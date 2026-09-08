@@ -1,0 +1,6 @@
+test,acir,circuit,create_vk,create_proof,verify,proof_size
+c03_holder_binding,2108,41283,0.19,0.51,0.02,16224
+c04_issuer_signature,535,55419,0.28,0.55,0.02,16224
+c05_age_verification,285,3208,0.04,0.13,0.02,16224
+c06_non_revocation,1024,52764,0.23,0.55,0.02,16224
+c09_full_proof,3224,141526,0.54,1.43,0.02,16224

@@ -1,0 +1,7 @@
+test,setup,create_proof,verify,proof_size
+c03_proof_holder,0.027,0.445,0.505,186429
+c04_proof_credential,0.011,0.003,0.004,570
+c05_proof_predicate,0.033,0.004,0.004,538
+c05_proof_predicate_age,0.033,0.034,0.007,1952
+c06_proof_non_revocation,0.024,0.005,0.007,760
+c09_proof_full,0.024,0.483,0.512,189141

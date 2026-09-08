@@ -1,10 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.14.1/.schema/devbox.schema.json",
-  "packages": [
-    "nodejs@22"
-  ],
+  "packages": ["typst@latest", "tinymist@latest", "nodejs@22"],
   "shell": {
     "scripts": {
+      "compile": ["cd report; typst compile index.typ"],
+      "watch": ["cd report; typst watch index.typ"],
       "test": [
         "make"
       ]

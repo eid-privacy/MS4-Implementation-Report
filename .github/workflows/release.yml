@@ -1,0 +1,57 @@
+name: Create PDF Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install devbox
+        uses: jetify-com/devbox-install-action@v0.14.0
+
+      - name: Compile PDF with devbox
+        run: devbox run compile
+
+      - name: Get current date and time
+        id: datetime
+        run: |
+          DATETIME=$(date +'%Y-%m-%d_%H-%M')
+          BASENAME=eid_privacy-101.292-IP-ICT-ms2-report
+          echo "datetime=${DATETIME}" >> $GITHUB_OUTPUT
+          echo "filename_date=${BASENAME}-${DATETIME}.pdf" >> $GITHUB_OUTPUT
+          echo "filename=${BASENAME}.pdf" >> $GITHUB_OUTPUT
+
+      - name: Rename PDF
+        run: |
+          cp report/index.pdf ${{ steps.datetime.outputs.filename }}
+          cp report/index.pdf ${{ steps.datetime.outputs.filename_date }}
+          rm report/index.pdf
+
+      # Uncomment once we have something to release...
+      #
+      # - name: Create Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: ${{ steps.datetime.outputs.datetime }}
+      #     name: ${{ steps.datetime.outputs.datetime }}
+      #     files: ${{ steps.datetime.outputs.filename_date }}
+      #     generate_release_notes: true
+
+      # - name: Update Latest Release
+      #   uses: softprops/action-gh-release@v1
+      #   with:
+      #     tag_name: latest
+      #     name: Latest Report
+      #     files: ${{ steps.datetime.outputs.filename }}
+      #     generate_release_notes: false
+      #     make_latest: true
