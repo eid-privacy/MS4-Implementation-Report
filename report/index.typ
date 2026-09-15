@@ -6,15 +6,20 @@
   paper-size: "a4",
   authors: (
     (
-      name: "Linus Gasser",
+      name: "Carine Dengler",
       organization: [EPFL],
-      email: "linus.gasser@epfl.ch",
-      url: "ineiti.ch"
+      email: "carine.dengler@epfl.ch",
     ),
     (
       name: "Clement Humbert",
       organization: [SICPA],
       email: "clement.humbert@sicpa.com",
+    ),
+    (
+      name: "Linus Gasser",
+      organization: [EPFL],
+      email: "linus.gasser@epfl.ch",
+      url: "ineiti.ch"
     ),
   ),
   abstract: [We describe the ongoing work for the Innosuisse grant 101.292 IP-ICT -
@@ -24,7 +29,10 @@
 )
 // #set page(margin: (inside: 2cm, outside: 1.5cm, y: 1.75cm))
 
-#include "ms4.typ"
-
-// Re-arrange MS2 a bit
-#include "ms2.typ"
+#include "1-intro.typ"
+#include "2-what.typ"
+#include "3-why.typ"
+#include "4-how.typ"
+#include "5-next-steps.typ"
+#include "6-conclusion.typ"
+#include "7-appendix.typ"
