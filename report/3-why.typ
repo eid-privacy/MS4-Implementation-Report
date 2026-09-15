@@ -1,19 +1,21 @@
 = WHY - Specific Choices for Implementations
 
-== Using noir
+== Using noir (L / Cl)
 
-- bind sigma proofs with easy to understand rust-like language
+=== Circuit Implementation (L)
 
-== Spartan Backend
+=== Compiler (Cl)
+
+== Spartan Backend (Cl)
 
 - because noir is optimised for verifier speed
 - include optimisations proposed by Cloudflare and Ubique
 
-== SICPA Implementation
+== SICPA Implementation (Cl)
 
 - learnings from SICPA integration
 
-== Mobile
+== Mobile (Ca)
 
 - Noir with MoPro (Barretenberg)
 - Noir with Spartan
