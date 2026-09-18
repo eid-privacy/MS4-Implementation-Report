@@ -16,7 +16,13 @@ If you want to use it.
 
 - speed depending on model
 - pre-computation storage space
-- explosion of proof size with for loops
+
+=== Complexity of Circuits
+
+- circuits are great and easy to understand
+- some patterns used in everyday language can lead to very inefficient circuits
+- Claude knew at least in one instance how to overcome this
+- Explain Barrel Shifter
 
 == Methodology (Ca / Li)
 

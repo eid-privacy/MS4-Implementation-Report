@@ -4,6 +4,12 @@
 
 === Circuit Implementation (L)
 
+- explain the goal of the full circuit
+- public inputs
+- witnesses
+- issuer is trustworthy
+- revocation (-> Appendix)
+
 === Compiler (Cl)
 
 == Spartan Backend (Cl)
