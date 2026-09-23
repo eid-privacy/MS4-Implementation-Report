@@ -3,6 +3,7 @@
 == Assumptions / Caveats (Cl / Li)
 
 - issuer is trustworthy
+- issuer is authoritative on the data being signed (it does not sign or use input from an adversarial holder).
 
 == Code Repositories / Documentation (Ca)
 
