@@ -18,7 +18,11 @@
 
 == SICPA Frontend (Cl)
 
-- explain SICPA integration
+- We integrated the proof system implementation in a solution providing issuance, verification, and could wallet capabilities.
+  - issuance is untouched, verification changes by adding new openid4vp proof type, same on wallet side
+- integration point within OpenId4VP
+  - new proof format
+- high-level architecture with our OpenId component fetching credentials as usual but delegating proof cration to ZKP component
 
 == Benchmarks (Ca)
 
@@ -36,7 +40,7 @@
 
 === Discussions
 
-- [zkp-valut](https://github.com/eid-privacy/zkp-vault) - most of the research
+- [zkp-vault](https://github.com/eid-privacy/zkp-vault) - most of the research
   papers we read
 - [eid-privacy](https://github.com/eid-privacy/eid-privacy.github.io) - blog
   of our work
@@ -57,4 +61,11 @@
 == Related Works (Cl)
 
 - Longfellow / Crescent
+  - Longfellow - best in class for requirements, no setup, PQ, very fast. Bad circuit writeability/readability and therefore auditing. A more accessible way to write circuit would be required for a proper rollout
+  - Crescent - useful ideas but public setup and the stack is "big" (Groth + Spartan + Commitments). Bellpepper is a better interface than Longfellow's to write circuits but still requires in-depth knowledge
+  - Vega @KS25 - Upgrade to Spartan, folding of circuits yields very fast proving, particularly by optimizing the hashing time. Bringing a nice-to-use DSL on top of it (e.g., Noir) would be a great follow-up to our work.
+  - OpenAC @ENRT26 - Need to read before making comments  
 - Standardisation efforts
+  - ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 (https://portal.etsi.org/webapp/workProgram/Report_WorkItem.asp?wki_id=74931)
+  - In our opinion, the standardization of BBS comes too late and the convenience vs cost of rollout of BBS is not in its favor anymore. Especially with all the strong circuit-based ZKP contenders.
+  - Yubico is doing stuff as well (find citation)
