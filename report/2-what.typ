@@ -31,7 +31,7 @@ following important points:
 - We had to change the revocation [ref-MS4]
 - Easy to understand and extend by IT professionals [ref-MS4]
 - On laptop hardware acceptable performance (< 1s for a proof),
-on mobile hardware still needs some improvement (<10s on a 2025 iPhone)
+on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 
 == Comparison with Other Solutions (L)
 
@@ -89,14 +89,30 @@ on mobile hardware still needs some improvement (<10s on a 2025 iPhone)
   nix and devbox
 
 
-== Related Works (Cl)
+== Related Works and concurrent events (Cl)
 
-- Longfellow / Crescent
-  - Longfellow - best in class for requirements, no setup, PQ, very fast. Bad circuit writeability/readability and therefore auditing. A more accessible way to write circuit would be required for a proper rollout
-  - Crescent - useful ideas but public setup and the stack is "big" (Groth + Spartan + Commitments). Bellpepper is a better interface than Longfellow's to write circuits but still requires in-depth knowledge
-  - Vega @KS25 - Upgrade to Spartan, folding of circuits yields very fast proving, particularly by optimizing the hashing time. Bringing a nice-to-use DSL on top of it (e.g., Noir) would be a great follow-up to our work.
+During the period this project spanned, a number of high-profile publications, as well as key governance decisions have happended.
+
+Interest towards production-deployable Zero-Knowledge solutions for digital identity
+is clear, if only from the number of very strong publications that happened during
+the course of this project. Among these, the most prominent results are:
+
+- Longfellow @FS24, a very optimized proof system that has been field tested with Google and Deutsche Bank.
+ We analyze it in comparison with Crescent in a blog post @EIDBlogCrescentLongfellow.
+ It achieves most of our targets but we found the adaptability to be poor when it came to changing the circuits' implementation and lack auditability by non-experts.
+- Crescent @FFL25 implements interesting ideas with commitments re-randomization as well as the modified ECDSA equation verification for holder binding.
+ We analyze and compare it to Longfellow in a blog article @EIDBlogCrescentLongfellow.
+ The main proof on the credential uses Groth16 @G16 which requires a public setup, something we wanted to avoid.
+ Our implementation uses their holder binding technique to reduce the ECDSA verification cost and maximize the proving work that can be done in a pre-computed phase.
+  - Vega @KS25 is an iteration on Spartan @S19.
+   It introduces a folding of circuits yielding very fast proving time.
+   In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
+   Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
   - OpenAC @ENRT26 - Need to read before making comments
+
+There are also talks from standardization body to include this work in standards recognized by the governing bodies in the EU:
+
 - Standardisation efforts
-  - ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 (https://portal.etsi.org/webapp/workProgram/Report_WorkItem.asp?wki_id=74931)
-  - In our opinion, the standardization of BBS comes too late and the convenience vs cost of rollout of BBS is not in its favor anymore. Especially with all the strong circuit-based ZKP contenders.
-  - Yubico is doing stuff as well (find citation)
+  - The authors of Longfellow have proposed it as an IETF draft @IETFLongfellow.
+  - ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 @ETSIZKP. In our opinion, the standardization of BBS is great but comes at a point in time when the convenience vs cost of rolling out BBS in a way that is compliant with eIDAS 2 is not attractive. Even less so with all the strong circuit-based ZKP contenders.
+  - Yubico has also announced interest in piloting with Longfellow in the scope of Europe's Digital Identity project https://www.yubico.com/blog/piloting-europes-future-id-passkeys-securing-digital-wallets/
