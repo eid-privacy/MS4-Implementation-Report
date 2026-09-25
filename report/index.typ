@@ -37,4 +37,15 @@
 
 #bibliography("references.bib", style: "ieee")
 
+#pagebreak()
+
+#counter(heading).update(0)
+#set heading(numbering: (..nums) => {
+  if nums.len() == 1 {
+    numbering("A", nums.at(0))
+  } else {
+    numbering("A.1", ..nums)
+  }
+})
+
 #include "7-appendix.typ"
