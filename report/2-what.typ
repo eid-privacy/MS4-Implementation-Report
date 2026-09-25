@@ -35,6 +35,26 @@ on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 
 == Comparison with Other Solutions (L)
 
+As discussed in our first report [ref-MS2], we distinguish the
+following families of ZKPs for our project:
+
+#table(
+  columns(auto, auto, auto, auto),
+  table.header([Family], [Efficiency / Performance], [Extension], [Examples]),
+
+  [Sigma-proof], [high], [difficult to reason about], [BBS+, ZKAttest],
+  [ZKP circuits], [medium], [compile specific languages into a ZKP], [noir, SNARKS, SNARGS],
+  [ZKVMs], [low], [simulates any program as a ZKP], [???]
+)
+
+
+
+
+- different types of ZKPs: sigma-proof, circuits, VMs
+- advantages / disadvantages of each solution (complexity / speed tradeof)
+- examples of each type
+- Longfellow / Crescent / OpenAC
+
 == Use case examples (L)
 
 - different kind of credentials:
