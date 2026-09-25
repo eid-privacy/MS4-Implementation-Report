@@ -25,7 +25,6 @@
   abstract: [We describe the ongoing work for the Innosuisse grant 101.292 IP-ICT -
   Secure and Privacy-Preserving Credentials for E-ID - between EPFL's C4DT and SICPA SA.
   This is the final Report.],
-  bibliography: bibliography("references.bib", style: "ieee"),
 )
 // #set page(margin: (inside: 2cm, outside: 1.5cm, y: 1.75cm))
 
@@ -35,4 +34,7 @@
 #include "4-how.typ"
 #include "5-next-steps.typ"
 #include "6-conclusion.typ"
+
+#bibliography("references.bib", style: "ieee")
+
 #include "7-appendix.typ"
