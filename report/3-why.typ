@@ -12,12 +12,18 @@
 
 === Compiler (Cl)
 
-As our interest is in optimizing circuit evaluation and proof computation for ECDSA verifications,
-we introduced a new compilation-time configuration to have Noir produce its intermediary circuit representation (ACIR)
-using the scalar field of the Tom-256 curve (cite ZKAttest, neuromancer.sk), especially designed for ECDSA's field arithmetic to be efficient.
-This change also requires the implementation of a "blackbox" used for circuit evaluation by noir.
-This stage evaluates the whole circuits a populates the prover's witness and public inputs.
-Our blackbox implementation is limited to elliptic curve addition and multi-scalar multiplication, foregoing the Poseidon commitment implementation.
+Noir is originally written and equipped to perform proofs and verifications on Aztec's blockchain.
+Noir comes with a default proof system and implementation: UltraHonk's implementation in Barretenberg.
+This proof system comes from the line of work on Plonk-ish proof systems and relies on the bn254-Grumpkin curve cycle constructed following a publication on the construction of such cycles @CK24.
+
+Our interest lies in circuits and proofs systems that are efficient to compute for ECDSA verifications of JSON-style data blobs as defined in @SDJWT.
+We used Noir compiler's parametrized architecture to introduced a new compilation-time configuration to change Noir's output circuit (ACIR)
+from using bn254-Grumpking to using the scalar field of the Tom-256 curve @zkattest @tom256parameters.
+An important note is that the P256 and Tom-256 curves do NOT form a cycle.
+As such, some of Noir's architecture assumptions break down in local places.
+This curve is especially designed to make computations in the P256 field (such as the ECDSA verification equation) efficient.
+Our implementation is limited to elliptic curve addition and multi-scalar-multiplication, foregoing the Poseidon commitment as our circuits don't require this.
+This implementation is only partial since a proper integration would imply a sizeable rework of Noir's achitecture as well as of its standard library, both build mostly with bn254 and curve cycles in mind.
 
 == Spartan Backend (Cl)
 
@@ -32,7 +38,6 @@ Our blackbox implementation is limited to elliptic curve addition and multi-scal
 - Deploying prover/verifier requires more resources than typical micro-service pods (RAM + CPU)
 - Precomputation costs a lot of storage and might not be an option for some providers
 - There is need for formalizing the circuit distribution and certification channels for an actual deployment beyond embedding a circuit in the official builds.
-
 == Mobile (Ca)
 
 - Noir with MoPro (Barretenberg)
