@@ -39,7 +39,7 @@ As discussed in our first report [ref-MS2], we distinguish the
 following families of ZKPs for our project:
 
 #table(
-  columns(auto, auto, auto, auto),
+  columns: (auto, auto, auto, auto),
   table.header([Family], [Efficiency / Performance], [Extension], [Examples]),
 
   [Sigma-proof], [high], [difficult to reason about], [BBS+, ZKAttest],
