@@ -158,13 +158,11 @@ To support such a verification, we extend from the OpenId4VP specification by ad
 This proof types allows communicating the public parameters selected by the verifier to the holder/prover, and the prover to return
 a base64 encoding of its zero-knowledge proof.
 
-- high-level architecture with our OpenId component fetching credentials as usual but delegating proof cration to ZKP component
- - open id component orchestrating the verification process as specified in OpenId4VP
- - prover component fetching relevant credential and computing the proof using our new tooling, returning it to the orchestrator
- - orchestrator, across the internet, sending the proof backend
- - orchestrator (verifier side) delegating the verification to a new component capable of verifying our ZKPs
-
-@fig-sicpa-architecture shows the resulting high-level architecture.
+At a high-level (see @fig-sicpa-architecture), our OpenId component receives a verification requests with a new 
+`proof_type` and delegates its creation to new components that embed the artifacts 
+implemented for this work.
+The OpenId flow is unchanged and communication happen agent-to-agent, over the internet,
+as for "normal" proof requests.
 
 #let openid-fill = rgb("#e8f0fe") // existing, standard OpenId4VP components
 #let zkp-fill = rgb("#e9f7ef") // new components introduced by this work
