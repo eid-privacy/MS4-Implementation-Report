@@ -41,15 +41,28 @@ As discussed in our first report [ref-MS2], we distinguish the
 following families of ZKPs for our project:
 
 #table(
-  columns: (auto, auto, auto, auto),
-  table.header([Family], [Efficiency / Performance], [Extension], [Examples]),
+  columns: (auto, auto, auto, auto, auto),
+  table.header([Family], [Efficiency / Performance], [Proof Input], [Extensibility], [Examples]),
 
-  [Sigma-proof], [high], [difficult to reason about], [BBS+, ZKAttest],
-  [ZKP circuits], [medium], [compile specific languages into a ZKP], [noir, SNARKS, SNARGS],
-  [ZKVMs], [low], [simulates any program as a ZKP], [???]
+  [Sigma-proof], [high], [Specialised credentials], [difficult to reason about without high
+    cryptographic knowledge], [BBS+, ZKAttest],
+  [ZKP circuits], [medium], [Standard SD-JWT], [based on simplified languages (rust-like, C-like)
+    which only needs moderate efforts to modify], [noir, SNARKS, SNARGS],
+  [ZKVMs], [low], [Standard SD-JWT], [simulates any program as a ZKP, so very simple to
+    extend], [SP1, OpenVM]
 )
 
+This table shows that there is a trade-off between efficiency, measured as
+proving-time and proof-size, and extensibility, measured as the possibility
+for non-domain-experts to change the inputs and tests of a ZKP.
+Another important point is that even though sigma-proof based ZKPs are very
+efficient, they need a credential in a format which is not in use by any of
+the governmental E-ID solutions proposed in Europe [ref-EU-ARF] [ref-Swiyu].
 
+
+=== Sigma-proofs
+
+[ref-FHLL25]
 
 
 - different types of ZKPs: sigma-proof, circuits, VMs

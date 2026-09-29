@@ -1,6 +1,6 @@
 # Question 1.1 - Summarize the progress of the activities in relation to the project planning and indicate to which degree the project objectives have been met
-* Summarize the (scientific) results of the project
-* Refer to the measurable and quantified objectives of each milestone and provide data supporting your achievements, justify to what extent the planned work packages and activities have been completed or not
+* OK - Summarize the (scientific) results of the project
+* OK - Refer to the measurable and quantified objectives of each milestone and provide data supporting your achievements, justify to what extent the planned work packages and activities have been completed or not
 * Have new risks been identified which could affect the future development activities?
 
 # Question 1.2 - Have scientific publications, inventions or patent applications been made? If yes, please give details regarding the status.
