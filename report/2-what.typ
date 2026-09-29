@@ -1,3 +1,5 @@
+#import "common.typ": *
+
 = WHAT - Overview of our Solution (L)
 
 When we started the project to work on Zero-Knowledge-Proofs (ZKPs)

@@ -1,3 +1,5 @@
+#import "common.typ": *
+
 = Next Steps (\*)
 
 == Who can use it?

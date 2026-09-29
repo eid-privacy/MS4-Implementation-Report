@@ -1,4 +1,6 @@
 #import "ams-article.typ": ams-article
+#import "common.typ": *
+
 #show link: underline
 #show: ams-article.with(
   title: [Secure and Privacy-Preserving Credentials for E-ID - #linebreak()
@@ -27,6 +29,7 @@
   This is the final Report.],
 )
 // #set page(margin: (inside: 2cm, outside: 1.5cm, y: 1.75cm))
+
 
 #include "1-intro.typ"
 #include "2-what.typ"

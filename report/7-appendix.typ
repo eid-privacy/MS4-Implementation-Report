@@ -1,3 +1,5 @@
+#import "common.typ": *
+
 = Appendix
 
 == MS3 Goals

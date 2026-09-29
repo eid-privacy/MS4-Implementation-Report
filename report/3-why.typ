@@ -1,3 +1,5 @@
+#import "common.typ": *
+
 = WHY - Specific Choices for Implementations
 
 We chose Noir to write out circuits for the following reasons:
