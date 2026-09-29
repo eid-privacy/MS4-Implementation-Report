@@ -31,7 +31,7 @@ Our solution is based on the standard SD-JWT used in Swiyu, with the
 following important points:
 
 - Using ZKP, there is no need for batch emission [ref-swiyu] anymore
-- We had to change the revocation [ref-MS4]
+- We had to change the revocation (see @follow-up-revocation) [ref-MS4]
 - Easy to understand and extend by IT professionals [ref-MS4]
 - On laptop hardware acceptable performance (< 1s for a proof),
 on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)

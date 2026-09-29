@@ -31,13 +31,13 @@ Next engineering steps would include:
 - A few changes in Noir's architecture would likely be needed to accommodate for curves that don't form a cycle and contribute our changes back to the upstream
   repository.
 
-=== Swiyu 
+=== Swiyu <follow-up-revocation>
 
 Regarding the standards we tried to preserve, OpenId4VP is untouched if for the non-breaking addition of a proof type.
 Following the workgroup's meetings and evolution would inform on how such proof mechanisms are meant to extend the original specification.
 
 
-Our proof circuit does not include revocation. The IETF standard for revocation lists includes either a compression pass, or a very lengthy bit string representation
+ Our proof circuit does not include revocation. The IETF standard for revocation lists includes either a compression pass, or a very lengthy bit string representation
 both causing prohibitive explosion of the circuit size, and therefore proving time.
 We propose an alternative approach in c06 that would add a flat cost to the proof.
 Designing such a ZKP-friendly approach to revocation would be a logical next step for a complete proposal.
