@@ -86,8 +86,22 @@ This proof can then be verified by any verifier in possession of the same R1CS i
 - Deploying prover/verifier requires more resources than typical micro-service pods (RAM + CPU)
 - Precomputation costs a lot of storage and might not be an option for some providers
 - There is need for formalizing the circuit distribution and certification channels for an actual deployment beyond embedding a circuit in the official builds.
-== Mobile (Ca)
 
-- Noir with MoPro (Barretenberg)
-- Noir with Spartan
-- Noir with Spartan and pre-computation
+== Mobile
+
+For our zero-knowledge proof system to have an impact in the real world - most notably as part of a future version of Switzerland's Swiyu app - we need to
+demonstrate that it can be executed on a mobile device in a realistic time.
+
+The two steps of the zero-knowledge proof system that are executed on a user's phone are the generation of the proof and its verification. Both the generation
+as well as the verification will need to be executed on the fly each time the holder wants to present their credential. It is therefore critical for user
+experience and widespread adoption that their runtime remains low. To this end, we optimized proof generation: as parts of it are common across
+different challenges and specific credentials, the proof can be partially precomputed and only the missing part computed on the fly.
+
+For the test device, we choose a consumer-grade device of medium age and the Android operating system as it is the most widespread mobile phone operating
+system @android.
+
+We created two Android apps, one for each of the backends. For the Barretenberg backend, we were able to use the Mopro framework @mopro to make the link
+between the Rust library instantiating and executing the zero-knowledge proofs and the Android platform. For the Spartan/Vega backend, we needed to create
+the foreign-language bindings ourselves using Mozilla's UniFFI tool @mozilla.
+
+The resulting Android apps allow us to test individual circuits as well as running benchmarks to gain insights into the average expected performance.
