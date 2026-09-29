@@ -103,6 +103,14 @@ This proof can then be verified by any verifier in possession of the same R1CS i
     are intermediate artefacts.],
 ) <fig-proof-pipeline>
 
+== Precomputation
+
+Around July 2026, Microsoft updated and renamed the source code distributed under the name of `spartan` to align it with the more recent Vega publication @KS25 under the name `vega-prover`. These changes introduced a clearer API to allow for partial instantiation of circuits and thus, pre-computation of partial proofs.
+
+We cascaded this capability to `spartan-backend` by adding a configuration file documenting which inputs of a circuit are expected to change at every circuit instantiation. As an example: the credential for a given holder is always the same, the challenger nonce is not. Our backend uses this to compute the partition of constraints that does not depend on these inputs. This partition represents the portion of the proof that can be pre-computed.
+
+With this in place we can optionally pre-compute e-ID presentations and at presentation time compute only the part that depends on the verifier's challenge for holder binding. This leads to a noticeable reduction in proving time but depending on the device computing the proof, loading precomputation is costly. For our c0200-swiyu-jwt circuit, precomputation's file size is around 1.5GB. It is to be noted as well that this intermediate proof contains sensitive information of the holder and needs to be stored in accordance.
+
 == Technical Limitations (\*)
 
 - speed depending on model
