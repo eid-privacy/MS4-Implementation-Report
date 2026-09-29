@@ -11,7 +11,7 @@ do with the code.
 
 == Remaining Challenges and follow-ups <remaining-challenges>
 
-=== Crytography
+=== Cryptography
 
 The main shortcoming of our proposal is shared with most others, short of Longfellow.
 Spartan is not post-quantum secure as it relies on the hardness of the discrete logarithm problem.
