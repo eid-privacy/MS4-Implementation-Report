@@ -38,7 +38,7 @@ on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 
 == Comparison with Other Solutions (L)
 
-As discussed in our first report [ref-MS2], we distinguish the
+As discussed in our first report @MS2-rep, we distinguish the
 following families of ZKPs for our project:
 
 #table(
