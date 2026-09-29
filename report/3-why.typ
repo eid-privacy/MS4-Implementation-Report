@@ -50,10 +50,16 @@ Notably, it is used for holder binding in Crescent @FFL25 and we reproduce this 
 Spartan relies on bellpepper to synthesize R1CS instances of circuits.
 Our contribution with the spartan-backend is the synthesis of Noir's compiled artifacts into R1CS instances.
 Our backend then uses this R1CS instance to produce or verify a zero-knowledge proof as implemented by Vega.
+R1CS being one of the most common ways to express NP-statements for zero-knowledge proofs, the synthesizer is some implementation away from
+being able to interface with other proof systems ingesting such statements.
+
+This architecture creates a lot of flexibility in the chain: Noir's ACIR could be synthesized by another piece of software (nothing exists at the time of writing)
+and mathematically speaking, the R1CS instance resulting of the synthesis and instantiation could be ingested by other proving backends reyling on R1CS.
 
 === Noir's artifacts and bytecode
 
 - ACIR Json files
+  - Caveat on comparing ACIR number of constraints and R1CS. They are not 1-to-1
 - Input 
 
 === Build and proof chain
