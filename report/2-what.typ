@@ -1,5 +1,5 @@
 #import "common.typ": *
-#import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
 = WHAT - Overview of our Solution (L)
 
@@ -138,13 +138,97 @@ create a proof, the main disadvantages are:
 - drivers license verification
 - rights for reduction (PLZ verification, salary verification)
 
-== SICPA Frontend (Cl)
+== SICPA Integration (Cl)
 
-- We integrated the proof system implementation in a solution providing issuance, verification, and could wallet capabilities.
-  - issuance is untouched, verification changes by adding new openid4vp proof type, same on wallet side
-- integration point within OpenId4VP
-  - new proof format
+SICPA has its own implementation of standardized formats and protocols for digital identity, including Swiyu-mandated SD-JWT and OpenId4VCi/VP.
+This makes our work on the SD-JWT of the Swiss e-id a very good candidate for integration in that implementation.
+
+
+SICPA's implementation is designed for so-called "Cloud Wallets".
+Keys reside in a key management system that lies outside of the solution's perimeter, modelled the same way an HSM is, i.e., no access to user's private keys.
+Platform users can, using the same set of keys, act as holders, provers, and verifiers.
+The integration we demonstrate for this work makes use of two distinct users: one who receives an e-id (outside of the scope of this work) and proves
+its possession and being over 18 years old using the zero-knowledge proof developed during the grant. The other user is a verifier able to use the zero-knowledge
+tooling to verify the holder's claim.
+We assume the issuer to be known and considered trustworthy, the implementation does not include going to the base registry.
+The interaction happens "in the cloud", and despite both user being hosted by the same platform, perform a proper OpenId4VP verification process across
+the internet.
+
+To support such a verification, we extend from the OpenId4VP specification by adding a "proof_type" that suits our ZKP.
+This proof types allows communicating the public parameters selected by the verifier to the holder/prover, and the prover to return
+a base64 encoding of its zero-knowledge proof.
+
 - high-level architecture with our OpenId component fetching credentials as usual but delegating proof cration to ZKP component
+ - open id component orchestrating the verification process as specified in OpenId4VP
+ - prover component fetching relevant credential and computing the proof using our new tooling, returning it to the orchestrator
+ - orchestrator, across the internet, sending the proof backend
+ - orchestrator (verifier side) delegating the verification to a new component capable of verifying our ZKPs
+
+@fig-sicpa-architecture shows the resulting high-level architecture.
+
+#let openid-fill = rgb("#e8f0fe") // existing, standard OpenId4VP components
+#let zkp-fill = rgb("#e9f7ef") // new components introduced by this work
+#let data-fill = rgb("#fff4e5") // credential storage
+
+#figure(
+  diagram(
+    spacing: (26mm, 15mm),
+    node-stroke: 0.6pt,
+    node-corner-radius: 2pt,
+    node-inset: 6pt,
+    edge-stroke: 0.6pt,
+    node-defocus: 0,
+
+    // --- holder / prover side (left column) -----------------------------
+    node((-0.2, -0.85), text(size: 0.85em, fill: gray)[*Holder / prover*], stroke: none, fill: none),
+    node((0, 0), align(center)[OpenId4VP component \
+      #text(size: 0.85em)[handles the new `proof_type`]], fill: openid-fill, name: <holder-oid>),
+    node((-.75, 1), align(center)[Credential store \
+      #text(size: 0.85em)[SD-JWT e-ID]], fill: data-fill, name: <credentials>),
+    node((0, 2), align(center)[ZKP prover component \
+      #text(size: 0.85em)[
+        Compute proof with public parameter \
+        \+ witness from credential
+      ]], fill: zkp-fill, name: <prover>),
+    edge(<credentials>, <prover>, "->", label: text(size: 0.8em)[],
+      label-side: left, label-sep: 2pt),
+    edge(<holder-oid>, <prover>, "->", bend: 25deg,
+      label: text(size: 0.8em)[3. public parameters], label-side: left, label-sep: 1pt),
+    edge(<prover>, <holder-oid>, "->", bend: 25deg,
+      label: text(size: 0.8em)[4. base64 proof], label-side: left, label-sep: 1pt),
+
+    // --- verifier side (right column) -----------------------------------
+    node((1, -0.85), text(size: 0.85em, fill: gray)[*Verifier*], stroke: none, fill: none),
+    node((1, 0), align(center)[OpenId4VP component \
+        #text(size: 0.85em)[chooses the public parameters]
+      ],
+      fill: openid-fill, name: <verifier-oid>),
+    node((1, 2), align(center)[ZKP verifier component \
+      #text(size: 0.85em)[synthesizes the R1CS,\
+      verify proof and public parameters]
+    ], fill: zkp-fill, name: <verifier-zkp>),
+    edge(<verifier-oid>, <verifier-zkp>, "->", bend: 25deg,
+      label: text(size: 0.8em)[6. proof], label-side: left, label-sep: 2pt),
+    edge(<verifier-zkp>, <verifier-oid>, "->", bend: 25deg,
+      label: text(size: 0.8em)[7. result], label-side: left, label-sep: 2pt),
+
+    // --- the two sides talk plain OpenId4VP over the internet ------------
+    edge(<verifier-oid>, <holder-oid>, "->", bend: -20deg, label-side: right, label-sep: 2pt,
+      label-fill: white, label: align(center, text(size: 0.8em)[1. authorization request 
+    ])),
+    edge(<holder-oid>, <verifier-oid>, "->", bend: -20deg, label-side: right, label-sep: 2pt,
+      label-fill: white, label: align(center, text(size: 0.8em)[5. VP token \ with the ZKP])),
+    edge((0.5, -1.2), (0.5, 2.6), stroke: (dash: "dashed", paint: gray),
+      label: text(size: 0.8em, fill: gray)[internet], label-pos: 0, label-side: right),
+  ),
+  caption: [High-level architecture of the integration. The
+    #box(fill: openid-fill, stroke: 0.4pt, inset: 2pt, outset: 1pt, radius: 1pt)[blue]
+    OpenId4VP components orchestrate the exchange as per specifications, and delegate the
+    zero-knowledge work to the
+    #box(fill: zkp-fill, stroke: 0.4pt, inset: 2pt, outset: 1pt, radius: 1pt)[green]
+    components introduced by this work. Both users are hosted by the same cloud-wallet
+    platform, but the presentation exchange still crosses the internet.],
+) <fig-sicpa-architecture>
 
 == Benchmarks (Ca)
 
