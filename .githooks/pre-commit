@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Verifies the report still compiles with typst before allowing a commit.
+set -euo pipefail
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if ! git diff --cached --name-only --diff-filter=ACM | grep -qE '^report/.*\.(typ|bib)$'; then
+    exit 0
+fi
+
+echo "pre-commit: compiling report with typst..."
+log=$(mktemp)
+if command -v devbox >/dev/null 2>&1; then
+    compile_cmd=(devbox run compile)
+else
+    compile_cmd=(typst compile report/index.typ)
+fi
+if ! "${compile_cmd[@]}" >"$log" 2>&1; then
+    echo "pre-commit: typst compile failed, commit aborted." >&2
+    cat "$log" >&2
+    rm -f "$log"
+    exit 1
+fi
+rm -f "$log"
+echo "pre-commit: typst compile OK."
