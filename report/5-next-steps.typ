@@ -31,7 +31,7 @@ Next engineering steps would include:
 - A few changes in Noir's architecture would likely be needed to accommodate for curves that don't form a cycle and contribute our changes back to the upstream
   repository.
 
-=== Swyiu 
+=== Swiyu 
 
 Regarding the standards we tried to preserve, OpenId4VP is untouched if for the non-breaking addition of a proof type.
 Following the workgroup's meetings and evolution would inform on how such proof mechanisms are meant to extend the original specification.

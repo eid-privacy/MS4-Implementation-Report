@@ -76,9 +76,6 @@ and mathematically speaking, the R1CS instance resulting of the synthesis and in
 
 This proof can then be verified by any verifier in possession of the same R1CS instance (i.e., synthesizing the same code with our synthesizer).
 
-
-
-
 == SICPA Implementation (Cl)
 
 - learnings from SICPA integration
@@ -102,6 +99,6 @@ system @android.
 
 We created two Android apps, one for each of the backends. For the Barretenberg backend, we were able to use the Mopro framework @mopro to make the link
 between the Rust library instantiating and executing the zero-knowledge proofs and the Android platform. For the Spartan/Vega backend, we needed to create
-the foreign-language bindings ourselves using Mozilla's UniFFI tool @mozilla.
+the foreign-language bindings ourselves using Mozilla's UniFFI tool @mozillaUniFFI.
 
 The resulting Android apps allow us to test individual circuits as well as running benchmarks to gain insights into the average expected performance.
