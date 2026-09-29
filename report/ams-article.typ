@@ -182,7 +182,7 @@
   // Configure lists and links.
   set list(indent: 24pt, body-indent: 5pt)
   set enum(indent: 24pt, body-indent: 5pt)
-  show link: set text(font: "New Computer Modern Mono")
+  show link: set text(font: "DejaVu Sans Mono")
 
   // Configure equations.
   show math.equation: set block(below: 8pt, above: 9pt)

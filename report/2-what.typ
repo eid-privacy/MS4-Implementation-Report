@@ -1,4 +1,5 @@
 #import "common.typ": *
+#import "@preview/fletcher:0.5.7" as fletcher: diagram, node, edge
 
 = WHAT - Overview of our Solution (L)
 
@@ -59,10 +60,65 @@ Another important point is that even though sigma-proof based ZKPs are very
 efficient, they need a credential in a format which is not in use by any of
 the governmental E-ID solutions proposed in Europe [ref-EU-ARF] [ref-Swiyu].
 
-
 === Sigma-proofs
 
-[ref-FHLL25]
+The term has been introduced for the first time by [ref-Cra97] and describes
+the interaction between a prover and a verifier.
+
+#figure(
+  diagram(
+    spacing: (3em, 2.2em),
+    node-stroke: 1pt,
+    node((0, 0), [Prover], name: <prover>),
+    node((2, 0), [Verifier], name: <verifier>),
+    edge((0, 0), (0, 3.5), "-", stroke: 0.5pt + gray),
+    edge((2, 0), (2, 3.5), "-", stroke: 0.5pt + gray),
+    edge((0, 1), (2, 1), "->", [commitment $t$]),
+    edge((2, 2), (0, 2), "->", [challenge $c$]),
+    edge((0, 3), (2, 3), "->", [response $s$]),
+  ),
+  caption: [Sigma-protocol: the prover commits, the verifier challenges, and
+    the prover responds.],
+) <fig-sigma-protocol>
+
+With some imagination, one can interpret the @fig-sigma-protocol as a
+greek $Epsilon$ - the paper indicates further that:
+
+#quote[Spelled out, the first part of _Sigma_ refers to "zig-zag" symbolising
+  the three moves, while the last part is an abbreviation of "Merlin-Arthur".]
+
+These proofs are very specialised to a specific proof type - [ref-CM99] gives
+a list which has been updated since then, but still gives an idea what
+can be done with these types of proofs:
+
+- Proving the knowledge of a discrete logarithm xo f a group element y
+  to a base g
+- Proving the knowledge of a representation of an element y to
+  the bases $g_1,...,g_l$
+- Proving the equality of the discrete logarithms of elements y1 and y2 to the bases
+  g and h, respectively
+- Proving the knowledge of (at least) one out of the discrete logarithms of
+  the elements $y_1$ and $y_2$ to the base g (proof of OR)
+- Proving the knowledge of a discrete logarithm that lies in a given range,
+  that is, $2^(ℓ_1) − 2^(ℓ_2) < log(g_y) < 2^(ℓ_1) + 2^(ℓ_2)$ , for some parameters
+  $ℓ_1$ and $ℓ_2$
+
+Over time, other sigma proofs have been defined, which led to [ref-CFQW19]
+describing a method of combining different families of sigma-proofs together
+in an optimized way.
+This method has been further optimised and is proposed for example by [ref-FHLL25]
+to be applied to electronic credentials.
+
+While these types of proofs are often the fastest and most concise way to
+create a proof, the main disadvantages are:
+
+- only people with specialized cryptographic knowledge can apply these
+  proofs to new credentials
+- these proofs only work with new formats for the electronic credentials,
+  so the EU-ARF and Swiyu projects would need to be rewritten
+
+=== ZKP-Circuits
+
 
 
 - different types of ZKPs: sigma-proof, circuits, VMs
