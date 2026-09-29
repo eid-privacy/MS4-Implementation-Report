@@ -60,13 +60,13 @@ and mathematically speaking, the R1CS instance resulting of the synthesis and in
 
 - ACIR Json files
   - Caveat on comparing ACIR number of constraints and R1CS. They are not 1-to-1
-- Input 
+- Input
 
 === Build and proof chain
 
 - Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
 - Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
-- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set 
+- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set
 - Prover uses `nargo-t256` a build from our forked Noir compiler relying on Tom-256 to map the inputs into individual "witnesses"
 - Prover uses `spartan-backend` to:
   - Read Noir's ACIR and synthesize an R1CS instance from it
@@ -84,7 +84,7 @@ This proof can then be verified by any verifier in possession of the same R1CS i
 - Precomputation costs a lot of storage and might not be an option for some providers
 - There is need for formalizing the circuit distribution and certification channels for an actual deployment beyond embedding a circuit in the official builds.
 
-== Mobile
+== Mobile (Ca)
 
 For our zero-knowledge proof system to have an impact in the real world - most notably as part of a future version of Switzerland's Swiyu app - we need to
 demonstrate that it can be executed on a mobile device in a realistic time.

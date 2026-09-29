@@ -119,12 +119,80 @@ create a proof, the main disadvantages are:
 
 === ZKP-Circuits
 
+In order to open ZKP for problems which are difficult to solve with a
+combination of sigma protocols, e.g., proving that a JSON witness
+has the correct form, it is necessary to describe the problem in a more
+abstract form.
+[ref-BCGTV13] creates a modified C-compiler which can compile a subset
+of C instructions to be run on a random-access machine called `TinyRAM`.
+The novelty in this approach is that this allows to express _any_ algorithm
+which can be written in C to be proven as a ZKP.
+In addition, the number of engineers knowing how to write C programs is
+vastly superior compared to the number of engineers knowing how to
+use sigma protocols.
 
+#figure(
+  diagram(
+    spacing: (3em, 2em),
+    node-stroke: 1pt,
+    node((0, 0), [C program], name: <c-program>),
+    node((0, 1), [TinyRAM], name: <tinyram>),
+    node((0, 2), [R1CS], name: <r1cs>),
+    node((0, 3), [zk-SNARK], name: <zksnarg>),
+    edge(<c-program>, <tinyram>, "->"),
+    edge(<tinyram>, <r1cs>, "->"),
+    edge(<r1cs>, <zksnarg>, "->"),
+  ),
+  caption: [Compilation pipeline from a C program down to a `zk-SNARK` proof.],
+) <fig-zkp-circuit-pipeline>
 
-- different types of ZKPs: sigma-proof, circuits, VMs
-- advantages / disadvantages of each solution (complexity / speed tradeof)
-- examples of each type
-- Longfellow / Crescent / OpenAC
+The figure @fig-zkp-circuit-pipeline shows the pipeline showing how a C
+program is compiled to the `TinyRAM` virtual architecture, which is
+rewritten as a `R1CS` circuit, and finally proven using a `zk-SNARK`.
+This model from 2013 has been much refined in the meantime, specifically
+the following elements have been updated:
+
+- input: instead of a subset of the C language, tools like `noir` allow
+  a much higher-level input
+- intermediate representation: the `TinyRAM` has been optimised and replaced
+  by various other representations. `noir` uses `ACIR`, which is already
+  closer to `R1CS` than `TinyRAM`. `R1CS` is still widely used as the
+  representation which is then fed to the prover
+- prover: while this early prover was based on a `zk-SNARK` using PCP,
+  the landscape has become much more diverse with new additions which
+  need less setup and have faster proving and verification times
+
+=== ZKVMs
+
+While ZKP-circuits are based on a specific language which is compiled
+with a special compiler, ZK Virtual Machines (ZKVM)s go one step further
+and implement a full von Neumann architecture with the possibility to
+create a ZKP.
+OpenVM [ref-OpenVM] goes one step further and proposes a
+_modular no-CPU architecture_ - modules can be added to provide
+RISC-V support, but also specific operations often used in ZKPs.
+This setup allows the combination of the best of circuits and
+sigma proofs: using circuits, OpenVM provides support for generic
+programming, using sigma proofs (or other) modules, OpenVM allows
+optimised proofs where it matters, e.g., ECDSA signatures, hashing,
+and other specialised cryptographic primitives.
+
+The latest benchmarks we found shows that a signature verification using
+OpenVM is only 10x slower than the same verification with `noir`
+or a special sigma-proof.
+
+=== Developments in 2025 / 2026
+
+Here are the three main projects which developed in parallel with our
+work and which are the most advanced.
+It is to be noted that our prover is based on the Spartan part of
+*Crescent*.
+
+*Longfellow*
+
+*Crescent*
+
+*OpenAC*
 
 == Use case examples (L)
 
