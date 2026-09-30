@@ -1,4 +1,5 @@
 #import "common.typ": *
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
 = WHY - Specific Choices for Implementations
 
@@ -14,14 +15,105 @@ The resulting proofs are short, verifying is very fast, and prover time is less 
 One of the main con of UltraHONK for our work is that it requires a public setup, a cryptographic ceremony that is delicate to setup properly for
 a public use case.
 
-
 This section will expose how we used Noir in conjunction with a proof system that had more of the properties we are after for the Swiss e-ID.
 
 == Using noir (L / Cl)
 
 === Circuit Implementation (L)
 
-- explain the goal of the full circuit
+The figure @fig-zkp-overview shows an illustration of the different parts
+of a ZKP.
+It is important to note that there is information known to both
+the prover and the verifier, namely the statement itself, as well
+as a set of public inputs, e.g., the public key of the issuer.
+Other inputs are private and will not be available to the verifier -
+only the final proof is available to the verifier, and the properties
+of the ZKPs make that the verifier cannot learn more information about
+the private data than the statement reveals.
+So if the statement tests if the given credential has a birthdate of
+more than 18 years in the past, the proof reveals that fact, but not
+more.
+
+#figure(
+  diagram(
+    mark-scale: 1.5,
+    spacing: (1.5em, 1.1em),
+    node-stroke: 1pt,
+    node((-1.5, -0.5), [*Prover*], stroke: none),
+    node((1.5, -0.5), [*Verifier*], stroke: none),
+    // Invisible node to keep the prover and verifier halves symmetric
+    node((2, 2.4), [], stroke: none),
+    edge((0, -0.8), (0, 6.5), "--", stroke: 1pt, layer: -1),
+    node((0, 0.5), [Public data], fill: white, name: <public>),
+    node((0, 2), [Statement], stroke: none, name: <stmt-label>),
+    node((-0.5, 2.8), height: 1cm, [Derived #linebreak() data], fill: white, stroke: (dash: "dashed"), name: <derived>),
+    node(
+      enclose: ((-0.8, 2), (0.8, 2), <stmt-label>, <derived>),
+      fill: luma(240),
+      name: <statement>,
+    ),
+    edge(<public>, <statement>, "->"),
+    node((-2, 2.4), [Secret data], stroke: none, name: <secret>),
+    edge(<secret>, <statement>, "->"),
+    edge((-0.5, 3.15), (1.3, 3.15), "->", bend: -50deg, label: [Proof $pi$], label-side: right),
+  ),
+  caption: [High-level overview of a ZKP: the prover proves a statement over
+    secret and public data, possibly deriving new data inside the statement,
+    and sends the resulting proof to the verifier.],
+) <fig-zkp-overview>
+
+#let Pub_holder = $"Pub"_"holder"$
+#let Pub_issuer = $"Pub"_"issuer"$
+#let challenge = $"Challenge"$
+#let credential = $"Credential"$
+#let hash_credential = $"CredHash"$
+#let hash_dob = $"DoBHash"$
+#let revocation_list = $"Revocation List"$
+#let timestamp_now = $"Current Date"$
+#let timestamp_dob = $"Date of Birth"$
+#let salt_dob = $"Salt DoB"$
+#let Sig_cred = $"Sig"_"cred"$
+#let Sig_ch = $"Sig"_"ch"$
+#let Sig_list = $"Sig"_"list"$
+#let Pr_holder = $"proof"_"holder"$
+#let Pr_sig_ch = $"proof"_#Sig_ch$
+#let Pr_Pub_holder = $"proof"_#Pub_holder$
+#let Pr_sig_cred = $"proof"_#Sig_cred$
+#let Pr_predicate = $"proof"_"predicate"$
+#let Pr_non-rev = $"proof"_"non-rev"$
+#let Sig_valid(pub, sig, msg) = $"signature_valid"( #pub, #sig, #msg )$
+
+The different parts of the ZKP we produced for this projects
+are the following:
+
+#table(
+  columns: 2,
+  table.header([Argument], [Elements]),
+  [Secret], [
+    - #credential of the holder
+    - positions of the elements in the credential
+    - #salt_dob - salt of the date of birth
+    - #timestamp_dob
+    - pre-computation of #Sig_cred
+  ],
+  [Public], [
+    - #Pub_issuer
+    - #timestamp_now
+    - pre-computation of #Sig_ch
+  ],
+  [Derived], [
+    - #Pub_holder from #credential
+    - $#hash_credential = "Sha256"(#credential)$
+    - $#hash_dob = "Sha256"(#salt_dob | #timestamp_dob)$
+  ],
+  [Statement],[
+    - #Sig_valid([#Pub_holder], [#Sig_ch], [#challenge])
+    - #Sig_valid([#Pub_issuer], [#Sig_cred], [#hash_credential])
+    - $#timestamp_dob + "18 years" <= #timestamp_now$
+  ]
+)
+
+- explain the goal of the full circuit c0200
 - public inputs
 - witnesses
 - issuer is trustworthy

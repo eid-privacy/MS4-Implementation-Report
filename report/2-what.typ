@@ -181,19 +181,6 @@ The latest benchmarks we found shows that a signature verification using
 OpenVM is only 10x slower than the same verification with `noir`
 or a special sigma-proof.
 
-=== Developments in 2025 / 2026
-
-Here are the three main projects which developed in parallel with our
-work and which are the most advanced.
-It is to be noted that our prover is based on the Spartan part of
-*Crescent*.
-
-*Longfellow*
-
-*Crescent*
-
-*OpenAC*
-
 == Use case examples (L)
 
 - different kind of credentials:
@@ -226,8 +213,8 @@ To support such a verification, we extend from the OpenId4VP specification by ad
 This proof types allows communicating the public parameters selected by the verifier to the holder/prover, and the prover to return
 a base64 encoding of its zero-knowledge proof.
 
-At a high-level (see @fig-sicpa-architecture), our OpenId component receives a verification requests with a new 
-`proof_type` and delegates its creation to new components that embed the artifacts 
+At a high-level (see @fig-sicpa-architecture), our OpenId component receives a verification requests with a new
+`proof_type` and delegates its creation to new components that embed the artifacts
 implemented for this work.
 The OpenId flow is unchanged and communication happen agent-to-agent, over the internet,
 as for "normal" proof requests.
@@ -280,7 +267,7 @@ as for "normal" proof requests.
 
     // --- the two sides talk plain OpenId4VP over the internet ------------
     edge(<verifier-oid>, <holder-oid>, "->", bend: -20deg, label-side: right, label-sep: 2pt,
-      label-fill: white, label: align(center, text(size: 0.8em)[1. authorization request 
+      label-fill: white, label: align(center, text(size: 0.8em)[1. authorization request
     ])),
     edge(<holder-oid>, <verifier-oid>, "->", bend: -20deg, label-side: right, label-sep: 2pt,
       label-fill: white, label: align(center, text(size: 0.8em)[5. VP token \ with the ZKP])),
@@ -345,11 +332,11 @@ the course of this project. Among these, the most prominent results are:
  We analyze and compare it to Longfellow in a blog article @EIDBlogCrescentLongfellow.
  The main proof on the credential uses Groth16 @G16 which requires a public setup, something we wanted to avoid.
  Our implementation uses their holder binding technique to reduce the ECDSA verification cost and maximize the proving work that can be done in a pre-computed phase.
-  - Vega @KS25 is an iteration on Spartan @S19.
+- Vega @KS25 is an iteration on Spartan @S19.
    It introduces a folding of circuits yielding very fast proving time.
    In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
    Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
-  - OpenAC @ENRT26 - Need to read before making comments
+- OpenAC @ENRT26 - Need to read before making comments
 
 There are also talks from standardization body to include this work in standards recognized by the governing bodies in the EU:
 
