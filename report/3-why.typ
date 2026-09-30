@@ -181,10 +181,9 @@ This proof can then be verified by any verifier in possession of the same R1CS i
 For our zero-knowledge proof system to have an impact in the real world - most notably as part of a future version of Switzerland's Swiyu app - we need to
 demonstrate that it can be executed on a mobile device in a realistic time.
 
-The two steps of the zero-knowledge proof system that are executed on a user's phone are the generation of the proof and its verification. Both the generation
-as well as the verification will need to be executed on the fly each time the holder wants to present their credential. It is therefore critical for user
-experience and widespread adoption that their runtime remains low. To this end, we optimized proof generation: as parts of it are common across
-different challenges and specific credentials, the proof can be partially precomputed and only the missing part computed on the fly.
+The proof generation will need to be executed on the fly each time the holder wants to present their credential. It is therefore critical for user experience
+and widespread adoption that its runtime remains low, i.e. 1 second maximum. As parts of the proof are common across different challenges and individual
+credentials, we implemented an initial optimization by partially precomputing it, so that only the missing parts are computed when the credential is used.
 
 For the test device, we choose a consumer-grade device of medium age and the Android operating system as it is the most widespread mobile phone operating
 system @android.
