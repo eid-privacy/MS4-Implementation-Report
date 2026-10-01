@@ -285,8 +285,36 @@ as for "normal" proof requests.
 
 == Benchmarks (Ca)
 
-- Run time on Macs / Mobile
-- Detail (c01 or just c200)
+=== Mac
+
+// TODO
+
+=== Mobile
+
+While at first glance it is the next logical step to also measure the performance of our circuits on a mobile phone,
+it is in reality a major milestone in our efforts to add zero-knowledge proofs to the Swiss e-ID ecosystem.
+
+The existing privacy-preserving digital credentials, Crescent and Longfellow rely on specialised credentials to achieve
+their impressive speed of < 1s proof verification time. We, on the other hand, are able to use the standard SD-DWT
+through a Noir circuit, a major prerequisite for integrating zero-knowledge proogs into the Swiss e-ID.
+
+For both the Barretenberg and Spartan/Vega backends, we used a Samsung Galaxy A54 with the Android 16 ("Baklava") operating
+system, 8 GB of RAM and an Octa-core CPU [reference to GSMArena].
+
+==== Barretenberg
+
+==== Spartan/Vega
+
+We evaluated the circuits `c0200_swiyu_jwt` and `c0202_sicpa_backend_constant` from the `spartan-backend` Rust module. Based on
+our previous experiences with the Noir mobile application based on the Barretenberg backend, we decided that 5 runs are sufficient
+to get a clear idea of the average performance, as the runtime is measured in the order of magnitude of seconds which is dominated
+by the computation time of the proof generation itself and not by short, intermediary spikes of load coming from other processes.
+
+// DRAFT
+
+insert table here
+
+add interpretation
 
 == Code Repositories (L)
 
