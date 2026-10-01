@@ -17,6 +17,7 @@ signature according to the formulas described in
 
 D4.3 - A mathematical proof for the algorithm in D4.2.
 
+-> ECDSA of Crescent
 #todo[Copy the mathematical proof we wrote on the napkin]
 
 D4.4 - Example programs showing how a credential is issued to a holder, and how a verifier can test whether the signature is valid.
@@ -43,9 +44,6 @@ shows how to create predicate proofs directly on the credential.
 
 === WP6b - Privacy-preserving revocation
 
--> Based on Spartan
--> Done by the security review
-
 // D6.2 - A privacy-preserving (non-linkable) algorithm for the holder to prove that their credential has not been revoked.
 
 D6.3 - A mathematical proof for the algorithm in D6.2.
@@ -54,19 +52,35 @@ D6.4 - Proof of concept implementations of the revocations.
 == MS3 Goals
 
 G5.3 An external entity verifies that D5.3 is correct
+
+-> Done by the security review
+
 G6.3 An external entity verifies that D6.3 is correct
+
+-> Done by the security review
+
 G4.3 An external entity verifies that the proof for the unlinkable and anonymous credential signing is correct.
+
+-> Done by the security review
+
 G3.3 An external entity verifies that the proof for the unlinkable proof of device binding is correct.
 
-=== WP7 - Final hardened implementation of our choices
+-> Done by the security review
+
+=== WP7 - Final hardened implementation of our choices (Cl)
 
 D7.1 - Build the library
 D7.2 - Documentation is available and allows usage of the library.
 D7.3 - Speed / bandwidth considerations.
 D7.4 - An external security review of the final implementation of the algorithms is performed
+
+-> Done by the security review
+
 D7.5 - Feedback from SICPA's Digital Trust Platform is integrated back into our library.
 
-=== WP8 - Use the library in SICPA's Digital Trust Platform
+
+
+=== WP8 - Use the library in SICPA's Digital Trust Platform (Cl)
 
 D8.1 - Choice of two use-cases to be implemented in SICPAs software.
 D8.2 - Implementation of use-cases using the library from WP7.
@@ -74,12 +88,37 @@ D8.2 - Implementation of use-cases using the library from WP7.
 == MS4 Goals
 
 G0.3 The final report is available
+
+Here we go...
+
 G7.1 Open sourced library is available publicly, e.g., on GitHub, with a "popular" OSI approved license
+
+Link to repo
+
 G7.2 The Digital Trust Platform in WP8 can be extended using the documentation
+
+Yes
+
 G7.3 The necessary operations are fast enough to be executed on a modern mobile device, and the size of the messages is well below 1MB.
+
+Near miss on SD-JWTs, works with flat data
+
 G7.4 The review shows the security of the library and its recommendations are integrated
+
+Yes
+
 G7.5 SICPA's Digital Trust Platform successfully implements new functionality using the library.
+
+Yes
+
 G8.1 Confirmation of usefulness of use-cases by FOITT and FOJ
+
+Orally...
+
 G8.2 Demonstrator on Digital Trust Platform is available and performs the needed functions.
 
-== All Blog Posts
+Yes
+
+== All Blog Posts (Ca)
+
+At least the links...

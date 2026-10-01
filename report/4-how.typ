@@ -7,6 +7,7 @@
 
 - issuer is trustworthy
 - issuer is authoritative on the data being signed (it does not sign or use input from an adversarial holder).
+- copy from security report
 
 == Code Repositories / Documentation (Ca)
 
@@ -16,7 +17,7 @@ How to use which repository for what job.
 
 If you want to use it.
 
-== Proof and verification pipelines
+== Proof and verification pipelines (Cl)
 
 - Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
 - Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
@@ -102,7 +103,7 @@ This proof can then be verified by any verifier in possession of the same R1CS i
     are intermediate artefacts.],
 ) <fig-proof-pipeline>
 
-== Precomputation
+== Precomputation (Cl)
 
 Around July 2026, Microsoft updated and renamed the source code distributed under the name of `spartan` to align it with the more recent Vega publication @KS25 under the name `vega-prover`. These changes introduced a clearer API to allow for partial instantiation of circuits and thus, pre-computation of partial proofs.
 
@@ -176,13 +177,13 @@ With this in place we can optionally pre-compute e-ID presentations and at prese
 - speed depending on model
 - pre-computation storage space
 
-=== Complexity of Circuits
+=== Complexity of Circuits (Li)
 
 - circuits are great and easy to understand
 - some patterns used in everyday language can lead to very inefficient circuits
 - Claude knew at least in one instance how to overcome this
 
-== Optimisations Performed
+== Optimisations Performed (Li)
 
 During our work on the noir circuits, we encountered various places where
 a normal implementation using standard programming techniques produced
@@ -266,6 +267,8 @@ without the cost of `noir_base64`'s decoder (which indexes a lookup
 table by a witness; see OPTIMIZE.md).
 
 === Selective Disclosure Values
+
+=== Holder Binding (Cl)
 
 == Methodology (Ca / Li)
 
