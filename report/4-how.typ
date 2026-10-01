@@ -179,11 +179,31 @@ With this in place we can optionally pre-compute e-ID presentations and at prese
 
 === Complexity of Circuits (Li)
 
-- circuits are great and easy to understand
-- some patterns used in everyday language can lead to very inefficient circuits
-- Claude knew at least in one instance how to overcome this
+While sigma proofs are faster and often produce smaller messages, we decided
+to use a circuit based proof system to make it easier for
+non-cryptographers to create their own proofs.
+During our project we saw that this actually works great, and that the
+engineers at SICPA were able to update our proposed circuit to
+enable new functionality.
 
-== Optimisations Performed (Li)
+However, we also saw one big downside of this openness: some programming
+patterns produce very big circuits, and as a non-cryptographer it is
+often difficult to understand why our code is not good.
+One example we encountered was the @how-opt-barrel, where a software
+engineer used a for loop to copy data from one array into another.
+But as the indexes were part of the private inputs, the circuit had
+to take into account all possible sizes - which are a lot.
+
+There is the possibility to introduce more optimisations in the noir
+backend to allow for automatic improvements of these cases.
+But there will be a lot of these patterns which create very big
+circuits, and thus are not optimal to be used.
+As of September 2026, LLMs like Claude were very helpful in detecting
+the reason for these big circuits, and proposing solutions.
+But as always, if you cannot judge if the proposed solution is actually
+good, it's difficult to avoid errors.
+
+== Optimisations Performed (Li) <how-opt>
 
 During our work on the noir circuits, we encountered various places where
 a normal implementation using standard programming techniques produced
@@ -192,7 +212,7 @@ This is due to the way Spartan takes the ACIR code and converts it to
 R1CS, specifically with regard to code which accesses variable-length
 input arrays.
 
-=== Index Passing as Private Input
+=== Index Passing as Private Input <how-opt-index>
 
 In @how-assumptions we assume that the input JSON is correctly formatted
 by the issuer, before it is signed.
@@ -208,7 +228,7 @@ This trick is also used in Spartan, and allows to avoid a full parsing
 of the JSON, while preventing the prover from giving a wrong position
 in the private input.
 
-=== Barrel Shifter
+=== Barrel Shifter <how-opt-barrel>
 
 In a circuit, "array index" isn't a pointer lookup like in normal code —
 the compiler has to turn it into arithmetic constraints.
@@ -241,7 +261,7 @@ Instead of one big variable shift (expensive random access),
 this does log2(max_shift) small conditional shifts by
 fixed powers of two (cheap, since each is a constant-offset copy plus a select).
 
-=== Base64 Encoder
+=== Base64 Encoder <how-opt-base64>
 
 The standard `noir_base64`
 encoder uses a 192-cell alphabet lookup table per output character, which
@@ -255,18 +275,59 @@ op.
 Per 3-byte chunk we pay only the bit decomposition (a few u8 div /
 mod ops) plus four 6-bit -> ASCII conditional selects.
 
-=== Unconstrained Circuits
+=== Brillig Circuits <how-opt-brillig>
 
-`device_pub_x_field` is an untrusted claim from an
-unconstrained base64 decode; it is constrained below by re-encoding
-with `fast_base64` and asserting the result matches
-`device_key_x_bytes` byte-for-byte. Base64url is injective on
-fixed-length byte arrays, so a matching encoding can only come from
-the correct value -- the same soundness as an in-circuit decode,
-without the cost of `noir_base64`'s decoder (which indexes a lookup
-table by a witness; see OPTIMIZE.md).
+Noir allows circuits to use external code whose results is put back
+into the circuit.
+This can improve circuit speed, but needs some special handling, as
+the returned value needs to be checked to be correct.
+A simple example is factorisation: given $c = a * b$, if $c$ is an
+input to the circuit, it is very expensive to calculate $a$ and $b$.
+However, an external circuit can do this calculation fast (depending
+on the size of $c$ of course), and return $a$ and $b$ to the circuit.
+Now the circuit can verify if $c == a * b$ and abort if this is not
+the case.
 
-=== Selective Disclosure Values
+In our circuit, the public key of the device is in the SD-JWT
+credential and stored as base-64.
+While encoding a binary stream into base64 is very fast, decoding produces
+big circuits.
+For this reason, our circuit does the following:
+
+- private input: position of the public key
+- call out to external program: verify the position and return the
+  decoded key as a binary blob
+- retrieve the decoded key, encode it again, and verify that it's
+  the same
+
+While it looks more complicated from an external view, the fact that
+encoding is much cheaper than decoding makes this output a smaller
+circuit.
+
+=== Selective Disclosure Values <how-opt-sd>
+
+In the SD-JWT standard, the signature of the issuer is not done on
+the data itself, but on a hashed version of the salted data.
+This allows a prover to selectively disclose values by providing
+the credential holding the hashes, plus the salt and the data.
+The verifier can then check that the hash is correct, and that the
+issuer's signature on the hashes works out.
+
+#let salt_dob = $"DoBSalt"$
+#let timestamp_dob = $"Date of Birth"$
+
+For our circuit, this is advantageous, as the hashed part of the SD-JWT
+is fixed size, and only the values and salts change.
+The signature of the issuer is only calculated over the fixed size,
+so the circuit also only has to verify the signature over this fixed
+part.
+Our circuit uses the date of birth, which can be entered into the
+circuit as a private input, together with its salt.
+The circuit then calculates $"Sha256"(#salt_dob | #timestamp_dob)$ and
+matches it against the corresponding line in the fixed part of the SD-JWT.
+Given that $"Sha256"$ is a cryptographic hash, it is deemed impossible
+for the prover to cheat and produce another value for the $#timestamp_dob$
+than what the issuer signed.
 
 === Holder Binding (Cl)
 

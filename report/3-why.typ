@@ -68,6 +68,7 @@ more.
 #let credential = $"Credential"$
 #let hash_credential = $"CredHash"$
 #let hash_dob = $"DoBHash"$
+#let salt_dob = $"DoBSalt"$
 #let revocation_list = $"Revocation List"$
 #let timestamp_now = $"Current Date"$
 #let timestamp_dob = $"Date of Birth"$
