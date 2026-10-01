@@ -18,10 +18,9 @@ If you want to use it.
 
 == Proof and verification pipelines
 
-
 - Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
 - Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
-- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set 
+- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set
 - Prover uses `nargo-t256` a build from our forked Noir compiler relying on Tom-256 to map the inputs into individual "witnesses"
 - Prover uses `spartan-backend` to:
   - Read Noir's ACIR and synthesize an R1CS instance from it
