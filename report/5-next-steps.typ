@@ -42,6 +42,12 @@ both causing prohibitive explosion of the circuit size, and therefore proving ti
 We propose an alternative approach in c06 that would add a flat cost to the proof.
 Designing such a ZKP-friendly approach to revocation would be a logical next step for a complete proposal.
 
+== Optimisations we didn't do
+
+- better range-checks with lookup tables
+- multi scalar multiplications
+- optimise Spartan conversion to automatically do barrel-shifter
+
 == Productization follow-ups
 
 While the integration of the proof components was not an obstacle, there are more structural and contextual items to be addressed for production-grade integration.
@@ -53,4 +59,3 @@ Exploring whether existing cloud offering such as Amazon S3 are a viable way to 
 For ecosystem and specification integrations there would be need to design a way to distribute and version circuits in a secure way to
 avoid discrepencies preventing proofs from functioning or downgrade attack when a circuit gets updated for security reasons.
 Specification of ZKPs is active in most standard bodies and how they adapt to the emergence of many proof systems remains to be seen.
-

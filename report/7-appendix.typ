@@ -4,6 +4,9 @@
 
 === WP4b - Unlinkable and anonymous credential signing
 
+// D4.2a - Implementation of the algorithm to provide unlinkable and anonymous credential signing.
+// D4.2b - Stretch goal: unlinkable pseudonyms bound to a service.
+
 Our chosen solution works directly with the SD-JWT format by the EUDI-Wallet and
 Swiyu, which made us investigate how to improve the performance of checks
 using the `noir` framework.
@@ -23,13 +26,27 @@ shows how the issuer signature is proven by the credential holder.
 
 === WP5b - Predicate Proofs - anonymous and unlinkable proofs of credential values
 
+// D5.2a - Algorithm for an anonymous, unlinkable proof of predicates, including the information necessary for the hardware based holder binding.
+// D5.2b - Stretch goal 1: proof bound to single verifier
+// D5.2c - Stretch goal 2: deniable proof
+
 D5.3 - A security proof and an implementation of D5.2.
+
+To prove predicates in standard SD-JWT credentials, used by the EUDI-wallet
+and Swiyu, we use the `noir` framework and a Spartan prover.
+The proof of Spartan can be found in their paper [ref-Spartan-proof].
+
 D5.4 - Example programs for creation and verification of predicates.
+
+Our example circuit in [c0200_swyiu_jwt](https://github.com/eid-privacy/spartan-backend/tree/main/circuits/c0200_swiyu_jwt)
+shows how to create predicate proofs directly on the credential.
 
 === WP6b - Privacy-preserving revocation
 
 -> Based on Spartan
 -> Done by the security review
+
+// D6.2 - A privacy-preserving (non-linkable) algorithm for the holder to prove that their credential has not been revoked.
 
 D6.3 - A mathematical proof for the algorithm in D6.2.
 D6.4 - Proof of concept implementations of the revocations.
