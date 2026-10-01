@@ -170,6 +170,8 @@ This proof can then be verified by any verifier in possession of the same R1CS i
 
 == SICPA Implementation (Cl)
 
+SICPA's platform models users as agents in control of their own keys, which are not hosted within reach of the proving software we want to deploy.\
+
 - learnings from SICPA integration
 - OpenId4VP can be conveniently extended
 - Deploying prover/verifier requires more resources than typical micro-service pods (RAM + CPU)

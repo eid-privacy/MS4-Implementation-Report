@@ -108,6 +108,67 @@ Around July 2026, Microsoft updated and renamed the source code distributed unde
 
 We cascaded this capability to `spartan-backend` by adding a configuration file documenting which inputs of a circuit are expected to change at every circuit instantiation. As an example: the credential for a given holder is always the same, the challenger nonce is not. Our backend uses this to compute the partition of constraints that does not depend on these inputs. This partition represents the portion of the proof that can be pre-computed.
 
+Concretely, the configuration file marks a few input wires as volatile, and the taint
+propagates forward: a constraint is volatile as soon as one of its inputs is.
+@fig-taint-partition illustrates this propagation on a simplified view of the c0200 circuit.
+
+#figure(
+  text(size: 0.9em, diagram(
+    spacing: (6mm, 8mm),
+    node-stroke: 0.6pt,
+    node-corner-radius: 2pt,
+    node-inset: 5pt,
+    edge-stroke: 0.6pt,
+    node-defocus: 0,
+
+    // --- stable inputs, left; volatile input, right ----------------------
+    node((0, 0), align(center)[SD-JWT credential], fill: check-fill, name: <cred>),
+    node((1.4, 0), align(center)[Device key], fill: check-fill, name: <dev>),
+    node((2.9, 0), align(center)[Verifier nonce], fill: data-fill, name: <nonce>),
+
+    // --- untainted sub-tree ---------------------------------------------
+    node((-0.1, 1), align(center)[Issuer signature], fill: check-fill, name: <sig>),
+    node((1.1, 1), align(center)[Claim extraction], fill: check-fill, name: <claims>),
+    edge(<cred>, <sig>, "->"),
+    edge(<cred>, <claims>, "->"),
+    node((0.5, 2), align(center)[Claims commitment], fill: check-fill, name: <commit>),
+    edge(<sig>, <commit>, "->"),
+    edge(<claims>, <commit>, "->"),
+
+    // --- tainted sub-tree -----------------------------------------------
+    node((2.4, 1), align(center)[Holder binding], fill: data-fill, name: <hb>),
+    edge(<nonce>, <hb>, "->"),
+    edge(<dev>, <hb>, "->"),
+    node((2.4, 2), align(center)[ECDSA check], fill: data-fill, name: <ecdsa>),
+    edge(<hb>, <ecdsa>, "->"),
+
+    // --- the root inherits the taint ------------------------------------
+    node((1.45, 3), align(center)[Proof root], fill: data-fill, name: <root>),
+    edge(<commit>, <root>, "->"),
+    edge(<ecdsa>, <root>, "->"),
+
+    // --- the two partitions ---------------------------------------------
+    node(enclose: (<cred>, <sig>, <claims>, <commit>),
+      stroke: (dash: "dashed", paint: gray), fill: none, inset: 8pt, snap: false,
+      name: <pre-box>),
+    node(enclose: (<nonce>, <hb>, <ecdsa>, <root>),
+      stroke: (dash: "dashed", paint: gray), fill: none, inset: 8pt, snap: false,
+      name: <live-box>),
+    node((0.5, 3.1), [pre-computed], stroke: none, fill: none),
+    node((2.9, 3.6), [presentation time], stroke: none, fill: none),
+  )),
+  caption: text(size: 0.9em)[Taint propagation through the constraint graph.
+    Nodes in
+    #box(fill: check-fill, stroke: 0.4pt, inset: 2pt, outset: 1pt, radius: 1pt)[green]
+    depend only on inputs that are stable across presentations and belong to the
+    pre-computable partition; nodes in
+    #box(fill: data-fill, stroke: 0.4pt, inset: 2pt, outset: 1pt, radius: 1pt)[orange]
+    are tainted, i.e. at least one of their parents is tainted, and must be recomputed at
+    every presentation. The device key is stable, but combining it with the nonce taints the
+    holder-binding branch, and the root inherits the taint.],
+) <fig-taint-partition>
+
+
 With this in place we can optionally pre-compute e-ID presentations and at presentation time compute only the part that depends on the verifier's challenge for holder binding. This leads to a noticeable reduction in proving time but depending on the device computing the proof, loading precomputation is costly. For our c0200-swiyu-jwt circuit, precomputation's file size is around 1.5GB. It is to be noted as well that this intermediate proof contains sensitive information of the holder and needs to be stored in accordance.
 
 == Technical Limitations (\*)
