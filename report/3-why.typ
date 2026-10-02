@@ -294,7 +294,48 @@ Given that $"Sha256"$ is a cryptographic hash, it is deemed impossible
 for the prover to cheat and produce another value for the $#timestamp_dob$
 than what the issuer signed.
 
-=== Holder Binding (Cl)
+=== Holder Binding <holder-binding>
+
+We used the proposal from Crescent @FFL25 for holder binding. Making $R$ a public input and computing public points based on the verifier challenge allows for most
+of the holder binding cost to be paid outside of the circuit -- a way more efficient
+computation.
+The verification functions as follows, this is borrowed directly from Crescent's
+section on holder binding (Section 3.4.1, "ECDSA Signature Proof" in @FFL25).
+
+*Definitions.*
+Following Crescent, the curve group is written multiplicatively:
+
+- $G$, the generator of the NIST P--256 group, of order $n$.
+- $d$, the device private key, generated and kept inside the secure element.
+- $Q = G^d$, the device public key. This is what we aim at keeping secret to prevent linkability.
+- $f(dot)$, the function taking a curve point and returning its $x$--coordinate.
+- $M$, the message signed by the device during the presentation, i.e. the fresh
+  challenge chosen by the verifier, already hashed and converted to an integer
+  modulo the group order.
+- $(r, s)$, the ECDSA signature produced by the secure element over $M$, with
+  $r = f(R)$ and $R$ the nonce point sampled for this signature.
+
+*Modified verification equation.*
+The original ECDSA verification equation is
+
+$ r = f(Q^(r slash s) G^(M slash s)) $
+
+Given $(R, s)$ instead of $(r, s)$, where $R = f^(-1)(r)$, the verifier can recompute
+$r = f(R)$ itself and check the equivalent statement $R = Q^(r slash s) G^(M slash s)$,
+which can be re-written as
+
+$ T^s U = Q quad "where" quad T = R^(1 slash r) quad "and" quad U = G^(-M slash r) $
+
+Since $M$ is public and $R$ is a random value that carries no information about the
+private key, the prover can reveal $R$ and the verifier can recompute $(T, U)$ on its
+own. The circuit is then only asked to check $T^s U = Q$ with the additional public
+inputs $(T, U)$ and the private input $s$, which costs a single scalar multiplication
+and a single point addition.
+
+This is what makes the construction a good fit to optimize our proposal. Additionally,
+as in Crescent, we instantiate this proof with Spartan over the Tom--256 curve @tom256parameters,
+whose group order is the P--256 prime, so that all group operations have efficient arithmetic circuits and a
+scalar multiplication takes approximately 2700 R1CS constraints @FFL25.
 
 === Revocation Lists (Li) <why-opt-revocation>
 
