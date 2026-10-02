@@ -127,7 +127,7 @@ This proof system comes from the line of work on Plonk-ish proof systems and rel
 
 Our interest lies in circuits and proofs systems that are efficient to compute for ECDSA verifications of JSON-style data blobs as defined in @SDJWT.
 We used Noir compiler's parametrized architecture to introduced a new compilation-time configuration to change Noir's output circuit (ACIR)
-from using bn254-Grumpking to using the scalar field of the Tom-256 curve @zkattest @tom256parameters.
+from using bn254-Grumpkin to using the scalar field of the Tom-256 curve @zkattest @tom256parameters.
 An important note is that the P256 and Tom-256 curves do NOT form a cycle.
 As such, some of Noir's architecture assumptions break down in local places.
 This curve is especially designed to make computations in the P256 field (such as the ECDSA verification equation) efficient.
