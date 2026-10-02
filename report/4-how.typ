@@ -16,7 +16,6 @@
 
 == Repositories <how-code>
 
-// DRAFT
 We have two main repositories, one for each of the proof systems that we examined: Noir with the default
 UltraHonk/Barretenberg system, and Noir with the Spartan/Vega proof system that we investigated as an
 optimization.
@@ -54,9 +53,31 @@ Finally, we included related work in a separate repository.
 
 == Use in Mobile
 
-#todo[Write]
+If you want to create your own mobile app, the UniFFI bindings in `zkp-android-spartan` provide everything you need. They are used to generate bindings
+for the Kotlin language, which you can then include in your own app as you see fit. The repository contains detailed instructions for both humans and AI
+coding agents to guide you through the process.
 
-If you want to use it.
+#figure(
+
+  diagram(
+    spacing: (6mm, 8mm),
+    node-stroke: 0.6pt,
+    node((0, 0), [*Kotlin app* \ App code (MainActivity.kt: \ Compose UI + benchmarks)]),
+    edge("d", "->", [calls the exported API]),
+    node((0, 1), [*UniFFI* \ Generated Kotlin bindings \ (noir_spartan.kt)]),
+    edge("d", "->"),
+    node((0, 2), [*UniFFI* \ JNA / JNI]),
+    edge("d", "->"),
+    node((0, 3), [*UniFFI* \ Rust FFI surface \ #raw("#[uniffi::export]") functions]),
+    edge("d", "->"),
+    node((0, 4), [*the library we provide* \ Public Rust API (noir_spartan)]),
+    edge("d", "->"),
+    node((0, 5), [*the library we provide* \ Underlying implementation \ (spartan-backend)]),
+    node((1, 5), [Circuit files on disk \ #raw("filesDir/circuits/<circuit>/")]),
+    edge((0, 4), (1, 5), "->", [re-reads files on every call]),
+    edge((0, 4), (0, 1), "-->", [build time: uniffi-bindgen \ generates bindings + FFI surface], bend: -40deg),
+  )
+)
 
 == Proof and verification pipelines
 
