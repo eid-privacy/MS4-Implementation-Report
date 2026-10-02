@@ -4,18 +4,16 @@
 
 == Who can use it?
 
-#todo[Write]
-
-Taking into account the assumptions in ..., here is what you can (not)
+Taking into account the assumptions in @how-assumptions, here is what you can
 do with the code.
-
-== Taxonomy Paper
-
-#todo[Write]
+The main work is to create a spartan-backend for the `noir` compiler,
+and this allows to build on a foundation to improve the performance
+of these circuits.
 
 == Remaining Challenges and follow-ups <remaining-challenges>
 
-#todo[Write]
+There are a couple of improvements which are possible and can lead our
+solution to be used and competitive with others like Longfellow itself.
 
 === Cryptography
 
@@ -49,12 +47,22 @@ Designing such a ZKP-friendly approach to revocation would be a logical next ste
 
 == Optimisations we didn't do
 
-#todo[Write]
-
-To get below $2^21$
-- better range-checks with lookup tables
-- multi scalar multiplications
-- optimise Spartan conversion to automatically do barrel-shifter
+The current Spartan implementation creates a matrix of size $2^N$, where $N$ is
+a natural number.
+For our age-proving circuit, the size of this matrix is $2^22$, but this
+is only because the size got rounded up.
+We are very close to $2^21$, which would improve the performance of the proof
+a lot.
+Here are some tasks we could do to get below that threshold:
+- better range-checks with lookup tables - currently each range-check is
+  individual
+- multi scalar multiplications - the multiplication ladders are very
+  expensive, and as there are at least two places where two scalar multiplications
+  happen in a row, this is an optimisation which might improve the performance
+- optimise Spartan conversion to automatically do barrel-shifter - currently,
+  a software engineer wanting to write a circuit, must be aware of some of the
+  pitfalls when creating a circuit. If Spartan can take care of this optimisation
+  automatically, it will be even easier to create these circuits.
 
 == Productization follow-ups <next-productisation>
 

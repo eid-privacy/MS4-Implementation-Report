@@ -160,7 +160,7 @@ being able to interface with other proof systems ingesting such statements.
 This architecture creates a lot of flexibility in the chain: Noir's ACIR could be synthesized by another piece of software (nothing exists at the time of writing)
 and mathematically speaking, the R1CS instance resulting of the synthesis and instantiation could be ingested by other proving backends reyling on R1CS.
 
-=== Build and proof chain
+=== Build and proof chain <why-spartan-build>
 
 Here are the steps a prover would execute with noir when doing a ZKP
 for example to prove their age is equal or above to 18 years:

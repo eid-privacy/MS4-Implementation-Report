@@ -3,18 +3,32 @@
 
 = If you want to use our code
 
+We hope that our work can be used by other people to test out how
+good ZKPs are currently for use-cases like e-ID.
+This chapter gives some pointers how to use our work and what the
+restrictions are.
+
 == Assumptions / Caveats <how-assumptions>
 
-#todo[Write]
-- issuer is trustworthy
-- issuer is authoritative on the data being signed (it does not sign or use input from an adversarial holder).
-- copy from security report
+It is important to understand what the generic assumptions we make
+with regard to the credentials and usage.
+Here is the list of assumptions we make with regard to the
+setup of the infrastructure with regards to the credentials:
 
-== Code Repositories / Documentation
+- the issuer is trustworthy - specifically, once an issuer signs
+  an SD-JWT, we can suppose that this data structure is correct,
+  and does not need to be verified in the circuit
+- the issuer is authoritative on the data being signed - there is
+  no user input which is taken as-is and put into the SD-JWT - so
+  any attacks where the user can use a free-form field to enter
+  hash values or other parts of a normal SD-JWT are not feasible
+- the verifier and the prover agree on the circuit to be executed,
+  and this circuit is secure and privacy preserving - we don't allow
+  for any random circuit by the verifier, which could reveal more
+  information than the prover is willing to release to the
+  verifier
 
-#todo[Write]
-
-== Repositories <how-code>
+== Code Repositories / Documentation <how-code>
 
 We have two main repositories, one for each of the proof systems that we examined: Noir with the default
 UltraHonk/Barretenberg system, and Noir with the Spartan/Vega proof system that we investigated as an
@@ -50,8 +64,17 @@ Finally, we included related work in a separate repository.
 
 - [zkp-vault](https://github.com/eid-privacy/zkp-vault): Collection of related work
 
-
 == Use in Mobile
+
+To know whether our chosen platform is really usable by today's mobile
+phones, we implemented a proof-of-concept mobile app which simply
+creates a proof, and then verifies it.
+We did not implement the full protocol of interacting with the government
+services like base and trust registry, but simply executed the code
+necessary to create a cryptographic proof.
+Given that this time is much longer than most network communication, we
+suppose that this gives us a good measurement on the feasibility of our
+solution.
 
 If you want to create your own mobile app, the UniFFI bindings in `zkp-android-spartan` provide everything you need. They are used to generate bindings
 for the Kotlin language, which you can then include in your own app as you see fit. The repository contains detailed instructions for both humans and AI
@@ -81,17 +104,10 @@ coding agents to guide you through the process.
 
 == Proof and verification pipelines
 
-- Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
-- Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
-- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set
-- Prover uses `nargo-t256` a build from our forked Noir compiler relying on Tom-256 to map the inputs into individual "witnesses"
-- Prover uses `spartan-backend` to:
-  - Read Noir's ACIR and synthesize an R1CS instance from it
-  - Read Noir's witness mapping and instantiate the R1CS with them
-  - Evaluate the circuit
-  - Compute the Vega proof for this circuit instance
-
-This proof can then be verified by any verifier in possession of the same R1CS instance (i.e., synthesizing the same code with our synthesizer).
+In @why-spartan-build, we describe the overall protocol how a proof
+is created, starting from the verifier, to the prover.
+Once a proof is created, this proof can then be verified by any verifier
+in possession of the same R1CS instance (i.e., synthesizing the same code with our synthesizer).
 
 @fig-proof-pipeline summarizes the pipeline visually.
 
@@ -236,13 +252,6 @@ With this in place we can optionally pre-compute e-ID presentations and at prese
 
 == Technical Limitations
 
-#todo[Write]
-
-- speed depending on model
-- pre-computation storage space
-
-=== Complexity of Circuits
-
 While sigma proofs are faster and often produce smaller messages, we decided
 to use a circuit based proof system to make it easier for
 non-cryptographers to create their own proofs.
@@ -267,11 +276,18 @@ the reason for these big circuits, and proposing solutions.
 But as always, if you cannot judge if the proposed solution is actually
 good, it's difficult to avoid errors.
 
-== Methodology
-
-#todo[Write]
-
-- measurements / platforms
+Another limitation comes with regard to our pre-computation described
+in @how-precomputation:
+while the schema is very interesting, as it allows to pre-compute the part
+of the proof which doesn't change, i.e., the issuer's signature and for
+age verification even the date of birth proof, there is a big downside.
+This pre-computation is in fact the whole matrix calculated so far, which
+for our age verification circuit corresponds to 1.5GB of data.
+Loading this data into memory to continue the computation already takes
+longer than the second part of the proof!
+We did not have the time yet to optimise this storage and loading of 1.5GB
+of data, which makes the improvements of the pre-computation much less
+impressive.
 
 == Security Review <how-security>
 
