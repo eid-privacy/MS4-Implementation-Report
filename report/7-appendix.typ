@@ -117,7 +117,7 @@ Here we go...
 
 G7.1 Open sourced library is available publicly, e.g., on GitHub, with a "popular" OSI approved license
 
-Link to repo
+Available on #link("https://github.com/eid-privacy/spartan-backend")[Github: eid-privacy/spartan-backend]
 
 G7.2 The Digital Trust Platform in WP8 can be extended using the documentation
 
@@ -125,23 +125,34 @@ Yes
 
 G7.3 The necessary operations are fast enough to be executed on a modern mobile device, and the size of the messages is well below 1MB.
 
-Near miss on SD-JWTs, works with flat data
+With flat data, a fixed-sized structure representing a credential, we reached 0.9 second of prover speed.
+
+We reached very good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
+and auditable solution.
+On a M4 Mac we get down to 1.5s of proving time.
+Phone implementation hangs around the 10s mark.
+Follow-ups exist that could bring this further down (see @remaining-challenges) without dismissing the work from this grant.
+Proof size is well below the limit of 1MB: our largest circuit (c0202_sicpa_backend_constant) results in proofs of 202KB.
 
 G7.4 The review shows the security of the library and its recommendations are integrated
 
-Yes
+Yes, report to be made available on the repository soon.
 
 G7.5 SICPA's Digital Trust Platform successfully implements new functionality using the library.
 
-Yes
+Yes, the platform can request and present credentials using the ZKP circuits and proof system implemented in the library.
 
 G8.1 Confirmation of usefulness of use-cases by FOITT and FOJ
 
-Orally...
+A few exchanges confirmed the usefulness of our approach and of the nuances we exposed throughout the work.
+The usecases were informally approved in discussions.
+We believe the usefulness of the "over 18" usecase is not to be demonstrated anymore given the widespread
+media coverage it had and the amount of regulatory politics focusing on it.
 
 G8.2 Demonstrator on Digital Trust Platform is available and performs the needed functions.
 
-Yes
+A demonstrator has been developed but due to the current cost of running a prover pod in our infrastructure,
+the flow of the demonstration will be the object of a recording and voice-over to show how it works.
 
 == All Blog Posts (Ca)
 
