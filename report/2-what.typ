@@ -364,7 +364,67 @@ the course of this project. Among these, the most prominent results are:
    It introduces a folding of circuits yielding very fast proving time.
    In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
    Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
-- OpenAC @ENRT26 - Need to read before making comments
+- OpenAC @ENRT26 is a transparent anonymous-credential design that, like our work, requires no trusted
+  setup and no modification of the issuer's credential-issuance flow.
+  It follows the same prepare-and-prove paradigm as Vega, with a lightweight and reusable offline
+  phase and device binding performed in-circuit.
+  Its proof mechanism is based on sum-check with Hyrax-style vector commitments, which makes it the
+  closest design to ours in terms of trust assumptions.
+  The authors position their work against the other contenders along two axes: user experience and
+  deployment (@tbl-openac-ux), and performance (@tbl-openac-perf).
+
+#figure(
+  table(
+    columns: (auto, auto, auto, auto),
+    table.header([Approach], [Offline phase], [Device binding], [Reusability]),
+
+    [BBS/BBS+], [None], [Optional], [No],
+    [Longfellow], [None], [Included], [No],
+    [Crescent], [Lightweight, reusable prepare], [Optional], [Yes],
+    [zk-creds], [Lightweight, reusable precompute & membership part],
+    [Optional, clone resistance / anti-sharing], [Yes],
+    [Vega], [Lightweight, reusable prepare], [Included], [Yes],
+    [OpenAC], [Lightweight, reusable prepare], [Integrated (in-circuit)], [Yes],
+  ),
+  caption: [Comparison of related approaches with respect to user experience and deployment,
+    reproduced from Table 2 of OpenAC @ENRT26.],
+) <tbl-openac-ux>
+
+#figure(
+  block[
+    #set text(size: 0.85em, hyphenate: false)
+    #table(
+      columns: 9,
+      align: (left, right, right, right, right, right, right, right, center),
+      table.cell(rowspan: 2)[Scheme],
+      table.cell(colspan: 4, align: center)[Latency (ms)],
+      table.cell(colspan: 3, align: center)[Size (kB)],
+      table.cell(rowspan: 2)[Trans.],
+      [Setup], [Precomp.], [Prove], [Verify], [Proof], [pk], [vk],
+
+      [Longfellow], [7~235], [---], [680], [324], [325], [202], [202], [#sym.checkmark],
+      [Crescent], [172~437], [14~725], [237], [118], [16], [710~565], [1], [#sym.times],
+      [Vega#sub[SC]], [3~689], [238], [247], [55], [99], [6~562], [6~561], [#sym.checkmark],
+      [Vega#sub[MC]], [193], [109], [212], [51], [150], [436], [436], [#sym.checkmark],
+      [OpenAC], [4~193], [3~442], [102], [83], [149.7], [433~664], [433~664], [#sym.checkmark],
+    )
+  ],
+  caption: [Performance comparison for a 1920-byte MSO, reproduced from Table 3 of
+    OpenAC @ENRT26, which itself adapts the comparison published in Vega @KS25.
+    The _Trans._ column indicates whether the setup is transparent.
+    The Longfellow, Crescent and Vega figures were measured on an Azure Standard F16as v6 VM
+    (16 vCPUs, 64 GB RAM), while the OpenAC figures were measured on a MacBook Pro M4
+    (14-core GPU, 24 GB RAM), so the numbers are only indicative.],
+) <tbl-openac-perf>
+
+As with every cross-paper comparison, these numbers should be read with care: the measurements
+were not taken on the same hardware, and the setup and pre-computation costs are amortized very
+differently depending on how often a credential is presented.
+What they do show is that the transparent, prepare-and-prove designs (Vega and OpenAC) reach
+online proving times in the order of a hundred milliseconds on desktop hardware, at the cost of
+substantially larger proving and verifying keys.
+
+=== Governance, standardization
 
 There are also talks from standardization body to include this work in standards recognized by the governing bodies in the EU:
 
