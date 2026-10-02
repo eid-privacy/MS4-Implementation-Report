@@ -405,13 +405,61 @@ and the other using the Spartan proof system, now known as Vega.
 
 === Mac
 
-#todo[Carine?]
+On desktop, we evaluated the two implementations on a MacBook Pro from 2023 with an Apple M2 Max CPU and 64 GB of RAM. While
+the zero-knowledge proof is ultimately destined to be integrated into the Swiyu mobile application, the performance measured
+on such a machine gives us an idea of what to expect on a less powerful device.
 
 ==== UltraHonk/Barretenberg
 
-#todo[Carine?]
+UltraHonk, as implemented by Barretenberg, is the default proof system used by Noir. It was therefore an obvious first
+step to evaluate the performance of such circuits. Surprisingly, the overall performance on the MacBook for this
+circuit is not significantly worse than that of the circuit using the Spartan/Vega proof system. However, we notice
+considerable differences in performance on mobile devices between the two circuits, suggesting that the underlying system
+architecture may play a role.
+
+===== Proof generation
+
+#table(
+  columns: 2,
+  [Noir test], [create_proof [s]],
+  [d10_swiyu_jwt], [3.10],
+)
+
+===== Verification
+
+#table(
+  columns: 2,
+  [Noir test], [verify [s]],
+  [d10_swiyu_jwt], [0.01],
+)
 
 ==== Spartan/Vega
+
+===== Proof generation
+
+#table(
+  columns: 4,
+  [], [Average of 5 runs [s]], [Best [s]],
+  [c0200_swiyu_jwt], [3.774], [3.692],
+  [c0200_swiyu_jwt (partially precomputed)], [2.889], [2.833],
+)
+
+Precomputing the partial proof takes on average about 5 seconds and generates a file of about 1.5 GB. This has important
+practical implications, not only for devices with limited storage, but it also means that the finalisation of the proof
+is dominated by the time spent reading the data from the device, about 2 seconds on average, or over a third of the
+total runtime of this step. While overall a significant speedup is achieved (23% on the MacBook), we will see that this
+has a considerable impact on the user experience on the mobile phone.
+
+===== Verification
+
+#todo[needs to be computed for this circuit]
+
+#table(
+  columns: 4,
+  [], [Average of 5 runs [s]], [Best [s]],
+  [c0200_swiyu_jwt], [], [],
+  [c0200_swiyu_jwt (partially precomputed)], [], [],
+)
 
 === Mobile
 
