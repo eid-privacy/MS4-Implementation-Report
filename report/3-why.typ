@@ -18,6 +18,13 @@ This section will expose how we used Noir in conjunction with a proof system tha
 
 == Using noir
 
+After MS2, we decided to pursue the ZKP-circuit venue instead of relying solely
+on sigma proofs.
+Noir is still the most complete and supported app to create ZKPs in a
+user-friendly way.
+It is also very extensible, which allowed us to change the prover backend,
+and improve the speed to create a ZKP.
+
 === Circuit Implementation
 
 The figure @fig-zkp-overview shows an illustration of the different parts
@@ -116,7 +123,13 @@ are the following:
   ]
 )
 
-#todo[- revocation (-> Appendix)]
+The code to write this proof is understandable by a software engineer without
+having to understand the deep cryptographic improvements.
+This is an important step to make ZKPs go from a
+_magical cryptography problem_ to an actual use-case which can be implemented
+and used in everyday's applications.
+One thing we did not include in this code is the _revocation_, which is
+described in @why-opt-revocation.
 
 === Compiler
 
@@ -147,21 +160,16 @@ being able to interface with other proof systems ingesting such statements.
 This architecture creates a lot of flexibility in the chain: Noir's ACIR could be synthesized by another piece of software (nothing exists at the time of writing)
 and mathematically speaking, the R1CS instance resulting of the synthesis and instantiation could be ingested by other proving backends reyling on R1CS.
 
-=== Noir's artifacts and bytecode
-
-#todo[
-- ACIR Json files
-  - Caveat on comparing ACIR number of constraints and R1CS. They are not 1-to-1
-- Input
-]
-
 === Build and proof chain
 
-#todo[Niceify this]
-- Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
-- Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
+Here are the steps a prover would execute with noir when doing a ZKP
+for example to prove their age is equal or above to 18 years:
+
+- Prover receives verification requests for their age, including holder binding nonce
+- Prover populates circuits input by mapping high-level function parameters of the Noir circuit description, using our modified `nargo-t256` tool, a build from our forked Noir compiler relying on Tom-256
 - A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set
-- Prover uses `nargo-t256` a build from our forked Noir compiler relying on Tom-256 to map the inputs into individual "witnesses"
+  this is necessary because to prove an ECDSA signature in Spartan, the inputs have to be modified
+- Prover uses `nargo-t256 execute` to map the inputs into individual "witnesses"
 - Prover uses `spartan-backend` to:
   - Read Noir's ACIR and synthesize an R1CS instance from it
   - Read Noir's witness mapping and instantiate the R1CS with them

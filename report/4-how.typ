@@ -10,12 +10,11 @@
 - issuer is authoritative on the data being signed (it does not sign or use input from an adversarial holder).
 - copy from security report
 
-<<<<<<< Updated upstream
 == Code Repositories / Documentation
 
 #todo[Write]
-=======
-== Repositories (Ca)
+
+== Repositories <how-code>
 
 // DRAFT
 We have two main repositories, one for each of the proof systems that we examined: Noir with the default
@@ -51,7 +50,6 @@ Finally, we included related work in a separate repository.
 === Related work
 
 - [zkp-vault](https://github.com/eid-privacy/zkp-vault): Collection of related work
->>>>>>> Stashed changes
 
 
 == Use in Mobile

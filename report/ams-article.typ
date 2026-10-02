@@ -145,6 +145,8 @@
   )
 
   // Configure headings.
+  // The vertical spacing mimics LaTeX's \section, \subsection and
+  // \subsubsection (3.5ex/2.3ex, 3.25ex/1.5ex, 3.25ex/1.5ex).
   set heading(numbering: "1.")
   show heading: it => {
     // Create the heading numbering.
@@ -153,31 +155,38 @@
       h(7pt, weak: true)
     }
 
-    // Level 1 headings are centered and smallcaps.
-    // The other ones are run-in.
+    // Space above and below each heading level.
+    let (above, below) = (
+      (2.4em, 1.3em),
+      (1.9em, 0.9em),
+      (1.6em, 0.8em),
+    ).at(it.level - 1, default: (1.3em, 0.7em))
+
+    // Level 1 headings are centered and smallcaps,
+    // level 2 bold and the other ones italic.
     set text(size: normal-size, weight: 400)
     set par(first-line-indent: 0em)
     if it.level == 1 {
       context if counter(heading).get().first() > 1 {
         colbreak(weak: true)
       }
-      set align(center)
-      set text(size: normal-size)
-      smallcaps[
-        #v(15pt, weak: true)
-        #number
-        #it.body
-        #v(normal-size, weak: true)
-      ]
       counter(figure.where(kind: "theorem")).update(0)
-    } else {
-      v(11pt, weak: true)
-      number
-      let styled = if it.level == 2 { strong } else { emph }
-      styled(it.body)
-      h(7pt, weak: true)
     }
+    block(above: above, below: below, sticky: true, width: 100%, {
+      if it.level == 1 {
+        set align(center)
+        smallcaps[#number#it.body]
+      } else {
+        let styled = if it.level == 2 { strong } else { emph }
+        number
+        styled(it.body)
+      }
+    })
   }
+
+  // Leave some space around lists, like LaTeX's \topsep.
+  show list: set block(above: 0.9em, below: 0.9em)
+  show enum: set block(above: 0.9em, below: 0.9em)
 
   // Configure lists and links.
   set list(indent: 24pt, body-indent: 5pt)

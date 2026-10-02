@@ -12,10 +12,10 @@ during the first part of this project [ref].
 After the first half of the project, we concluded the following:
 
 - Standardisation is very important for governments, so it will be
-very difficult to get adoption for a new format [ref]
+  very difficult to get adoption for a new format [ref]
 - ZKPs made a lot of progress, and the circuit-based ZKPs are much
-easier to reason about and are catching up with respect to performance
-to other types of ZKPs [ref]
+  easier to reason about and are catching up with respect to performance
+  to other types of ZKPs [ref]
 
 This made us adjust the direction for the second half of the project:
 instead of creating a new type of ZKP based on a new credential format,
@@ -186,7 +186,7 @@ or a special sigma-proof.
 This section is an exploration of possible use-cases with ZKPs
 on standard SD-JWT credentials.
 During this project, we only implemented the age verification and the
-non-revocation (see @why-opt-revocation) as circuits (see @what-code),
+non-revocation (see @why-opt-revocation) as circuits (see @how-code),
 and SICPA integrated the age verification in its cloud wallet
 (see @what-sicpa).
 The other examples are not implemented, but they all rely on the same
