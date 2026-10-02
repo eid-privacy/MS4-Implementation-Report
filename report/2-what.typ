@@ -181,7 +181,7 @@ The latest benchmarks we found shows that a signature verification using
 OpenVM is only 10x slower than the same verification with `noir`
 or a special sigma-proof.
 
-== Use case examples (L)
+== Use case examples (L) <what-use-cases>
 
 - different kind of credentials:
   - state e-ID credential (root of trust, name, dob, picture)

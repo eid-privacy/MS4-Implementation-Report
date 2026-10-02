@@ -207,4 +207,29 @@ good, it's difficult to avoid errors.
 
 - measurements / platforms
 
-== Security Review (Cl / Li)
+== Security Review (Cl / Li) <how-security>
+
+On the 24th of August, [zkSecurity](https://zksecurity.xyz) started
+the security review of our proof-of-concept code.
+We wrote the requirement for the review to include:
+
+- our inclusion of the Spartan prover as a backend for noir
+- the circuits we wrote for the proof-of-concept
+  - for the Swiyu SD-JWT credential
+  - for the SICPA case
+- our proposal for the revocation list, including the circuit
+
+After the allotted time, zkSecurity came back to us with the
+report of their findings [ref?]:
+
+- 8 high security findings which can allow a prover to cheat
+  - 7 got fixed in the latest release of `spartan-backend`
+  - 1 was deemed a misunderstanding of the scope
+- 4 medium security findings which can produce incorrect results
+  - 2 got fixed
+  - 2 were not relevant for our work
+- 2 low security findings
+  - only relevant in a different attacker model than ours
+- 4 informational findings for further work
+  - 1 got fixed
+  - 3 are not relevant to our work here

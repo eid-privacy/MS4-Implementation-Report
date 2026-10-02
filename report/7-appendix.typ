@@ -48,7 +48,7 @@ own. The circuit is then only asked to check $T^s U = Q$ with the additional pub
 inputs $(T, U)$ and the private input $s$, which costs a single scalar multiplication
 and a single point addition.
 
-This is what makes the construction a good fit to optimize our proposal. Additionally, 
+This is what makes the construction a good fit to optimize our proposal. Additionally,
 as in Crescent, we instantiate this proof with Spartan over the Tom--256 curve @tom256parameters,
 whose group order is the P--256 prime, so that all group operations have efficient arithmetic circuits and a
 scalar multiplication takes approximately 2700 R1CS constraints @FFL25.
@@ -190,6 +190,15 @@ A few exchanges confirmed the usefulness of our approach and of the nuances we e
 The usecases were informally approved in discussions.
 We believe the usefulness of the "over 18" usecase is not to be demonstrated anymore given the widespread
 media coverage it had and the amount of regulatory politics focusing on it.
+
+The other use-cases described in @what-use-cases are not yet
+possible, as the Swiyu platform has not been opened to the
+public yet.
+Also, currently only the governmental e-ID credential is
+available, plus the driving license credential.
+But so far no commune or high-school started emitting
+credentials, for example for a proof of residency, diplomas,
+work permits, or other information.
 
 G8.2 Demonstrator on Digital Trust Platform is available and performs the needed functions.
 
