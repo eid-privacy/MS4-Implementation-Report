@@ -70,20 +70,44 @@ G3.3 An external entity verifies that the proof for the unlinkable proof of devi
 === WP7 - Final hardened implementation of our choices (Cl)
 
 D7.1 - Build the library
+
+Available on #link("https://github.com/eid-privacy/spartan-backend")[Github: eid-privacy/spartan-backend]
+
 D7.2 - Documentation is available and allows usage of the library.
+
+Available in D7.1 repository. Guidance is given in this report as well.
+
 D7.3 - Speed / bandwidth considerations.
+
+We reached very good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
+and auditable solution.
+On a M4 Mac we get down to 1.5s of proving time.
+Phone implementation hangs around the 10s mark.
+Follow-ups exist that could bring this further down (see @remaining-challenges) without dismissing the work from this grant.
+Proof size is well below the limit of 1MB: our largest circuit (c0202_sicpa_backend_constant) results in proofs of 202KB.
+
 D7.4 - An external security review of the final implementation of the algorithms is performed
 
--> Done by the security review
+We mandated #link("https://zksecurity.xyz/")[ZkSecurity], a company specialized in ZKP implementations, to conduct the security audit of the
+backend, circuit, and noir blackbox implementation.
+The critical findings impacting the soundness of our implementation have been addressed.
+The report will be made available shortly on the library's repository.
 
 D7.5 - Feedback from SICPA's Digital Trust Platform is integrated back into our library.
 
-
+The library architecture and most of the synthesis was engineered by a member of SICPA's team, ensuring a good fit for integration
+in a digital identity product.
+It is likely that further quality improvements will be contributed to the library as integration progresses further.
 
 === WP8 - Use the library in SICPA's Digital Trust Platform (Cl)
 
 D8.1 - Choice of two use-cases to be implemented in SICPAs software.
+
+SICPA implemented an "over 18" use case and is planning to implement a set membership one.
+
 D8.2 - Implementation of use-cases using the library from WP7.
+
+The "over 18" use-case is implemented using the library and its c0202 circuit.
 
 == MS4 Goals
 
