@@ -250,7 +250,7 @@
   // }))
 
   // Configure paragraph properties.
-  set par(spacing: 0.58em, first-line-indent: 1.2em, justify: true, leading: 0.58em)
+  set par(spacing: 0.85em, first-line-indent: 1.2em, justify: true, leading: 0.58em)
 
   // Display the abstract
   if abstract != none {
