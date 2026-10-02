@@ -51,4 +51,5 @@
   }
 })
 
-#include "7-appendix.typ"
+#include "7-appendix-a.typ"
+#include "8-appendix-b.typ"

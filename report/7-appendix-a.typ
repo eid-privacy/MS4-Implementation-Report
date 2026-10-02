@@ -1,8 +1,8 @@
 #import "common.typ": *
 
-= Appendix
+= Appendix A - Work Packages and Mile Stones <app-wp-ms>
 
-=== WP4b - Unlinkable and anonymous credential signing
+== WP4b - Unlinkable and anonymous credential signing
 
 // D4.2a - Implementation of the algorithm to provide unlinkable and anonymous credential signing.
 // D4.2b - Stretch goal: unlinkable pseudonyms bound to a service.
@@ -20,7 +20,7 @@ D4.4 - Example programs showing how a credential is issued to a holder, and how 
 Our example circuit in [c0200_swyiu_jwt](https://github.com/eid-privacy/spartan-backend/tree/main/circuits/c0200_swiyu_jwt)
 shows how the issuer signature is proven by the credential holder.
 
-=== WP5b - Predicate Proofs - anonymous and unlinkable proofs of credential values
+== WP5b - Predicate Proofs - anonymous and unlinkable proofs of credential values
 
 // D5.2a - Algorithm for an anonymous, unlinkable proof of predicates, including the information necessary for the hardware based holder binding.
 // D5.2b - Stretch goal 1: proof bound to single verifier
@@ -37,7 +37,7 @@ D5.4 - Example programs for creation and verification of predicates.
 Our example circuit in [c0200_swyiu_jwt](https://github.com/eid-privacy/spartan-backend/tree/main/circuits/c0200_swiyu_jwt)
 shows how to create predicate proofs directly on the credential.
 
-=== WP6b - Privacy-preserving revocation
+== WP6b - Privacy-preserving revocation
 
 D6.3 - A mathematical proof for the algorithm in D6.2.
 
@@ -71,7 +71,7 @@ G3.3 An external entity verifies that the proof for the unlinkable proof of devi
 
 -> Done by the security review
 
-=== WP7 - Final hardened implementation of our choices
+== WP7 - Final hardened implementation of our choices
 
 D7.1 - Build the library
 
@@ -103,7 +103,7 @@ The library architecture and most of the synthesis was engineered by a member of
 in a digital identity product.
 It is likely that further quality improvements will be contributed to the library as integration progresses further.
 
-=== WP8 - Use the library in SICPA's Digital Trust Platform
+== WP8 - Use the library in SICPA's Digital Trust Platform
 
 D8.1 - Choice of two use-cases to be implemented in SICPAs software.
 
