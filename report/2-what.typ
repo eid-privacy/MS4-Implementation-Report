@@ -518,35 +518,6 @@ Furthermore, we also observed that the total proof generation time is dominated 
 very approach used to achieve this improvement diminishes its benefit. Combined with the large size, this makes this particular
 optimization rather impractical for user devices; however, it is a good indicator of the direction future optimizations may take.
 
-== Code Repositories <what-code>
-
-=== Main Work
-
-- [spartan-backend](https://github.com/eid-privacy/spartan-backend) - using
-  Spartan as a proving backend for noir
-- [zkp-pocs](https://github.com/eid-privacy/zkp-pocs) - a collection of circuits
-  created during the grant
-
-=== Discussions
-
-- [zkp-vault](https://github.com/eid-privacy/zkp-vault) - most of the research
-  papers we read
-- [eid-privacy](https://github.com/eid-privacy/eid-privacy.github.io) - blog
-  of our work
-
-=== Benchmarks
-
-- [zkp-android](https://github.com/eid-privacy/zkp-android) - mobile test app
-  for benchmark measurements
-- [zkp-android-spartan](https://github.com/eid-privacy/zkp-android) - mobile test app
-  for benchmark measurements using the spartan backend
-
-=== Utilities
-
-- [flakes](https://github.com/eid-privacy/flakes) - pre-compiled packages for
-  nix and devbox
-
-
 == Related Works and concurrent events
 
 During the period this project spanned, a number of high-profile publications, as well as key governance decisions have happended.
