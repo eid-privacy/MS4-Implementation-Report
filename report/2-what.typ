@@ -412,10 +412,7 @@ on such a machine gives us an idea of what to expect on a less powerful device.
 ==== UltraHonk/Barretenberg
 
 UltraHonk, as implemented by Barretenberg, is the default proof system used by Noir. It was therefore an obvious first
-step to evaluate the performance of such circuits. Surprisingly, the overall performance on the MacBook for this
-circuit is not significantly worse than that of the circuit using the Spartan/Vega proof system. However, we notice
-considerable differences in performance on mobile devices between the two circuits, suggesting that the underlying system
-architecture may play a role.
+step to evaluate the performance of such circuits.
 
 #table(
   columns: 2,
@@ -423,7 +420,15 @@ architecture may play a role.
   [d10_swiyu_jwt], [3.10],
 )
 
+Surprisingly, the overall performance on the MacBook for this
+circuit is not significantly worse than that of the circuit using the Spartan/Vega proof system. However, we notice
+considerable differences in performance on mobile devices between the two circuits, suggesting that the underlying system
+architecture may play a role.
+
 ==== Spartan/Vega
+
+For the Spartan and Vega proof systems, we evaluated the `c0200_swiyu_jwt` circuit from our `spartan-backend` Rust module at
+commit 4229482.
 
 #table(
   columns: 4,
@@ -451,13 +456,11 @@ Swiss e-ID.
 For both the UltraHonk/Barretenberg and Spartan/Vega implementations, we used a Samsung Galaxy A54 running Android 16 ("Baklava")
 with 8 GB of RAM and an octa-core CPU @galaxy-a54.
 
-#todo[add the commit hashes]
-
 ==== UltraHonk/Barretenberg
 
-We evaluated the circuit `d10_swiyu_jwt` from the `zkp-pocs` library @EIDBlogMobile. In addition to the proofs of concept, this
-library contains a variety of example circuits, one of which is `d10_swiyu_jwt`, a full Swiyu SD-JWT age proof with issuer and
-holder binding, but excluding the non-revocation proof.
+We evaluated the circuit `d10_swiyu_jwt` from the `zkp-pocs` library (commit d58bc79) @EIDBlogMobile. In addition to the proofs
+of concept, this library contains a variety of example circuits, one of which is `d10_swiyu_jwt`, a full Swiyu SD-JWT age proof
+with issuer and holder binding, but excluding the non-revocation proof.
 
 #table(
   columns: 4,
@@ -471,10 +474,10 @@ endeavour from a theoretical undertaking to a practically applicable result.
 
 ==== Spartan/Vega
 
-We evaluated the circuits `c0200_swiyu_jwt` from the `spartan-backend` Rust module. Drawing on our previous experience with the
-UltraHonk/Barretenberg-based Noir mobile application, we decided that five runs are sufficient to obtain a clear picture
-of the average performance. Since the runtime lies in the range of several seconds, it can be assumed that is dominated by the
-proof-generation computation itself rather than by brief load spikes caused by other processes.
+We evaluated the circuit `c0200_swiyu_jwt` from the `spartan-backend` Rust module (commit 4229482). Drawing on our previous
+experience with the UltraHonk/Barretenberg-based Noir mobile application, we decided that five runs are sufficient to obtain a
+clear picture of the average performance. Since the runtime lies in the range of several seconds, it can be assumed that is
+dominated by the proof-generation computation itself rather than by brief load spikes caused by other processes.
 
 #table(
   columns: 4,
