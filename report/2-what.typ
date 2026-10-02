@@ -285,36 +285,79 @@ as for "normal" proof requests.
 
 == Benchmarks (Ca)
 
+For this report, we benchmarked the performance of two implementations of a Swiyu SD-JWT age proof, including issuer and
+holder binding but excluding non-revocation.
+
+Both implementations are written in Noir: one using the default proof system UltraHonk as implemented in Barretenberg,
+and the other using the Spartan proof system, now known as Vega.
+
 === Mac
 
 // TODO
 
-=== Mobile
-
-While at first glance it is the next logical step to also measure the performance of our circuits on a mobile phone,
-it is in reality a major milestone in our efforts to add zero-knowledge proofs to the Swiss e-ID ecosystem.
-
-The existing privacy-preserving digital credentials, Crescent and Longfellow rely on specialised credentials to achieve
-their impressive speed of < 1s proof verification time. We, on the other hand, are able to use the standard SD-DWT
-through a Noir circuit, a major prerequisite for integrating zero-knowledge proogs into the Swiss e-ID.
-
-For both the Barretenberg and Spartan/Vega backends, we used a Samsung Galaxy A54 with the Android 16 ("Baklava") operating
-system, 8 GB of RAM and an Octa-core CPU [reference to GSMArena].
-
-==== Barretenberg
-
-==== Spartan/Vega
-
-We evaluated the circuits `c0200_swiyu_jwt` and `c0202_sicpa_backend_constant` from the `spartan-backend` Rust module. Based on
-our previous experiences with the Noir mobile application based on the Barretenberg backend, we decided that 5 runs are sufficient
-to get a clear idea of the average performance, as the runtime is measured in the order of magnitude of seconds which is dominated
-by the computation time of the proof generation itself and not by short, intermediary spikes of load coming from other processes.
+==== UltraHonk/Barretenberg
 
 // DRAFT
 
-insert table here
 
-add interpretation
+==== Spartan/Vega
+
+=== Mobile
+
+While measuring the performance of our circuits on a mobile phone might at first glance seem like the next logical
+step, it is in reality a major milestone in our efforts to add zero-knowledge proofs to the Swiss e-ID ecosystem.
+
+The existing privacy-preserving digital credentials, Crescent and Longfellow, rely on specialised credential formats
+to achieve their impressive proof verification times of under one second. We, on the other hand, are able to use the
+standard SD-DWT through a Noir circuit, which is a major prerequisite for integrating zero-knowledge proofs into the
+Swiss e-ID.
+
+For both the UltraHonk/Barretenberg and Spartan/Vega implementations, we used a Samsung Galaxy A54 running Android 16 ("Baklava")
+with 8 GB of RAM and an octa-core CPU @galaxy-a54.
+
+// TODO add the commit hashes
+
+==== UltraHonk/Barretenberg
+
+We evaluated the circuit `d10_swiyu_jwt` from the `zkp-pocs` library @EIDBlogMobile. In addition to the proofs of concept, this
+library contains a variety of example circuits, one of which is `d10_swiyu_jwt`, a full Swiyu SD-JWT age proof with issuer and
+holder binding, but excluding the non-revocation proof.
+
+#table(
+  columns: 4,
+  [], [Average of 100 runs [s]], [Best [s]], [Worst [s]],
+  [d10_swiyu_jwt], [18.419], [16.154], [21.013],
+)
+
+With an average runtime of 18.5 seconds, the verifiable SD-JWT credential clearly leaves much to be desired in terms of user
+experience. However, successfully generating an SD-JWT credential proof on a mobile device marked a major step in moving our
+endeavour from a theoretical undertaking to a practically applicable result.
+
+==== Spartan/Vega
+
+We evaluated the circuits `c0200_swiyu_jwt` from the `spartan-backend` Rust module. Drawing on our previous experience with the
+UltraHonk/Barretenberg-based Noir mobile application, we decided that five runs are sufficient to obtain a clear picture
+of the average performance. Since the runtime lies in the range of several seconds, it can be assumed that is dominated by the
+proof-generation computation itself rather than by brief load spikes caused by other processes.
+
+===== Proof generation
+
+#table(
+  columns: 4,
+  [], [Average of 5 runs [s]], [Best [s]], [Worst [s]],
+  [c0200_swiyu_jwt], [11.793], [11.777], [11.813],
+  [c0200_swiyu_jwt (partially precomputed)], [9.468], [9.329], [9.905],
+)
+
+As can be seen, precomputation reduces the average proof generation time during presentation by 2.446 seconds, or just below 20%,
+which is a considerable speed-up. While this is impressive, it comes at a cost: the precomputed circuit takes up about 1.5 GB,
+which is a considerable amount of space on consumer-grade mobile devices. Its initial precomputation takes up a little over 18
+seconds, which is however not a problem, as it only has to be executed once during initial setup.
+
+Furthermore, we also observed that the total proof generation time is dominated by the time spent reading from disk
+(around 6 seconds). While this means that the proof generation itself is actually well over 20% faster, it also means that the
+very approach used to achieve this improvement diminishes its benefit. Combined with the large size, this makes this particular
+optimization rather impractical for user devices; however, it is a good indicator of the direction future optimizations may take.
 
 == Code Repositories (L) <what-code>
 
