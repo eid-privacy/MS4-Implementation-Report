@@ -155,7 +155,7 @@ The "over 18" use-case is implemented using the library and its c0202 circuit.
 
 G0.3 The final report is available
 
-Here we go...
+Yes - This is the final report.
 
 G7.1 Open sourced library is available publicly, e.g., on GitHub, with a "popular" OSI approved license
 

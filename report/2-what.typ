@@ -183,17 +183,129 @@ or a special sigma-proof.
 
 == Use case examples (L) <what-use-cases>
 
-- different kind of credentials:
-  - state e-ID credential (root of trust, name, dob, picture)
-  - governmental services (drivers license, electronic health dossier, IV)
-  - commune and cantonal credentials (address)
-  - employer (job title, salary)
-  - commercial (abonnements, entries)
-- age verification (duh)
-- drivers license verification
-- rights for reduction (PLZ verification, salary verification)
+This section is an exploration of possible use-cases with ZKPs
+on standard SD-JWT credentials.
+During this project, we only implemented the age verification and the
+non-revocation (see @why-opt-revocation) as circuits (see @what-code),
+and SICPA integrated the age verification in its cloud wallet
+(see @what-sicpa).
+The other examples are not implemented, but they all rely on the same
+building blocks: parsing the SD-JWT, verifying the signature of the
+issuer, checking the holder binding, and the non-revocation.
+Only the statement on the disclosed values changes from one use case
+to the other.
+One missing building block which is not yet clear is how to link several
+credentials together:
+If you have a credential from your commune, it needs to be tied to your
+governmental e-ID.
+Will this be done using the full name and the birthdate?
+Or using the AHV number?
+This is not yet clear in the current implementations, and future use
+cases will show how this is done.
 
-== SICPA Integration (Cl)
+The Swiyu project itself lists the following uses which are expected from the
+introduction of the e-ID onwards @SwiyuCh:
+
+- Proof of age
+- Open a bank account
+- Obtain electronic signatures
+- Register in the organ and tissue donation register
+- Subscribe to a mobile plan
+- Use the nationwide government login
+- Order an extract from the criminal record
+- Found a company
+
+Possible future uses are ordering a debt collection register extract,
+and electronically signing popular initiatives and referendums.
+
+Many of these uses, like opening a bank account or subscribing to a
+mobile plan, require by law a full identification of the holder, so
+a ZKP does not bring much there.
+But the proof of age is the first one in the list, and the
+extracts from the criminal record and the debt collection register
+will become credentials themselves.
+These credentials are then shown to third parties, e.g., a future
+employer or a landlord, and a ZKP allows to show only what the
+third party needs to know.
+The table @tbl-use-cases lists the types of statements we identified,
+starting with the most probable ones.
+It is to be noted that this supposes that the user has the needed
+additional credentials, because the governmental e-ID does not contain
+most of the information described in this table.
+
+#figure(
+  table(
+    columns: (auto, 1fr),
+    align: left,
+    table.header([Statement type], [Examples]),
+
+    [Threshold on a date],
+    [Over 18 or over 16 for buying alcohol or accessing online platforms,
+      e.g., to comply with the Swiss youth protection law for films and
+      video games.
+      Under 26 for youth tariffs, over 65 for senior reductions.
+      Driving license held for more than 2 years for renting a car.
+      Credential is not expired, without revealing the expiry date.],
+
+    [Empty or negative statements],
+    [The criminal record extract has no entries, e.g., for a job
+      application.
+      The debt collection register extract has no entries, e.g., for
+      renting an apartment.
+      The credential is not on the revocation list.],
+
+    [Pseudonyms and uniqueness],
+    [One signature per person and per popular initiative or referendum:
+      the circuit proves the Swiss nationality, the age over 18 and the
+      residence in the commune, and outputs a pseudonym derived from
+      the credential and the initiative.
+      The same pseudonym can be used for one account per person on a
+      platform, or for anonymous polls.],
+
+    [Set membership],
+    [The postal code belongs to a commune, e.g., for resident
+      discounts at the swimming pool or for a parking permit.
+      The nationality is in the EU/EFTA.
+      The residence permit is a B or C permit, without revealing the
+      nationality.
+      The driving license includes category B.],
+
+    [Threshold on a number],
+    [The taxable income is below a limit, e.g., for health insurance
+      premium reductions, the KulturLegi, or daycare tariffs.
+      The salary is above a given amount, e.g., for renting an
+      apartment.
+      These examples are speculative, as there are no plans for tax or
+      employer credentials yet.],
+  ),
+  caption: [Types of statements which could be proven with a ZKP on
+    SD-JWT credentials, starting with the most probable ones.],
+) <tbl-use-cases>
+
+The examples in @tbl-use-cases involve credentials from many different
+issuers: the federal e-ID as root of trust, other federal services like
+the criminal record and the driving license, the cantons and communes
+for the address and the debt collection register, schools and
+universities, health insurances and employers.
+
+This is where the ZKP circuits show their strength compared to
+sigma proofs.
+With sigma proofs, every row of @tbl-use-cases needs a different
+protocol: range proofs for the thresholds, accumulators or
+OR-proofs for the set membership, verifiable random functions for the
+pseudonyms, and equality proofs for linking credentials.
+Combining these protocols in a secure and efficient way needs
+specialised cryptographic knowledge, and every new issuer would have
+to adopt a new credential format.
+With Noir, every row is a small function on top of the common
+building blocks, which an IT professional can write and an auditor
+can review.
+The pseudonym for popular initiatives, for example, is a hash
+of a secret from the credential and the identifier of the
+initiative, computed in a few lines of code next to the checks for
+the nationality, the age, and the commune.
+
+== SICPA Integration (Cl) <what-sicpa>
 
 SICPA has its own implementation of standardized formats and protocols for digital identity, including Swiyu-mandated SD-JWT and OpenId4VCi/VP.
 This makes our work on the SD-JWT of the Swiss e-id a very good candidate for integration in that implementation.
