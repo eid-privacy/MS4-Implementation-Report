@@ -458,7 +458,6 @@ has a considerable impact on the user experience on the mobile phone.
   columns: 4,
   [], [Average of 5 runs [s]], [Best [s]],
   [c0200_swiyu_jwt], [], [],
-  [c0200_swiyu_jwt (partially precomputed)], [], [],
 )
 
 === Mobile
