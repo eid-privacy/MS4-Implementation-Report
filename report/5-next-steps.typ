@@ -56,7 +56,7 @@ To get below $2^21$
 - multi scalar multiplications
 - optimise Spartan conversion to automatically do barrel-shifter
 
-== Productization follow-ups
+== Productization follow-ups <next-productisation>
 
 While the integration of the proof components was not an obstacle, there are more structural and contextual items to be addressed for production-grade integration.
 
@@ -67,3 +67,13 @@ Exploring whether existing cloud offering such as Amazon S3 are a viable way to 
 For ecosystem and specification integrations there would be need to design a way to distribute and version circuits in a secure way to
 avoid discrepencies preventing proofs from functioning or downgrade attack when a circuit gets updated for security reasons.
 Specification of ZKPs is active in most standard bodies and how they adapt to the emergence of many proof systems remains to be seen.
+
+// Clement: make sure that the following is all here:
+//
+// - Status of the implementation plan (i.e., the required steps from project end to the realization or market launch of the product/service by the implementation partner/s).
+// - What implementation scenario is being considered (e.g., product/service, market, etc.)?
+// - What are the main milestones and decision-making points for implementation?
+// - How is the necessary know-how transfer ensured? How were the implementation partners been able to strengthen and expand its knowledge, technology and innovation base through cooperation with research partners?
+// - What quantitative economic results can be expected from the implementation (e.g., turnover, profit, market positioning, social value creation)?
+// - Have new risks been identified which could affect the future commercialisation activities?
+// - IPR strategy and measures to ensure commercial exploitation (FTO - Freedom to Operate)

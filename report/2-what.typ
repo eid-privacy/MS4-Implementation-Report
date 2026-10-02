@@ -583,7 +583,3 @@ There are also talks from standardization body to include this work in standards
   - The authors of Longfellow have proposed it as an IETF draft @IETFLongfellow.
   - ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 @ETSIZKP. In our opinion, the standardization of BBS is great but comes at a point in time when the convenience vs cost of rolling out BBS in a way that is compliant with eIDAS 2 is not attractive. Even less so with all the strong circuit-based ZKP contenders.
   - Yubico has also announced interest in piloting with Longfellow in the scope of Europe's Digital Identity project https://www.yubico.com/blog/piloting-europes-future-id-passkeys-securing-digital-wallets/
-
-== New Risks <what-risks>
-
-- Have new risks been identified which could affect the future development activities?

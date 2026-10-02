@@ -146,7 +146,7 @@ This proof can then be verified by any verifier in possession of the same R1CS i
     are intermediate artefacts.],
 ) <fig-proof-pipeline>
 
-== Precomputation
+== Precomputation <how-precomputation>
 
 Around July 2026, Microsoft updated and renamed the source code distributed under the name of `spartan` to align it with the more recent Vega publication @KS25 under the name `vega-prover`. These changes introduced a clearer API to allow for partial instantiation of circuits and thus, pre-computation of partial proofs.
 
