@@ -168,6 +168,179 @@ and mathematically speaking, the R1CS instance resulting of the synthesis and in
 
 This proof can then be verified by any verifier in possession of the same R1CS instance (i.e., synthesizing the same code with our synthesizer).
 
+== Optimisations Performed (Li) <how-opt>
+
+During our work on the noir circuits, we encountered various places where
+a normal implementation using standard programming techniques produced
+very big circuits for the Spartan backend.
+This is due to the way Spartan takes the ACIR code and converts it to
+R1CS, specifically with regard to code which accesses variable-length
+input arrays.
+
+=== Index Passing as Private Input <how-opt-index>
+
+In @how-assumptions we assume that the input JSON is correctly formatted
+by the issuer, before it is signed.
+For this reason we don't do a full JSON syntax check in our circuit, and
+take advantage of this correctly formatted JSON to do the following:
+instead of parsing the JSON and extracting various values, our circuit
+let's the prover give the _position_ of the values to be extracted
+as a private input.
+The verifier can trust this position, even though it ignores it, as the
+circuit makes sure that the JSON field pointed to at the position has
+the required name.
+This trick is also used in Spartan, and allows to avoid a full parsing
+of the JSON, while preventing the prover from giving a wrong position
+in the private input.
+
+=== Barrel Shifter <how-opt-barrel>
+
+In a circuit, "array index" isn't a pointer lookup like in normal code —
+the compiler has to turn it into arithmetic constraints.
+If the index is a compile-time constant, that's free:
+it's just wiring `out[3] = src[1]`, decided at compile time.
+But if the index is a runtime value (a witness, unknown until the prover runs),
+the circuit can't "jump" to that slot.
+It has to build logic that says, for every possible index value, "is this the one? if
+so, copy it" — effectively a scan over all N positions for every single output element.
+
+A standard for-loop uses `src[k - shift]` where `shift` is a runtime input.
+That's a variable index, so for each of the N output bytes, the compiler emits
+an ~N-sized selector over all possible source positions.
+N outputs × N-sized lookup each ≈ O(N²) constraints.
+Our input array is in the thousands of bytes, so N² blows up fast.
+
+A barrel shifter never does a variable-index read.
+It decomposes the shift into its bits (LOG of them, since shift is bounded —
+here at most 128, i.e. 8 bits).
+At each bit-step it shifts by a fixed power of two (1, 2, 4, 8, ...),
+and those are compile-time constants baked into the unrolled loop (step
+doubles each iteration, LOG is a compile-time generic, so the outer loop
+is fully unrolled at compile time).
+Indexing by a constant offset is free.
+The only "runtime" part is a cheap `if bit == 1 { from } else { cur[i] }`
+select per byte per step — O(N) work, done LOG times, so O(N·LOG) total —
+roughly N·8 instead of N².
+
+Instead of one big variable shift (expensive random access),
+this does log2(max_shift) small conditional shifts by
+fixed powers of two (cheap, since each is a constant-offset copy plus a select).
+
+=== Base64 Encoder <how-opt-base64>
+
+The standard `noir_base64`
+encoder uses a 192-cell alphabet lookup table per output character, which
+dominates the cost of circuits that base64-encode kilobyte-scale buffers
+(e.g. c0200's full SD-JWT payload).
+
+Our base64 encoder emits plain integer arithmetic over a
+statically-unrolled loop, so every byte access is a *constant* array
+index and resolves to a direct witness reference rather than a memory
+op.
+Per 3-byte chunk we pay only the bit decomposition (a few u8 div /
+mod ops) plus four 6-bit -> ASCII conditional selects.
+
+=== Brillig Circuits <how-opt-brillig>
+
+Noir allows circuits to use external code whose results is put back
+into the circuit.
+This can improve circuit speed, but needs some special handling, as
+the returned value needs to be checked to be correct.
+A simple example is factorisation: given $c = a * b$, if $c$ is an
+input to the circuit, it is very expensive to calculate $a$ and $b$.
+However, an external circuit can do this calculation fast (depending
+on the size of $c$ of course), and return $a$ and $b$ to the circuit.
+Now the circuit can verify if $c == a * b$ and abort if this is not
+the case.
+
+In our circuit, the public key of the device is in the SD-JWT
+credential and stored as base-64.
+While encoding a binary stream into base64 is very fast, decoding produces
+big circuits.
+For this reason, our circuit does the following:
+
+- private input: position of the public key
+- call out to external program: verify the position and return the
+  decoded key as a binary blob
+- retrieve the decoded key, encode it again, and verify that it's
+  the same
+
+While it looks more complicated from an external view, the fact that
+encoding is much cheaper than decoding makes this output a smaller
+circuit.
+
+=== Selective Disclosure Values <how-opt-sd>
+
+In the SD-JWT standard, the signature of the issuer is not done on
+the data itself, but on a hashed version of the salted data.
+This allows a prover to selectively disclose values by providing
+the credential holding the hashes, plus the salt and the data.
+The verifier can then check that the hash is correct, and that the
+issuer's signature on the hashes works out.
+
+#let salt_dob = $"DoBSalt"$
+#let timestamp_dob = $"Date of Birth"$
+
+For our circuit, this is advantageous, as the hashed part of the SD-JWT
+is fixed size, and only the values and salts change.
+The signature of the issuer is only calculated over the fixed size,
+so the circuit also only has to verify the signature over this fixed
+part.
+Our circuit uses the date of birth, which can be entered into the
+circuit as a private input, together with its salt.
+The circuit then calculates $"Sha256"(#salt_dob | #timestamp_dob)$ and
+matches it against the corresponding line in the fixed part of the SD-JWT.
+Given that $"Sha256"$ is a cryptographic hash, it is deemed impossible
+for the prover to cheat and produce another value for the $#timestamp_dob$
+than what the issuer signed.
+
+=== Holder Binding (Cl)
+
+=== Revocation Lists (Li) <why-opt-revocation>
+
+As described in [ref-MS2-revocation], we decided to not use any
+advanced cryptographic accumulators because of the overhead
+necessary by the clients to keep their witnesses up-to-date.
+Instead we started to use the revocation lists in the Swiyu
+project, but had to abandon their protocol because the list itself
+was compressed, and decompression inflates the circuit size
+too much.
+For this reason we went with a simpler approach, keeping the
+list uncompressed, but signed by the issuer.
+Here is the format of this simplified revocation list:
+
+#table(
+  columns: (auto, auto, auto),
+  table.header([Name], [Size [B]], [Description]),
+
+  [`ID_START`], [8], [The first `CRED_ID` described in this list],
+  [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch where this list expires],
+  [`REV_LIST`], [128], [Bit-field of revoked credentials - 0: non-revoked - 1: revoked],
+  [`SIG`], [64], [ECDSA signature on the first part of this list]
+)
+
+In addition to this list, every credential now needs a unique
+`CRED_ID`, ideally incrementally starting from 0.
+As the credential itself is never revealed, this `CRED_ID`
+does not pose a danger to the anonymity of our system.
+When creating a prove, the client needs to download the
+corresponding revocation list from the server.
+We did not consider the privacy implication of this request,
+but techniques like "Private Information Retrieval" can make
+this retrieval oblivious to the server.
+The circuit needs to perform the following tests so that the
+verifier can be convinced of the non-revocation of this
+credential:
+
+- `ID_START` $<=$ `CRED_ID` $<$ `ID_START` $+$ `1024`
+- `TIMESTAMP_NOW` < `EXPIRES_AT`
+- `REV_LIST[CRED_ID - ID_START] == 0`
+- `ECDSA_VERIFICATION(LIST, SIG, PUB_KEY) == TRUE`
+
+The most expensive operation in this list is the ECDSA
+verification, as it also contains a `SHA256` operation,
+and both are very expensive.
+
 == SICPA Implementation (Cl)
 
 SICPA's platform models users as agents in control of their own keys, which are not hosted within reach of the proving software we want to deploy.
