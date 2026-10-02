@@ -10,11 +10,49 @@
 - issuer is authoritative on the data being signed (it does not sign or use input from an adversarial holder).
 - copy from security report
 
+<<<<<<< Updated upstream
 == Code Repositories / Documentation
 
 #todo[Write]
+=======
+== Repositories (Ca)
 
-How to use which repository for what job.
+// DRAFT
+We have two main repositories, one for each of the proof systems that we examined: Noir with the default
+UltraHonk/Barretenberg system, and Noir with the Spartan/Vega proof system that we investigated as an
+optimization.
+
+Mirroring this, we also provide a test mobile app for each of the proof systems to benchmark the Swiyu SD-JWT
+circuits on a phone.
+
+These four repositories each contain extensive README files with instructions as well as Devbox
+configurations to ease reproducibility. They also contain AGENTS files to guide AI coding agents.
+
+Furthermore, we published blog posts throughout the course of the grant to report on our progress, all of
+which are tracked in a separate repository.
+
+Finally, we included related work in a separate repository.
+
+=== Main work
+
+- [spartan-backend](https://github.com/eid-privacy/spartan-backend): Noir with the Spartan/Vega proof system
+- [zkp-pocs](https://github.com/eid-privacy/zkp-pocs): Collection of circuits (Noir with UltraHonk/Barretenberg)
+- [flakes](https://github.com/eid-privacy/flakes): Utility repository with precompiled packages for Nix and Devbox
+
+=== Benchmarks
+
+- [zkp-android](https://github.com/eid-privacy/zkp-android): Mobile test app for benchmarking Noir with UltraHonk/Barretenberg
+- [zkp-android-spartan](https://github.com/eid-privacy/zkp-android-spartan): Mobile test app for benchmarking Noir with the Spartan/Vega proof system
+
+=== Publications
+
+- [eid-privacy](https://github.com/eid-privacy/eid-privacy.github.io): Our blog posts
+
+=== Related work
+
+- [zkp-vault](https://github.com/eid-privacy/zkp-vault): Collection of related work
+>>>>>>> Stashed changes
+
 
 == Use in Mobile
 
