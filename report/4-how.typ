@@ -1,23 +1,28 @@
 #import "common.typ": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
-= HOW - If you want to use our code
+= If you want to use our code
 
-== Assumptions / Caveats (Cl / Li)<how-assumptions>
+== Assumptions / Caveats <how-assumptions>
 
+#todo[Write]
 - issuer is trustworthy
 - issuer is authoritative on the data being signed (it does not sign or use input from an adversarial holder).
 - copy from security report
 
-== Code Repositories / Documentation (Ca)
+== Code Repositories / Documentation
+
+#todo[Write]
 
 How to use which repository for what job.
 
-== Use in Mobile (Ca)
+== Use in Mobile
+
+#todo[Write]
 
 If you want to use it.
 
-== Proof and verification pipelines (Cl)
+== Proof and verification pipelines
 
 - Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
 - Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
@@ -103,7 +108,7 @@ This proof can then be verified by any verifier in possession of the same R1CS i
     are intermediate artefacts.],
 ) <fig-proof-pipeline>
 
-== Precomputation (Cl)
+== Precomputation
 
 Around July 2026, Microsoft updated and renamed the source code distributed under the name of `spartan` to align it with the more recent Vega publication @KS25 under the name `vega-prover`. These changes introduced a clearer API to allow for partial instantiation of circuits and thus, pre-computation of partial proofs.
 
@@ -172,12 +177,14 @@ propagates forward: a constraint is volatile as soon as one of its inputs is.
 
 With this in place we can optionally pre-compute e-ID presentations and at presentation time compute only the part that depends on the verifier's challenge for holder binding. This leads to a noticeable reduction in proving time but depending on the device computing the proof, loading precomputation is costly. For our c0200-swiyu-jwt circuit, precomputation's file size is around 1.5GB. It is to be noted as well that this intermediate proof contains sensitive information of the holder and needs to be stored in accordance.
 
-== Technical Limitations (\*)
+== Technical Limitations
+
+#todo[Write]
 
 - speed depending on model
 - pre-computation storage space
 
-=== Complexity of Circuits (Li)
+=== Complexity of Circuits
 
 While sigma proofs are faster and often produce smaller messages, we decided
 to use a circuit based proof system to make it easier for
@@ -203,11 +210,13 @@ the reason for these big circuits, and proposing solutions.
 But as always, if you cannot judge if the proposed solution is actually
 good, it's difficult to avoid errors.
 
-== Methodology (Ca / Li)
+== Methodology
+
+#todo[Write]
 
 - measurements / platforms
 
-== Security Review (Cl / Li) <how-security>
+== Security Review <how-security>
 
 On the 24th of August, [zkSecurity](https://zksecurity.xyz) started
 the security review of our proof-of-concept code.

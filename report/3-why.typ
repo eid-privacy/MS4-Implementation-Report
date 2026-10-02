@@ -1,14 +1,13 @@
 #import "common.typ": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
-= WHY - Specific Choices for Implementations
+= Specific Choices for Implementations
 
 We chose Noir to write out circuits for the following reasons:
-#list(
-  [Circuit accessibility to non-expert developers (with caveats)],
-  [Circuit readability for auditing and review purposes],
-  [Modular architecture allowing us to use it decoupled from the original proof system],
-)
+
+- Circuit accessibility to non-expert developers (with caveats)
+- Circuit readability for auditing and review purposes
+- Modular architecture allowing us to use it decoupled from the original proof system
 
 Noir's default proof system is UltraHonk @UltraHONK, a system designed for the typical trade-offs seen in blockchain scenarions.
 The resulting proofs are short, verifying is very fast, and prover time is less of a concern.
@@ -17,9 +16,9 @@ a public use case.
 
 This section will expose how we used Noir in conjunction with a proof system that had more of the properties we are after for the Swiss e-ID.
 
-== Using noir (L / Cl)
+== Using noir
 
-=== Circuit Implementation (L)
+=== Circuit Implementation
 
 The figure @fig-zkp-overview shows an illustration of the different parts
 of a ZKP.
@@ -117,9 +116,9 @@ are the following:
   ]
 )
 
-- revocation (-> Appendix)
+#todo[- revocation (-> Appendix)]
 
-=== Compiler (Cl)
+=== Compiler
 
 Noir is originally written and equipped to perform proofs and verifications on Aztec's blockchain.
 Noir comes with a default proof system and implementation: UltraHonk's implementation in Barretenberg.
@@ -134,7 +133,7 @@ This curve is especially designed to make computations in the P256 field (such a
 Our implementation is limited to elliptic curve addition and multi-scalar-multiplication, foregoing the Poseidon commitment as our circuits don't require this.
 This implementation is only partial since a proper integration would imply a sizeable rework of Noir's architecture as well as of its standard library, both built mostly with bn254 and curve cycles in mind.
 
-== Spartan Backend (Cl) <why-spartan>
+== Spartan Backend <why-spartan>
 
 Producing Noir's ACIR with Tom-256 representing values of the circuits enables us to use work from Srinath Setty on Spartan @S19 (and then Vega @KS25).
 Spartan is attractive for its prover cost as well as capability to work with Tom-256.
@@ -150,12 +149,15 @@ and mathematically speaking, the R1CS instance resulting of the synthesis and in
 
 === Noir's artifacts and bytecode
 
+#todo[
 - ACIR Json files
   - Caveat on comparing ACIR number of constraints and R1CS. They are not 1-to-1
 - Input
+]
 
 === Build and proof chain
 
+#todo[Niceify this]
 - Prover receives verification requests containing public, verifier chosen parameters (including holder binding nonce)
 - Prover populates circuits input by mapping high-level function parameters of the Noir circuit description
 - A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set
@@ -168,7 +170,7 @@ and mathematically speaking, the R1CS instance resulting of the synthesis and in
 
 This proof can then be verified by any verifier in possession of the same R1CS instance (i.e., synthesizing the same code with our synthesizer).
 
-== Optimisations Performed (Li) <how-opt>
+== Optimisations Performed <how-opt>
 
 During our work on the noir circuits, we encountered various places where
 a normal implementation using standard programming techniques produced
@@ -302,7 +304,8 @@ computation.
 The verification functions as follows, this is borrowed directly from Crescent's
 section on holder binding (Section 3.4.1, "ECDSA Signature Proof" in @FFL25).
 
-*Definitions.*
+==== Definitions
+
 Following Crescent, the curve group is written multiplicatively:
 
 - $G$, the generator of the NIST P--256 group, of order $n$.
@@ -315,7 +318,8 @@ Following Crescent, the curve group is written multiplicatively:
 - $(r, s)$, the ECDSA signature produced by the secure element over $M$, with
   $r = f(R)$ and $R$ the nonce point sampled for this signature.
 
-*Modified verification equation.*
+==== Modified verification equation
+
 The original ECDSA verification equation is
 
 $ r = f(Q^(r slash s) G^(M slash s)) $
@@ -337,7 +341,7 @@ as in Crescent, we instantiate this proof with Spartan over the Tom--256 curve @
 whose group order is the P--256 prime, so that all group operations have efficient arithmetic circuits and a
 scalar multiplication takes approximately 2700 R1CS constraints @FFL25.
 
-=== Revocation Lists (Li) <why-opt-revocation>
+=== Revocation Lists <why-opt-revocation>
 
 As described in [ref-MS2-revocation], we decided to not use any
 advanced cryptographic accumulators because of the overhead
@@ -382,7 +386,7 @@ The most expensive operation in this list is the ECDSA
 verification, as it also contains a `SHA256` operation,
 and both are very expensive.
 
-== SICPA Implementation (Cl)
+== SICPA Implementation
 
 SICPA's platform models users as agents in control of their own keys, which are not hosted within reach of the proving software we want to deploy.
 This replicates closely the setup we have on a phone with the key in the Android's secure element.
@@ -401,7 +405,7 @@ A point we analyzed late in the project and would deserve more experimentation i
 on a phone is in the realm of realistic implementations, doing so for a high number of credentials, without risking leaking witness values, and ensuring that loading
 the precomputation does come at a cost that offsets the benefit of precomputation is no trivial matter.
 
-== Mobile (Ca)
+== Mobile
 
 For our zero-knowledge proof system to have an impact in the real world, most notably as part of a future version of Switzerland's Swiyu app, we need to
 demonstrate that it can be executed on a mobile device in realistic time.

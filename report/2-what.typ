@@ -1,7 +1,7 @@
 #import "common.typ": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
-= WHAT - Overview of our Solution (L)
+= Overview of our Solution
 
 When we started the project to work on Zero-Knowledge-Proofs (ZKPs)
 in the context of electronic identities, we looked for new structures
@@ -36,7 +36,7 @@ following important points:
 - On laptop hardware acceptable performance (< 1s for a proof),
 on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 
-== Comparison with Other Solutions (L)
+== Comparison with Other Solutions
 
 As discussed in our first report @MS2-rep, we distinguish the
 following families of ZKPs for our project:
@@ -181,7 +181,7 @@ The latest benchmarks we found shows that a signature verification using
 OpenVM is only 10x slower than the same verification with `noir`
 or a special sigma-proof.
 
-== Use case examples (L) <what-use-cases>
+== Use case examples <what-use-cases>
 
 This section is an exploration of possible use-cases with ZKPs
 on standard SD-JWT credentials.
@@ -305,7 +305,7 @@ of a secret from the credential and the identifier of the
 initiative, computed in a few lines of code next to the checks for
 the nationality, the age, and the commune.
 
-== SICPA Integration (Cl) <what-sicpa>
+== SICPA Integration <what-sicpa>
 
 SICPA has its own implementation of standardized formats and protocols for digital identity, including Swiyu-mandated SD-JWT and OpenId4VCi/VP.
 This makes our work on the SD-JWT of the Swiss e-id a very good candidate for integration in that implementation.
@@ -395,7 +395,7 @@ as for "normal" proof requests.
     platform, but the presentation exchange still crosses the internet.],
 ) <fig-sicpa-architecture>
 
-== Benchmarks (Ca)
+== Benchmarks
 
 For this report, we benchmarked the performance of two implementations of a Swiyu SD-JWT age proof, including issuer and
 holder binding but excluding non-revocation.
@@ -405,12 +405,11 @@ and the other using the Spartan proof system, now known as Vega.
 
 === Mac
 
-// TODO
+#todo[Carine?]
 
 ==== UltraHonk/Barretenberg
 
-// DRAFT
-
+#todo[Carine?]
 
 ==== Spartan/Vega
 
@@ -427,7 +426,7 @@ Swiss e-ID.
 For both the UltraHonk/Barretenberg and Spartan/Vega implementations, we used a Samsung Galaxy A54 running Android 16 ("Baklava")
 with 8 GB of RAM and an octa-core CPU @galaxy-a54.
 
-// TODO add the commit hashes
+#todo[add the commit hashes]
 
 ==== UltraHonk/Barretenberg
 
@@ -471,7 +470,7 @@ Furthermore, we also observed that the total proof generation time is dominated 
 very approach used to achieve this improvement diminishes its benefit. Combined with the large size, this makes this particular
 optimization rather impractical for user devices; however, it is a good indicator of the direction future optimizations may take.
 
-== Code Repositories (L) <what-code>
+== Code Repositories <what-code>
 
 === Main Work
 
@@ -500,7 +499,7 @@ optimization rather impractical for user devices; however, it is a good indicato
   nix and devbox
 
 
-== Related Works and concurrent events (Cl)
+== Related Works and concurrent events
 
 During the period this project spanned, a number of high-profile publications, as well as key governance decisions have happended.
 

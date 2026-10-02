@@ -10,7 +10,6 @@
 Our chosen solution works directly with the SD-JWT format by the EUDI-Wallet and
 Swiyu, which made us investigate how to improve the performance of checks
 using the `noir` framework.
-See <holder-binding>
 
 D4.3 - A mathematical proof for the algorithm in D4.2.
 
@@ -72,7 +71,7 @@ G3.3 An external entity verifies that the proof for the unlinkable proof of devi
 
 -> Done by the security review
 
-=== WP7 - Final hardened implementation of our choices (Cl)
+=== WP7 - Final hardened implementation of our choices
 
 D7.1 - Build the library
 
@@ -104,7 +103,7 @@ The library architecture and most of the synthesis was engineered by a member of
 in a digital identity product.
 It is likely that further quality improvements will be contributed to the library as integration progresses further.
 
-=== WP8 - Use the library in SICPA's Digital Trust Platform (Cl)
+=== WP8 - Use the library in SICPA's Digital Trust Platform
 
 D8.1 - Choice of two use-cases to be implemented in SICPAs software.
 
@@ -168,7 +167,7 @@ G8.2 Demonstrator on Digital Trust Platform is available and performs the needed
 A demonstrator has been developed but due to the current cost of running a prover pod in our infrastructure,
 the flow of the demonstration will be the object of a recording and voice-over to show how it works.
 
-== All Blog Posts (Ca)
+== All Blog Posts
 
 - 2025-05-07 - #link("https://eid-privacy.github.io/wp0/2025/05/07/welcome.html")[Welcome to our technical blog]
 - 2025-05-23 - #link("https://eid-privacy.github.io/wp1/wp2/2025/05/23/swiyu-demo-announcement.html")[Open Source SWIYU Demo application]

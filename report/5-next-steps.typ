@@ -1,15 +1,21 @@
 #import "common.typ": *
 
-= Next Steps (\*)
+= Next Steps
 
 == Who can use it?
+
+#todo[Write]
 
 Taking into account the assumptions in ..., here is what you can (not)
 do with the code.
 
 == Taxonomy Paper
 
+#todo[Write]
+
 == Remaining Challenges and follow-ups <remaining-challenges>
+
+#todo[Write]
 
 === Cryptography
 
@@ -41,7 +47,9 @@ both causing prohibitive explosion of the circuit size, and therefore proving ti
 We propose an alternative approach in c06 that would add a flat cost to the proof.
 Designing such a ZKP-friendly approach to revocation would be a logical next step for a complete proposal.
 
-== Optimisations we didn't do (Li)
+== Optimisations we didn't do
+
+#todo[Write]
 
 To get below $2^21$
 - better range-checks with lookup tables
