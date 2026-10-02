@@ -362,18 +362,19 @@ the precomputation does come at a cost that offsets the benefit of precomputatio
 
 == Mobile (Ca)
 
-For our zero-knowledge proof system to have an impact in the real world - most notably as part of a future version of Switzerland's Swiyu app - we need to
-demonstrate that it can be executed on a mobile device in a realistic time.
+For our zero-knowledge proof system to have an impact in the real world, most notably as part of a future version of Switzerland's Swiyu app, we need to
+demonstrate that it can be executed on a mobile device in realistic time.
 
-The proof generation will need to be executed on the fly each time the holder wants to present their credential. It is therefore critical for user experience
-and widespread adoption that its runtime remains low, i.e. 1 second maximum. As parts of the proof are common across different challenges and individual
-credentials, we implemented an initial optimization by partially precomputing it, so that only the missing parts are computed when the credential is used.
+The proof generation needs to be executed on the fly each time the holder wants to present their credential. It is therefore critical for user experience
+and widespread adoption that its runtime remains low, i.e. a maximum of 1 second. As parts of the proof are common across different challenges and individual
+credentials, we implemented an initial optimization that partially precomputes the proof, so that only the missing parts need to be computed when the
+credential is used.
 
-For the test device, we choose a consumer-grade device of medium age and the Android operating system as it is the most widespread mobile phone operating
-system @android.
+For the test device, we chose a consumer-grade device that is a few years old and running the Android operating system, as it is the most widespread mobile
+operating system @android.
 
-We created two Android apps, one for each of the backends. For the Barretenberg backend, we were able to use the Mopro framework @mopro to make the link
-between the Rust library instantiating and executing the zero-knowledge proofs and the Android platform. For the Spartan/Vega backend, we needed to create
-the foreign-language bindings ourselves using Mozilla's UniFFI tool @mozillaUniFFI.
+We created two Android apps, one for the UltraHonk/Barretenberg and one for the Spartan/Vega proof systems. For the former, we were able to use the Mopro
+framework @mopro to connect the Rust library that instantiates and executes the zero-knowledge proofs with the Android platform. For the latter, we needed
+to create the foreign-language bindings ourselves using Mozilla's UniFFI tool @mozillaUniFFI.
 
-The resulting Android apps allow us to test individual circuits as well as running benchmarks to gain insights into the average expected performance.
+The resulting Android apps allow us to test individual circuits as well as to run benchmarks to gain insights into the expected average performance.
