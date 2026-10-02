@@ -171,13 +171,22 @@ This proof can then be verified by any verifier in possession of the same R1CS i
 
 == SICPA Implementation (Cl)
 
-SICPA's platform models users as agents in control of their own keys, which are not hosted within reach of the proving software we want to deploy.\
+SICPA's platform models users as agents in control of their own keys, which are not hosted within reach of the proving software we want to deploy.
+This replicates closely the setup we have on a phone with the key in the Android's secure element.
 
-- learnings from SICPA integration
-- OpenId4VP can be conveniently extended
-- Deploying prover/verifier requires more resources than typical micro-service pods (RAM + CPU)
-- Precomputation costs a lot of storage and might not be an option for some providers
-- There is need for formalizing the circuit distribution and certification channels for an actual deployment beyond embedding a circuit in the official builds.
+One of the big question we're still trying to work on with this integration is the cost of operating such ZKP infrastructure at a reasonable speed.
+Allocating a full vCPU and 10GB of RAM to the deployment of the ZKP tooling still results in proving and verification speed in the order of 30 seconds
+each.
+Therefore it is clear that a thorough follow-up analysis of the cost/speed trade-offs and types of deployment must be conducted based on each individual
+use-cases.
+The biggest divide being between high-volume-low-margins credential presentations industries and low-volume-high-margins ones.
+Working on the integration with OpenId4VP was not a big hurdle as some of the structures can be conveniently extended with a new proof type but it also
+became clear that a ZKP ecosystem needs a reliable distribution channel for circuits and acceptable public parameters ranges to prevent outdated or malicious circuits
+execution (e.g., a verifier distributing a ZKP circuit that requests oversharing from the prover).
+Such a distribution channel should complement the verifier's registry described in Swiyu @Swiyu.
+A point we analyzed late in the project and would deserve more experimentation is the use of precomputation. While storing a large file of precomputation securely
+on a phone is in the realm of realistic implementations, doing so for a high number of credentials, without risking leaking witness values, and ensuring that loading
+the precomputation does come at a cost that offsets the benefit of precomputation is no trivial matter.
 
 == Mobile (Ca)
 
