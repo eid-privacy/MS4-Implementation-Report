@@ -207,4 +207,16 @@ the flow of the demonstration will be the object of a recording and voice-over t
 
 == All Blog Posts (Ca)
 
-At least the links...
+- 2025-05-07 - #link("https://eid-privacy.github.io/wp0/2025/05/07/welcome.html")[Welcome to our technical blog]
+- 2025-05-23 - #link("https://eid-privacy.github.io/wp1/wp2/2025/05/23/swiyu-demo-announcement.html")[Open Source SWIYU Demo application]
+- 2025-06-10 - #link("https://eid-privacy.github.io/wp1/2025/06/10/taxonomy-101.html")[Taxonomy 101]
+- 2025-09-17 - #link("https://eid-privacy.github.io/wp1/2025/09/17/taxonomy-of-digital-identity-systems.html")[Taxonomy of digital identity systems]
+- 2025-09-17 - #link("https://eid-privacy.github.io/wp2/2025/09/17/privacy-enhancing-resources.html")[Resources on Zero-knowledge Systems and Proofs]
+- 2025-10-20 - #link("https://eid-privacy.github.io/wp4/2025/10/20/overview.html")[Overview of Privacy and Unlinkability]
+- 2025-10-21 - #link("https://eid-privacy.github.io/wp1/2025/10/21/comparing-implemented-zk-systems.html")[Comparing ZK systems]
+- 2025-11-28 - #link("https://eid-privacy.github.io/wp0/2025/11/28/crescent-longfellow-showdown.html")[Crescent and Longfellow]
+- 2026-01-09 - #link("https://eid-privacy.github.io/2026/01/09/poc-report.html")[Proof-of-Concept for ZKPs]
+- 2026-01-27 - #link("https://eid-privacy.github.io/wp2/2026/01/27/docknetwork-crypto-library.html")[Choosing a Cryptographic Library for Anonymous Credentials]
+- 2026-04-22 - #link("https://eid-privacy.github.io/wp2/2026/04/22/zkp-vault.html")[Reading list for ZKP algorithms and implementations]
+- 2026-05-27 - #link("https://eid-privacy.github.io/wp2/2026/05/27/noir-benchmarking.html")[BoundedVec sizes vs. proving time in Noir]
+- 2026-06-19 - #link("https://eid-privacy.github.io/wp2/2026/06/19/noir-benchmarking-mobile.html")[Verifiable SD-JWT Credential on Mobile]

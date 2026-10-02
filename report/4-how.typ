@@ -230,6 +230,8 @@ report of their findings [ref?]:
   - 2 were not relevant for our work
 - 2 low security findings
   - only relevant in a different attacker model than ours
-- 4 informational findings for further work
+- 1 informational finding which got fixed
+- 3 known issues
   - 1 got fixed
-  - 3 are not relevant to our work here
+  - 1 is not in our attacker model
+  - 1 is not yet fixed
