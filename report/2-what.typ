@@ -397,8 +397,8 @@ as for "normal" proof requests.
 
 == Benchmarks
 
-For this report, we benchmarked the performance of two implementations of a Swiyu SD-JWT age proof, including issuer and
-holder binding but excluding non-revocation.
+For this report, we benchmarked the performance of the proof creation step of two implementations of a Swiyu SD-JWT age proof,
+including issuer and holder binding but excluding non-revocation.
 
 Both implementations are written in Noir: one using the default proof system UltraHonk as implemented in Barretenberg,
 and the other using the Spartan proof system, now known as Vega.
@@ -417,25 +417,13 @@ circuit is not significantly worse than that of the circuit using the Spartan/Ve
 considerable differences in performance on mobile devices between the two circuits, suggesting that the underlying system
 architecture may play a role.
 
-===== Proof generation
-
 #table(
   columns: 2,
   [Noir test], [create_proof [s]],
   [d10_swiyu_jwt], [3.10],
 )
 
-===== Verification
-
-#table(
-  columns: 2,
-  [Noir test], [verify [s]],
-  [d10_swiyu_jwt], [0.01],
-)
-
 ==== Spartan/Vega
-
-===== Proof generation
 
 #table(
   columns: 4,
@@ -449,16 +437,6 @@ practical implications, not only for devices with limited storage, but it also m
 is dominated by the time spent reading the data from the device, about 2 seconds on average, or over a third of the
 total runtime of this step. While overall a significant speedup is achieved (23% on the MacBook), we will see that this
 has a considerable impact on the user experience on the mobile phone.
-
-===== Verification
-
-#todo[needs to be computed for this circuit]
-
-#table(
-  columns: 4,
-  [], [Average of 5 runs [s]], [Best [s]],
-  [c0200_swiyu_jwt], [], [],
-)
 
 === Mobile
 
@@ -497,8 +475,6 @@ We evaluated the circuits `c0200_swiyu_jwt` from the `spartan-backend` Rust modu
 UltraHonk/Barretenberg-based Noir mobile application, we decided that five runs are sufficient to obtain a clear picture
 of the average performance. Since the runtime lies in the range of several seconds, it can be assumed that is dominated by the
 proof-generation computation itself rather than by brief load spikes caused by other processes.
-
-===== Proof generation
 
 #table(
   columns: 4,
