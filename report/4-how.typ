@@ -331,6 +331,51 @@ than what the issuer signed.
 
 === Holder Binding (Cl)
 
+=== Revocation Lists (Li) <why-opt-revocation>
+
+As described in [ref-MS2-revocation], we decided to not use any
+advanced cryptographic accumulators because of the overhead
+necessary by the clients to keep their witnesses up-to-date.
+Instead we started to use the revocation lists in the Swiyu
+project, but had to abandon their protocol because the list itself
+was compressed, and decompression inflates the circuit size
+too much.
+For this reason we went with a simpler approach, keeping the
+list uncompressed, but signed by the issuer.
+Here is the format of this simplified revocation list:
+
+#table(
+  columns: (auto, auto, auto),
+  table.header([Name], [Size [B]], [Description]),
+
+  [`ID_START`], [8], [The first `CRED_ID` described in this list],
+  [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch where this list expires],
+  [`REV_LIST`], [128], [Bit-field of revoked credentials - 0: non-revoked - 1: revoked],
+  [`SIG`], [64], [ECDSA signature on the first part of this list]
+)
+
+In addition to this list, every credential now needs a unique
+`CRED_ID`, ideally incrementally starting from 0.
+As the credential itself is never revealed, this `CRED_ID`
+does not pose a danger to the anonymity of our system.
+When creating a prove, the client needs to download the
+corresponding revocation list from the server.
+We did not consider the privacy implication of this request,
+but techniques like "Private Information Retrieval" can make
+this retrieval oblivious to the server.
+The circuit needs to perform the following tests so that the
+verifier can be convinced of the non-revocation of this
+credential:
+
+- `ID_START` $<=$ `CRED_ID` $<$ `ID_START` $+$ `1024`
+- `TIMESTAMP_NOW` < `EXPIRES_AT`
+- `REV_LIST[CRED_ID - ID_START] == 0`
+- `ECDSA_VERIFICATION(LIST, SIG, PUB_KEY) == TRUE`
+
+The most expensive operation in this list is the ECDSA
+verification, as it also contains a `SHA256` operation,
+and both are very expensive.
+
 == Methodology (Ca / Li)
 
 - measurements / platforms

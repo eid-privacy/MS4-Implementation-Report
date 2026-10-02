@@ -69,10 +69,11 @@ more.
 #let hash_credential = $"CredHash"$
 #let hash_dob = $"DoBHash"$
 #let salt_dob = $"DoBSalt"$
+#let base64_dob = $"DoBBase64"$
+#let pos_dob = $"DoBPos"$
 #let revocation_list = $"Revocation List"$
 #let timestamp_now = $"Current Date"$
 #let timestamp_dob = $"Date of Birth"$
-#let salt_dob = $"Salt DoB"$
 #let Sig_cred = $"Sig"_"cred"$
 #let Sig_ch = $"Sig"_"ch"$
 #let Sig_list = $"Sig"_"list"$
@@ -90,34 +91,32 @@ are the following:
 #table(
   columns: 2,
   table.header([Argument], [Elements]),
-  [Secret], [
+  [Secret inputs], [
     - #credential of the holder
-    - positions of the elements in the credential
+    - #pos_dob - positions of the elements in the credential
     - #salt_dob - salt of the date of birth
     - #timestamp_dob
     - pre-computation of #Sig_cred
   ],
-  [Public], [
+  [Public inputs], [
     - #Pub_issuer
     - #timestamp_now
     - pre-computation of #Sig_ch
   ],
-  [Derived], [
+  [Derived in the circuit], [
     - #Pub_holder from #credential
     - $#hash_credential = "Sha256"(#credential)$
     - $#hash_dob = "Sha256"(#salt_dob | #timestamp_dob)$
+    - $#base64_dob = "base64.encode"(#hash_dob)$
   ],
-  [Statement],[
+  [Statements],[
     - #Sig_valid([#Pub_holder], [#Sig_ch], [#challenge])
     - #Sig_valid([#Pub_issuer], [#Sig_cred], [#hash_credential])
+    - $#base64_dob == #credential [#pos_dob:]$
     - $#timestamp_dob + "18 years" <= #timestamp_now$
   ]
 )
 
-- explain the goal of the full circuit c0200
-- public inputs
-- witnesses
-- issuer is trustworthy
 - revocation (-> Appendix)
 
 === Compiler (Cl)
@@ -135,7 +134,7 @@ This curve is especially designed to make computations in the P256 field (such a
 Our implementation is limited to elliptic curve addition and multi-scalar-multiplication, foregoing the Poseidon commitment as our circuits don't require this.
 This implementation is only partial since a proper integration would imply a sizeable rework of Noir's architecture as well as of its standard library, both built mostly with bn254 and curve cycles in mind.
 
-== Spartan Backend (Cl)
+== Spartan Backend (Cl) <why-spartan>
 
 Producing Noir's ACIR with Tom-256 representing values of the circuits enables us to use work from Srinath Setty on Spartan @S19 (and then Vega @KS25).
 Spartan is attractive for its prover cost as well as capability to work with Tom-256.

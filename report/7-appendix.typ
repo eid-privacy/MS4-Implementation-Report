@@ -11,9 +11,8 @@ Our chosen solution works directly with the SD-JWT format by the EUDI-Wallet and
 Swiyu, which made us investigate how to improve the performance of checks
 using the `noir` framework.
 We ported the Spartan-proof for ECDSA and implemented the conversion of the ECDSA
-signature according to the formulas described in
-
-#todo[Link to formula description]
+signature.
+For more information, see @why-spartan.
 
 D4.3 - A mathematical proof for the algorithm in D4.2.
 
@@ -44,10 +43,19 @@ shows how to create predicate proofs directly on the credential.
 
 === WP6b - Privacy-preserving revocation
 
-// D6.2 - A privacy-preserving (non-linkable) algorithm for the holder to prove that their credential has not been revoked.
-
 D6.3 - A mathematical proof for the algorithm in D6.2.
+
+As described in @why-opt-revocation, we did not use a
+cryptographic approach to the revocation, but created
+a simplified list, signed by the issuer.
+The security review did include our proposition, and
+they did not mark our list as problematic in any way.
+
 D6.4 - Proof of concept implementations of the revocations.
+
+We have a circuit with an example of this revocation list
+in our first Proof-of-Concepts, as circuit
+[c06_non_revocation](https://github.com/eid-privacy/zkp-pocs/tree/main/noir/c06_non_revocation).
 
 == MS3 Goals
 
