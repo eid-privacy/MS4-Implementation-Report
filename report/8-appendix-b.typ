@@ -98,7 +98,18 @@ proofs, but not decrypt previous proofs.
 
 // - How do you see the economic market potential as well as the value creation potential of both the project and the innovation in the long run?
 
-#todo(assignee: [Clement])[Fill in commercial]
+SICPA sees Zero-Knowledge Proofs as a key technology for markets that increasingly rely on
+the credentialization of documents and proofs.
+Between the start and end of this project we observe a shift in discourse around ZKP from 
+considering them a _nice-to-have_ frontier technology to something that needs to be 
+standardized and deployed sooner rather than later.
+The technology produced during this work is already being assessed for fit
+in various internal initiatives using the knowledge gathered through the last
+year and a half.
+We believe Zero-Knowledge to be an equalizer in holder-verifier relationships
+whether they involve individuals, public, or private institutions.
+As such, the value created by this work is a push in the right direction for our
+mission to further the sovereignty and privacy of these actors.
 
 == Question 1.5
 

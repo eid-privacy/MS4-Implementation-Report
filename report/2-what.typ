@@ -8,11 +8,12 @@ in the context of electronic identities, we looked for new structures
 to describe electronic credentials.
 We did an extended literature review and looked at various programming
 libraries which implement the necessary cryptographic primitives
-during the first part of this project [ref].
+during the first part of this project @EIDBlogZKComparison @EIDBlogZKLibraries.
 After the first half of the project, we concluded the following:
 
+#todo(assignee: "Li")[I added the ref to the long discussion on ARF, not sure which citations you had in mind]
 - Standardisation is very important for governments, so it will be
-  very difficult to get adoption for a new format [ref]
+  very difficult to get adoption for a new format [ref] @EUDI-ARF-BBS-1
 - ZKPs made a lot of progress, and the circuit-based ZKPs are much
   easier to reason about and are catching up with respect to performance
   to other types of ZKPs [ref]
@@ -30,7 +31,7 @@ algorithms.
 Our solution is based on the standard SD-JWT used in Swiyu, with the
 following important points:
 
-- Using ZKP, there is no need for batch emission [ref-swiyu] anymore
+- Using ZKP, there is no need for batch emission @Swiyu anymore
 - We had to change the revocation (see @follow-up-revocation) [ref-MS4]
 - Easy to understand and extend by IT professionals [ref-MS4]
 - On laptop hardware acceptable performance (< 1s for a proof),
@@ -58,11 +59,11 @@ proving-time and proof-size, and extensibility, measured as the possibility
 for non-domain-experts to change the inputs and tests of a ZKP.
 Another important point is that even though sigma-proof based ZKPs are very
 efficient, they need a credential in a format which is not in use by any of
-the governmental E-ID solutions proposed in Europe [ref-EU-ARF] [ref-Swiyu].
+the governmental E-ID solutions proposed in Europe @EUDI-ARF @Swiyu.
 
 === Sigma-proofs
 
-The term has been introduced for the first time by [ref-Cra97] and describes
+The term has been introduced for the first time by @Cra97 and describes
 the interaction between a prover and a verifier.
 
 #figure(
@@ -87,7 +88,7 @@ greek $Epsilon$ - the paper indicates further that:
 #quote[Spelled out, the first part of _Sigma_ refers to "zig-zag" symbolising
   the three moves, while the last part is an abbreviation of "Merlin-Arthur".]
 
-These proofs are very specialised to a specific proof type - [ref-CM99] gives
+These proofs are very specialised to a specific proof type - @CM99 gives
 a list which has been updated since then, but still gives an idea what
 can be done with these types of proofs:
 
