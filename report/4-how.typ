@@ -80,7 +80,7 @@ If you want to create your own mobile app, the UniFFI bindings in `zkp-android-s
 for the Kotlin language, which you can then include in your own app as you see fit. The repository contains detailed instructions for both humans and AI
 coding agents to guide you through the process.
 
-#figure(
+#wide-figure(
 
   diagram(
     spacing: (6mm, 8mm),
@@ -115,7 +115,7 @@ in possession of the same R1CS instance (i.e., synthesizing the same code with o
 #let data-fill = rgb("#fff4e5") // intermediate artefacts
 #let check-fill = rgb("#e9f7ef") // final verification
 
-#figure(
+#wide-figure(
   diagram(
     spacing: (10mm, 10mm),
     node-stroke: 0.6pt,
@@ -191,7 +191,7 @@ Concretely, the configuration file marks a few input wires as volatile, and the 
 propagates forward: a constraint is volatile as soon as one of its inputs is.
 @fig-taint-partition illustrates this propagation on a simplified view of the c0200 circuit.
 
-#figure(
+#wide-figure(
   text(size: 0.9em, diagram(
     spacing: (6mm, 8mm),
     node-stroke: 0.6pt,

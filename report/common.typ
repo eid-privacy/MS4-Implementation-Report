@@ -1,6 +1,6 @@
 // Shared helpers for every chapter of the report.
 // Each chapter file is its own Typst module, so it must import this file itself.
-#import "ams-article.typ": theorem, proof
+#import "ams-article.typ": theorem, proof, wide-figure, wide-table
 
 #let todo(body, assignee: none) = block(
   fill: luma(95%),

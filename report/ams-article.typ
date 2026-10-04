@@ -20,7 +20,17 @@
   abstract: none,
 
   // The article's paper size. Also affects the margins.
-  paper-size: "us-letter",
+  paper-size: "a4",
+
+  // Whether to use narrow margins. Narrow margins (the default) give
+  // a tighter, more compact layout. Wide margins (narrow: false) use
+  // the full AMS-article margins, leaving room for review comments.
+  narrow: true,
+
+  // Number of body columns: 2 for the classic AMS-article look,
+  // 1 for a single-column layout. `wide-figure` spans all columns
+  // either way.
+  columns: 2,
 
   // The result of a call to the `bibliography` function or `none`.
   bibliography: none,
@@ -46,22 +56,32 @@
   // Configure the page.
   set page(
     paper: paper-size,
-    // The margins depend on the paper size.
-    margin: if paper-size != "a4" {
-      (
-        top: (116pt / 279mm) * 100%,
-        left: (126pt / 216mm) * 100%,
-        right: (128pt / 216mm) * 100%,
-        bottom: (94pt / 279mm) * 100%,
-      )
-    } else {
-      (
-        top: 117pt,
-        left: 118pt,
-        right: 119pt,
-        bottom: 96pt,
-      )
+    // The margins depend on the paper size, and are scaled down
+    // (divided by 3) when `narrow` is true, leaving full-size,
+    // comment-friendly margins when it is false.
+    margin: {
+      let divisor = if narrow { 3 } else { 1 }
+      if paper-size != "a4" {
+        (
+          top: (116pt / 279mm) * 100% / divisor,
+          left: (126pt / 216mm) * 100% / divisor,
+          right: (128pt / 216mm) * 100% / divisor,
+          bottom: (94pt / 279mm) * 100% / divisor,
+        )
+      } else {
+        (
+          top: 117pt / divisor,
+          left: 118pt / divisor,
+          right: 119pt / divisor,
+          bottom: 96pt / divisor,
+        )
+      }
     },
+
+    // Lay out the body in `columns` columns, AMS-article style. The
+    // title/author block above uses `scope: "parent"` so it still
+    // spans all columns instead of only the first one.
+    columns: columns,
 
     // The page header should show the page number and list of
     // authors, except on the first page. The page number is on
@@ -299,3 +319,47 @@
 
   $square.stroked$
 })
+
+// A figure that spans both columns in a two-column layout.
+//
+// This uses `figure`'s own `placement`/`scope` support rather than
+// wrapping the figure in a separate `place`: `place` is not a
+// referenceable element, so a label attached after a `place(figure(..))`
+// call (`#wide-figure(..) <my-label>`) would bind to the `place` and
+// `@my-label` would fail to resolve ("cannot reference place"). Letting
+// `figure` itself float keeps the figure as the outermost, labelable
+// element, exactly like a plain `figure(..) <label>` elsewhere in this
+// report. In a one-column layout, floating across "parent" columns is a
+// no-op (the column and the page have the same width), so the same call
+// also produces a normal full-width figure there, and `wide-figure` can
+// be used unconditionally regardless of the page's column count.
+//
+// Usage is the same as `figure()`, e.g.:
+//   #wide-figure(image("diagram.svg"), caption: [A wide diagram]) <fig-label>
+#let wide-figure(body, placement: top, ..args) = figure(
+  body,
+  placement: placement,
+  scope: "parent",
+  ..args,
+)
+
+// A bare table that spans both columns, for the places in this report
+// that use `table(...)` directly (no caption/numbering) rather than
+// `figure(table(...))`. Same floating mechanism as `wide-figure`, and
+// likewise a no-op fallback to a normal full-width table in a
+// one-column layout.
+//
+// A bare `table()` is not a referenceable element in Typst (with or
+// without this wrapper), so if you need `@my-label` to point at the
+// table, use `wide-figure(table(...), caption: [...]) <my-label>`
+// instead.
+//
+// Usage is the same as `table()`, e.g.:
+//   #wide-table(columns: 2, [A], [B], [1], [2])
+#let wide-table(..args) = place(
+  top,
+  float: true,
+  scope: "parent",
+  clearance: 1.5em,
+  table(..args),
+)

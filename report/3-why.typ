@@ -1,5 +1,5 @@
 #import "common.typ": *
-#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 = Specific Choices for Implementations <why>
 
@@ -94,33 +94,44 @@ more.
 The different parts of the ZKP we produced for this projects
 are the following:
 
-#table(
-  columns: 2,
-  table.header([Argument], [Elements]),
-  [Secret inputs], [
-    - #credential of the holder
-    - #pos_dob - positions of the elements in the credential
-    - #salt_dob - salt of the date of birth
-    - #timestamp_dob
-    - pre-computation of #Sig_cred
-  ],
-  [Public inputs], [
-    - #Pub_issuer
-    - #timestamp_now
-    - pre-computation of #Sig_ch
-  ],
-  [Derived in the circuit], [
-    - #Pub_holder from #credential
-    - $#hash_credential = "Sha256"(#credential)$
-    - $#hash_dob = "Sha256"(#salt_dob | #timestamp_dob)$
-    - $#base64_dob = "base64.encode"(#hash_dob)$
-  ],
-  [Statements],[
-    - #Sig_valid([#Pub_holder], [#Sig_ch], [#challenge])
-    - #Sig_valid([#Pub_issuer], [#Sig_cred], [#hash_credential])
-    - $#base64_dob == #credential [#pos_dob:]$
-    - $#timestamp_dob + "18 years" <= #timestamp_now$
-  ]
+#wide-figure(
+  table(
+    columns: (auto, auto),
+    align: left,
+    table.header([Argument], [Elements]),
+    [Secret inputs],
+    [
+      - #credential of the holder
+      - #pos_dob - positions of the elements in the credential
+      - #salt_dob - salt of the date of birth
+      - #timestamp_dob
+      - pre-computation of #Sig_cred
+    ],
+
+    [Public inputs],
+    [
+      - #Pub_issuer
+      - #timestamp_now
+      - pre-computation of #Sig_ch
+    ],
+
+    [Derived in the circuit],
+    [
+      - #Pub_holder from #credential
+      - $#hash_credential = "Sha256"(#credential)$
+      - $#hash_dob = "Sha256"(#salt_dob | #timestamp_dob)$
+      - $#base64_dob = "base64.encode"(#hash_dob)$
+    ],
+
+    [Statements],
+    [
+      - #Sig_valid([#Pub_holder], [#Sig_ch], [#challenge])
+      - #Sig_valid([#Pub_issuer], [#Sig_cred], [#hash_credential])
+      - $#base64_dob == #credential [#pos_dob:]$
+      - $#timestamp_dob + "18 years" <= #timestamp_now$
+    ],
+  ),
+  caption: [The description of the circuit used in our examples],
 )
 
 The code to write this proof is understandable by a software engineer without
@@ -369,7 +380,7 @@ Here is the format of this simplified revocation list:
   [`ID_START`], [8], [The first `CRED_ID` described in this list],
   [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch where this list expires],
   [`REV_LIST`], [128], [Bit-field of revoked credentials - 0: non-revoked - 1: revoked],
-  [`SIG`], [64], [ECDSA signature on the first part of this list]
+  [`SIG`], [64], [ECDSA signature on the first part of this list],
 )
 
 In addition to this list, every credential now needs a unique

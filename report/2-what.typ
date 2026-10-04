@@ -1,5 +1,5 @@
 #import "common.typ": *
-#import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
+#import "@preview/fletcher:0.5.8" as fletcher: diagram, edge, node
 
 = Overview of our Solution <what>
 
@@ -42,16 +42,35 @@ on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 As discussed in our first report @MS2-rep, we distinguish the
 following families of ZKPs for our project:
 
-#table(
-  columns: (auto, auto, auto, auto, auto),
-  table.header([Family], [Efficiency / Performance], [Proof Input], [Extensibility], [Examples]),
+#wide-figure(
+  table(
+    columns: (auto, auto, auto, auto, auto),
+    table.header([Family], [Efficiency / Performance], [Proof Input], [Extensibility], [Examples]),
 
-  [Sigma-proof], [high], [Specialised credentials], [difficult to reason about without high
-    cryptographic knowledge], [BBS+, ZKAttest],
-  [ZKP circuits], [medium], [Standard SD-JWT], [based on simplified languages (rust-like, C-like)
-    which only needs moderate efforts to modify], [noir, SNARKS, SNARGS],
-  [ZKVMs], [low], [Standard SD-JWT], [simulates any program as a ZKP, so very simple to
-    extend], [SP1, OpenVM]
+    [Sigma-proof],
+    [high],
+    [Specialised credentials],
+    [difficult to reason about without high
+      cryptographic knowledge],
+    [BBS+, ZKAttest],
+
+    [ZKP circuits],
+    [medium],
+    [Standard SD-JWT],
+    [based on simplified languages (rust-like, C-like)
+      which only needs moderate efforts to modify],
+    [noir, SNARKS, SNARGS],
+
+    [ZKVMs],
+    [low],
+    [Standard SD-JWT],
+    [simulates any program as a ZKP, so very simple to
+      extend],
+    [SP1, OpenVM],
+  ),
+  caption: [Going from the first ZKP family to the latest,
+    one can see that the complexity to use it goes down,
+    while the performance also drops.],
 )
 
 This table shows that there is a trade-off between efficiency, measured as
@@ -234,7 +253,7 @@ It is to be noted that this supposes that the user has the needed
 additional credentials, because the governmental e-ID does not contain
 most of the information described in this table.
 
-#figure(
+#wide-figure(
   table(
     columns: (auto, 1fr),
     align: left,
@@ -336,7 +355,7 @@ as for "normal" proof requests.
 #let zkp-fill = rgb("#e9f7ef") // new components introduced by this work
 #let data-fill = rgb("#fff4e5") // credential storage
 
-#figure(
+#wide-figure(
   diagram(
     spacing: (26mm, 15mm),
     node-stroke: 0.6pt,
@@ -347,45 +366,119 @@ as for "normal" proof requests.
 
     // --- holder / prover side (left column) -----------------------------
     node((-0.2, -0.85), text(size: 0.85em, fill: gray)[*Holder / prover*], stroke: none, fill: none),
-    node((0, 0), align(center)[OpenId4VP component \
-      #text(size: 0.85em)[handles the new `proof_type`]], fill: openid-fill, name: <holder-oid>),
-    node((-.75, 1), align(center)[Credential store \
-      #text(size: 0.85em)[SD-JWT e-ID]], fill: data-fill, name: <credentials>),
-    node((0, 2), align(center)[ZKP prover component \
-      #text(size: 0.85em)[
-        Compute proof with public parameter \
-        \+ witness from credential
-      ]], fill: zkp-fill, name: <prover>),
-    edge(<credentials>, <prover>, "->", label: text(size: 0.8em)[],
-      label-side: left, label-sep: 2pt),
-    edge(<holder-oid>, <prover>, "->", bend: 25deg,
-      label: text(size: 0.8em)[3. public parameters], label-side: left, label-sep: 1pt),
-    edge(<prover>, <holder-oid>, "->", bend: 25deg,
-      label: text(size: 0.8em)[4. base64 proof], label-side: left, label-sep: 1pt),
+    node(
+      (0, 0),
+      align(center)[OpenId4VP component \
+        #text(size: 0.85em)[handles the new `proof_type`]],
+      fill: openid-fill,
+      name: <holder-oid>,
+    ),
+    node(
+      (-.75, 1),
+      align(center)[Credential store \
+        #text(size: 0.85em)[SD-JWT e-ID]],
+      fill: data-fill,
+      name: <credentials>,
+    ),
+    node(
+      (0, 2),
+      align(center)[ZKP prover component \
+        #text(size: 0.85em)[
+          Compute proof with public parameter \
+          \+ witness from credential
+        ]],
+      fill: zkp-fill,
+      name: <prover>,
+    ),
+    edge(<credentials>, <prover>, "->", label: text(size: 0.8em)[], label-side: left, label-sep: 2pt),
+    edge(
+      <holder-oid>,
+      <prover>,
+      "->",
+      bend: 25deg,
+      label: text(size: 0.8em)[3. public parameters],
+      label-side: left,
+      label-sep: 1pt,
+    ),
+    edge(
+      <prover>,
+      <holder-oid>,
+      "->",
+      bend: 25deg,
+      label: text(size: 0.8em)[4. base64 proof],
+      label-side: left,
+      label-sep: 1pt,
+    ),
 
     // --- verifier side (right column) -----------------------------------
     node((1, -0.85), text(size: 0.85em, fill: gray)[*Verifier*], stroke: none, fill: none),
-    node((1, 0), align(center)[OpenId4VP component \
+    node(
+      (1, 0),
+      align(center)[OpenId4VP component \
         #text(size: 0.85em)[chooses the public parameters]
       ],
-      fill: openid-fill, name: <verifier-oid>),
-    node((1, 2), align(center)[ZKP verifier component \
-      #text(size: 0.85em)[synthesizes the R1CS,\
-      verify proof and public parameters]
-    ], fill: zkp-fill, name: <verifier-zkp>),
-    edge(<verifier-oid>, <verifier-zkp>, "->", bend: 25deg,
-      label: text(size: 0.8em)[6. proof], label-side: left, label-sep: 2pt),
-    edge(<verifier-zkp>, <verifier-oid>, "->", bend: 25deg,
-      label: text(size: 0.8em)[7. result], label-side: left, label-sep: 2pt),
+      fill: openid-fill,
+      name: <verifier-oid>,
+    ),
+    node(
+      (1, 2),
+      align(center)[ZKP verifier component \
+        #text(size: 0.85em)[synthesizes the R1CS,\
+          verify proof and public parameters]
+      ],
+      fill: zkp-fill,
+      name: <verifier-zkp>,
+    ),
+    edge(
+      <verifier-oid>,
+      <verifier-zkp>,
+      "->",
+      bend: 25deg,
+      label: text(size: 0.8em)[6. proof],
+      label-side: left,
+      label-sep: 2pt,
+    ),
+    edge(
+      <verifier-zkp>,
+      <verifier-oid>,
+      "->",
+      bend: 25deg,
+      label: text(size: 0.8em)[7. result],
+      label-side: left,
+      label-sep: 2pt,
+    ),
 
     // --- the two sides talk plain OpenId4VP over the internet ------------
-    edge(<verifier-oid>, <holder-oid>, "->", bend: -20deg, label-side: right, label-sep: 2pt,
-      label-fill: white, label: align(center, text(size: 0.8em)[1. authorization request
-    ])),
-    edge(<holder-oid>, <verifier-oid>, "->", bend: -20deg, label-side: right, label-sep: 2pt,
-      label-fill: white, label: align(center, text(size: 0.8em)[5. VP token \ with the ZKP])),
-    edge((0.5, -1.2), (0.5, 2.6), stroke: (dash: "dashed", paint: gray),
-      label: text(size: 0.8em, fill: gray)[internet], label-pos: 0, label-side: right),
+    edge(
+      <verifier-oid>,
+      <holder-oid>,
+      "->",
+      bend: -20deg,
+      label-side: right,
+      label-sep: 2pt,
+      label-fill: white,
+      label: align(center, text(size: 0.8em)[
+        1. authorization request
+      ]),
+    ),
+    edge(
+      <holder-oid>,
+      <verifier-oid>,
+      "->",
+      bend: -20deg,
+      label-side: right,
+      label-sep: 2pt,
+      label-fill: white,
+      label: align(center, text(size: 0.8em)[5. VP token \ with the ZKP]),
+    ),
+    edge(
+      (0.5, -1.2),
+      (0.5, 2.6),
+      stroke: (dash: "dashed", paint: gray),
+      label: text(size: 0.8em, fill: gray)[internet],
+      label-pos: 0,
+      label-side: right,
+    ),
   ),
   caption: [High-level architecture of the integration. The
     #box(fill: openid-fill, stroke: 0.4pt, inset: 2pt, outset: 1pt, radius: 1pt)[blue]
@@ -432,10 +525,11 @@ For the Spartan and Vega proof systems, we evaluated the `c0200_swiyu_jwt` circu
 commit 4229482.
 
 #table(
-  columns: 4,
-  [], [Average of 5 runs [s]], [Best [s]],
+  columns: 3,
+  [Circuit], [Average of 5 runs [s]], [Best [s]],
   [c0200_swiyu_jwt], [3.774], [3.692],
-  [c0200_swiyu_jwt (partially precomputed)], [2.889], [2.833],
+  [c0200_swiyu_jwt \
+    (partially precomputed)], [2.889], [2.833],
 )
 
 Precomputing the partial proof takes on average about 5 seconds and generates a file of about 1.5 GB. This has important
@@ -506,16 +600,16 @@ is clear, if only from the number of very strong publications that happened duri
 the course of this project. Among these, the most prominent results are:
 
 - Longfellow @FS24, a very optimized proof system that has been field tested with Google and Deutsche Bank.
- We analyze it in comparison with Crescent in a blog post @EIDBlogCrescentLongfellow.
- It achieves most of our targets but we found the adaptability to be poor when it came to changing the circuits' implementation and lack auditability by non-experts.
+  We analyze it in comparison with Crescent in a blog post @EIDBlogCrescentLongfellow.
+  It achieves most of our targets but we found the adaptability to be poor when it came to changing the circuits' implementation and lack auditability by non-experts.
 - Crescent @FFL25 implements interesting ideas with commitments re-randomization as well as the modified ECDSA equation verification for holder binding.
- We analyze and compare it to Longfellow in a blog article @EIDBlogCrescentLongfellow.
- The main proof on the credential uses Groth16 @G16 which requires a public setup, something we wanted to avoid.
- Our implementation uses their holder binding technique to reduce the ECDSA verification cost and maximize the proving work that can be done in a pre-computed phase.
+  We analyze and compare it to Longfellow in a blog article @EIDBlogCrescentLongfellow.
+  The main proof on the credential uses Groth16 @G16 which requires a public setup, something we wanted to avoid.
+  Our implementation uses their holder binding technique to reduce the ECDSA verification cost and maximize the proving work that can be done in a pre-computed phase.
 - Vega @KS25 is an iteration on Spartan @S19.
-   It introduces a folding of circuits yielding very fast proving time.
-   In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
-   Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
+  It introduces a folding of circuits yielding very fast proving time.
+  In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
+  Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
 - OpenAC @ENRT26 is a transparent anonymous-credential design that, like our work, requires no trusted
   setup and no modification of the issuer's credential-issuance flow.
   It follows the same prepare-and-prove paradigm as Vega, with a lightweight and reusable offline
@@ -525,7 +619,7 @@ the course of this project. Among these, the most prominent results are:
   The authors position their work against the other contenders along two axes: user experience and
   deployment (@tbl-openac-ux), and performance (@tbl-openac-perf).
 
-#figure(
+#wide-figure(
   table(
     columns: (auto, auto, auto, auto),
     table.header([Approach], [Offline phase], [Device binding], [Reusability]),
@@ -533,8 +627,11 @@ the course of this project. Among these, the most prominent results are:
     [BBS/BBS+], [None], [Optional], [No],
     [Longfellow], [None], [Included], [No],
     [Crescent], [Lightweight, reusable prepare], [Optional], [Yes],
-    [zk-creds], [Lightweight, reusable precompute & membership part],
-    [Optional, clone resistance / anti-sharing], [Yes],
+    [zk-creds],
+    [Lightweight, reusable precompute & membership part],
+    [Optional, clone resistance / anti-sharing],
+    [Yes],
+
     [Vega], [Lightweight, reusable prepare], [Included], [Yes],
     [OpenAC], [Lightweight, reusable prepare], [Integrated (in-circuit)], [Yes],
   ),
@@ -542,7 +639,7 @@ the course of this project. Among these, the most prominent results are:
     reproduced from Table 2 of OpenAC @ENRT26.],
 ) <tbl-openac-ux>
 
-#figure(
+#wide-figure(
   block[
     #set text(size: 0.85em, hyphenate: false)
     #table(
