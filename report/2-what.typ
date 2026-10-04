@@ -11,19 +11,18 @@ libraries which implement the necessary cryptographic primitives
 during the first part of this project @EIDBlogZKComparison @EIDBlogZKLibraries.
 After the first half of the project, we concluded the following:
 
-#todo(assignee: "Li")[I added the ref to the long discussion on ARF, not sure which citations you had in mind]
 - Standardisation is very important for governments, so it will be
-  very difficult to get adoption for a new format [ref] @EUDI-ARF-BBS-1
+  very difficult to get adoption for a new format @EUDI-ARF-BBS-1
 - ZKPs made a lot of progress, and the circuit-based ZKPs are much
   easier to reason about and are catching up with respect to performance
-  to other types of ZKPs [ref]
+  to other types of ZKPs @MS2-rep
 
 This made us adjust the direction for the second half of the project:
 instead of creating a new type of ZKP based on a new credential format,
 we decided to work on a circuit-based ZKP and do the minimum changes
 necessary to the standard SD-JWT credentials.
 During our project various new propositions for ZKPs were published
-[ref], [ref], [ref]. To our knowledge, our proposition and measurements
+@IETFLongfellow, @KS25, @ENRT26. To our knowledge, our proposition and measurements
 are the first ones to be done on a real credential from a real
 E-ID project (Swiyu), with code available as Open Source and
 understandable by somebody without specific knowledge of the
@@ -32,8 +31,9 @@ Our solution is based on the standard SD-JWT used in Swiyu, with the
 following important points:
 
 - Using ZKP, there is no need for batch emission @Swiyu anymore
-- We had to change the revocation (see @follow-up-revocation) [ref-MS4]
-- Easy to understand and extend by IT professionals [ref-MS4]
+- We had to change the revocation, see @follow-up-revocation and
+@why-opt-revocation
+- Easy to understand and extend by IT professionals, see @why
 - On laptop hardware acceptable performance (< 1s for a proof),
 on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 
@@ -104,10 +104,10 @@ can be done with these types of proofs:
   that is, $2^(ℓ_1) − 2^(ℓ_2) < log(g_y) < 2^(ℓ_1) + 2^(ℓ_2)$ , for some parameters
   $ℓ_1$ and $ℓ_2$
 
-Over time, other sigma proofs have been defined, which led to [ref-CFQW19]
+Over time, other sigma proofs have been defined, which led to @CFQ19
 describing a method of combining different families of sigma-proofs together
 in an optimized way.
-This method has been further optimised and is proposed for example by [ref-FHLL25]
+This method has been further optimised and is proposed for example by @FHLL25
 to be applied to electronic credentials.
 
 While these types of proofs are often the fastest and most concise way to
@@ -124,7 +124,7 @@ In order to open ZKP for problems which are difficult to solve with a
 combination of sigma protocols, e.g., proving that a JSON witness
 has the correct form, it is necessary to describe the problem in a more
 abstract form.
-[ref-BCGTV13] creates a modified C-compiler which can compile a subset
+@BCGTV13 creates a modified C-compiler which can compile a subset
 of C instructions to be run on a random-access machine called `TinyRAM`.
 The novelty in this approach is that this allows to express _any_ algorithm
 which can be written in C to be proven as a ZKP.
@@ -169,7 +169,7 @@ While ZKP-circuits are based on a specific language which is compiled
 with a special compiler, ZK Virtual Machines (ZKVM)s go one step further
 and implement a full von Neumann architecture with the possibility to
 create a ZKP.
-OpenVM [ref-OpenVM] goes one step further and proposes a
+OpenVM, see @OpenVM, goes one step further and proposes a
 _modular no-CPU architecture_ - modules can be added to provide
 RISC-V support, but also specific operations often used in ZKPs.
 This setup allows the combination of the best of circuits and

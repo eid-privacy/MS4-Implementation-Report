@@ -302,7 +302,7 @@ We wrote the requirement for the review to include:
 - our proposal for the revocation list, including the circuit
 
 After the allotted time, zkSecurity came back to us with the
-report of their findings [ref?]:
+report of their findings:
 
 - 8 high security findings which can allow a prover to cheat
   - 7 got fixed in the latest release of `spartan-backend`

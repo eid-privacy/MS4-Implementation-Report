@@ -30,7 +30,7 @@ _D5.3 - A security proof and an implementation of D5.2_
 
 To prove predicates in standard SD-JWT credentials, used by the EUDI-wallet
 and Swiyu, we use the `noir` framework and a Spartan prover.
-The proof of Spartan can be found in their paper [ref-Spartan-proof].
+The proof of Spartan can be found in their paper @KS25.
 
 _D5.4 - Example programs for creation and verification of predicates_
 

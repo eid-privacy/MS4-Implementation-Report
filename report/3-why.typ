@@ -1,7 +1,7 @@
 #import "common.typ": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
-= Specific Choices for Implementations
+= Specific Choices for Implementations <why>
 
 We chose Noir to write out circuits for the following reasons:
 
@@ -351,7 +351,7 @@ scalar multiplication takes approximately 2700 R1CS constraints @FFL25.
 
 === Revocation Lists <why-opt-revocation>
 
-As described in [ref-MS2-revocation], we decided to not use any
+As described in @MS2-rep, we decided to not use any
 advanced cryptographic accumulators because of the overhead
 necessary by the clients to keep their witnesses up-to-date.
 Instead we started to use the revocation lists in the Swiyu
