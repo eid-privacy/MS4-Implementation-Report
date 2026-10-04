@@ -1,7 +1,7 @@
 #import "common.typ": *
 #import "@preview/fletcher:0.5.8" as fletcher: diagram, node, edge
 
-= If you want to use our code
+= If you want to use our code <how>
 
 We hope that our work can be used by other people to test out how
 good ZKPs are currently for use-cases like e-ID.
@@ -81,8 +81,8 @@ for the Kotlin language, which you can then include in your own app as you see f
 coding agents to guide you through the process.
 
 #wide-figure(
-
   diagram(
+    mark-scale: 150%,
     spacing: (6mm, 8mm),
     node-stroke: 0.6pt,
     node((0, 0), [*Kotlin app* \ App code (MainActivity.kt: \ Compose UI + benchmarks)]),
@@ -93,13 +93,15 @@ coding agents to guide you through the process.
     edge("d", "->"),
     node((0, 3), [*UniFFI* \ Rust FFI surface \ #raw("#[uniffi::export]") functions]),
     edge("d", "->"),
-    node((0, 4), [*the library we provide* \ Public Rust API (noir_spartan)]),
+    node((0, 4), [*noir_spartan* \ Public Rust API \ for spartan_backend ]),
     edge("d", "->"),
-    node((0, 5), [*the library we provide* \ Underlying implementation \ (spartan-backend)]),
+    node((0, 5), [*spartan_backend* \ Underlying implementation]),
     node((1, 5), [Circuit files on disk \ #raw("filesDir/circuits/<circuit>/")]),
     edge((0, 4), (1, 5), "->", [re-reads files on every call]),
-    edge((0, 4), (0, 1), "-->", [build time: uniffi-bindgen \ generates bindings + FFI surface], bend: -40deg),
-  )
+    edge((0.3, 4), (0.2, 1), "-->", [build time: uniffi-bindgen \ generates bindings + FFI surface], bend: -40deg),
+  ),
+  caption: [Including rust code in a mobile app using UniFFI.
+    The *UniFFI* blocks are provided by the library or auto-generated.]
 )
 
 == Proof and verification pipelines
@@ -250,7 +252,7 @@ propagates forward: a constraint is volatile as soon as one of its inputs is.
 
 With this in place we can optionally pre-compute e-ID presentations and at presentation time compute only the part that depends on the verifier's challenge for holder binding. This leads to a noticeable reduction in proving time but depending on the device computing the proof, loading precomputation is costly. For our c0200-swiyu-jwt circuit, precomputation's file size is around 1.5GB. It is to be noted as well that this intermediate proof contains sensitive information of the holder and needs to be stored in accordance.
 
-== Technical Limitations
+== Technical Limitations <how-technical>
 
 While sigma proofs are faster and often produce smaller messages, we decided
 to use a circuit based proof system to make it easier for

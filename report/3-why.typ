@@ -27,7 +27,7 @@ and improve the speed to create a ZKP.
 
 === Circuit Implementation
 
-The figure @fig-zkp-overview shows an illustration of the different parts
+The @fig-zkp-overview shows an illustration of the different parts
 of a ZKP.
 It is important to note that there is information known to both
 the prover and the verifier, namely the statement itself, as well
@@ -132,7 +132,7 @@ are the following:
     ],
   ),
   caption: [The description of the circuit used in our examples],
-)
+)<why-age-proof>
 
 The code to write this proof is understandable by a software engineer without
 having to understand the deep cryptographic improvements.
@@ -404,6 +404,32 @@ credential:
 The most expensive operation in this list is the ECDSA
 verification, as it also contains a `SHA256` operation,
 and both are very expensive.
+
+=== Storage of the Pre-Computation
+
+Our first implementation of the Spartan pre-computation used serde to write
+the pre-computed matrix of Spartan to disk.
+The size of this write was about 2GB, but more importantly, the reading of
+the structure involved verifications by the Spartan backend to make sure
+that the values are correct!
+As we suppose that the prover doesn't want to cheat themselves, and as it
+is not possible to create an invalid proof in any case, these checks are not
+necessary.
+
+In addition, the matrix, and the stored values, contain a lot of $0$s, and
+the non-$0$ values are also very repetitive.
+Some of the values stored in the Spartan structure were also not necessary
+in the finalisation phase.
+This reduced the data size to 1GB, and the compression reduced it even
+further down to 28MB!
+
+So instead of storing and loading 2GB, the Spartan prover now stores only
+28MB, but has to compress and decompress the data.
+However, on a Mac and Intel, this is much faster than reading the data
+from the SSD.
+
+#todo(assignee: [Clement])[Add how removing the checks in Spartan makes this
+  even faster!]
 
 == SICPA Implementation
 

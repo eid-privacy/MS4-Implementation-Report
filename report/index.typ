@@ -6,6 +6,8 @@
   title: [Secure and Privacy-Preserving Credentials for E-ID - #linebreak()
     Final Report],
   paper-size: "a4",
+  // narrow: true,
+  // columns: 2,
   authors: (
     (
       name: "Carine Dengler",
@@ -25,7 +27,7 @@
     ),
   ),
   abstract: [We describe the ongoing work for the Innosuisse grant 101.292 IP-ICT -
-  Secure and Privacy-Preserving Credentials for E-ID - between EPFL's C4DT and SICPA SA.
+  Secure and Privacy-Preserving Credentials for E-ID - between EPFL and SICPA SA.
   This is the final Report.],
 )
 // #set page(margin: (inside: 2cm, outside: 1.5cm, y: 1.75cm))

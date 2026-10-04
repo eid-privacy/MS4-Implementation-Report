@@ -3,7 +3,7 @@
 
 = Overview of our Solution <what>
 
-When we started the project to work on Zero-Knowledge-Proofs (ZKPs)
+When we started to work on Zero-Knowledge-Proofs (ZKPs)
 in the context of electronic identities, we looked for new structures
 to describe electronic credentials.
 We did an extended literature review and looked at various programming
@@ -32,53 +32,57 @@ following important points:
 
 - Using ZKP, there is no need for batch emission @Swiyu anymore
 - We had to change the revocation, see @follow-up-revocation and
-@why-opt-revocation
-- Easy to understand and extend by IT professionals, see @why
+  @why-opt-revocation
+- Easy to understand and extendable by IT professionals, see @why
 - On laptop hardware acceptable performance (< 1s for a proof),
-on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
+  on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
 
 == Comparison with Other Solutions
 
-As discussed in our first report @MS2-rep, we distinguish the
-following families of ZKPs for our project:
-
-#wide-figure(
-  table(
-    columns: (auto, auto, auto, auto, auto),
-    table.header([Family], [Efficiency / Performance], [Proof Input], [Extensibility], [Examples]),
-
-    [Sigma-proof],
-    [high],
-    [Specialised credentials],
-    [difficult to reason about without high
-      cryptographic knowledge],
-    [BBS+, ZKAttest],
-
-    [ZKP circuits],
-    [medium],
-    [Standard SD-JWT],
-    [based on simplified languages (rust-like, C-like)
-      which only needs moderate efforts to modify],
-    [noir, SNARKS, SNARGS],
-
-    [ZKVMs],
-    [low],
-    [Standard SD-JWT],
-    [simulates any program as a ZKP, so very simple to
-      extend],
-    [SP1, OpenVM],
-  ),
-  caption: [Going from the first ZKP family to the latest,
-    one can see that the complexity to use it goes down,
-    while the performance also drops.],
-)
-
-This table shows that there is a trade-off between efficiency, measured as
+As discussed in our first report @MS2-rep, we define three main
+families of ZKPs for our project.
+@what-zkp-families shows a summary of these three families, together
+with efficiency and extensibility.
+It shows that there is a trade-off between efficiency, measured as
 proving-time and proof-size, and extensibility, measured as the possibility
 for non-domain-experts to change the inputs and tests of a ZKP.
 Another important point is that even though sigma-proof based ZKPs are very
 efficient, they need a credential in a format which is not in use by any of
 the governmental E-ID solutions proposed in Europe @EUDI-ARF @Swiyu.
+
+#wide-figure(
+  {
+    set par(justify: false)
+    table(
+      columns: (auto, auto, 1fr, 2.5fr, 1fr),
+      table.header([Family], [Efficiency #linebreak() / Performance], [Proof Input], [Extensibility], [Examples]),
+
+      [Sigma-proof],
+      [high],
+      [Specialised credentials],
+      [difficult to reason about without high
+        cryptographic knowledge],
+      [BBS+, ZKAttest],
+
+      [ZKP circuits],
+      [medium],
+      [Standard #box[SD-JWT]],
+      [based on simplified languages (rust-like, C-like)
+        which only needs moderate efforts to modify],
+      [noir, SNARKS, SNARGS],
+
+      [ZKVMs],
+      [low],
+      [Standard #box[SD-JWT]],
+      [simulates any program as a ZKP, so very simple to
+        extend],
+      [SP1, OpenVM],
+    )
+  },
+  caption: [Going from the first ZKP family to the latest,
+    one can see that the complexity to use it goes down,
+    while the performance also drops.],
+)<what-zkp-families>
 
 === Sigma-proofs
 
@@ -102,9 +106,10 @@ the interaction between a prover and a verifier.
 ) <fig-sigma-protocol>
 
 With some imagination, one can interpret the @fig-sigma-protocol as a
-greek $Epsilon$ - the paper indicates further that:
+greek $Epsilon$ - @Cra97 indicates further that:
 
-#quote[Spelled out, the first part of _Sigma_ refers to "zig-zag" symbolising
+#quote(block: true)[Spelled out, the first part of
+  _Sigma_ refers to "zig-zag" symbolising
   the three moves, while the last part is an abbreviation of "Merlin-Arthur".]
 
 These proofs are very specialised to a specific proof type - @CM99 gives
@@ -123,10 +128,10 @@ can be done with these types of proofs:
   that is, $2^(ℓ_1) − 2^(ℓ_2) < log(g_y) < 2^(ℓ_1) + 2^(ℓ_2)$ , for some parameters
   $ℓ_1$ and $ℓ_2$
 
-Over time, other sigma proofs have been defined, which led to @CFQ19
+Over time, other sigma proofs have been defined, which led to LegoSNARK @CFQ19
 describing a method of combining different families of sigma-proofs together
 in an optimized way.
-This method has been further optimised and is proposed for example by @FHLL25
+This method has been further optimised and is proposed for example in @FHLL25
 to be applied to electronic credentials.
 
 While these types of proofs are often the fastest and most concise way to
@@ -166,7 +171,7 @@ use sigma protocols.
   caption: [Compilation pipeline from a C program down to a `zk-SNARK` proof.],
 ) <fig-zkp-circuit-pipeline>
 
-The figure @fig-zkp-circuit-pipeline shows the pipeline showing how a C
+The @fig-zkp-circuit-pipeline shows the pipeline showing how a C
 program is compiled to the `TinyRAM` virtual architecture, which is
 rewritten as a `R1CS` circuit, and finally proven using a `zk-SNARK`.
 This model from 2013 has been much refined in the meantime, specifically
@@ -188,8 +193,8 @@ While ZKP-circuits are based on a specific language which is compiled
 with a special compiler, ZK Virtual Machines (ZKVM)s go one step further
 and implement a full von Neumann architecture with the possibility to
 create a ZKP.
-OpenVM, see @OpenVM, goes one step further and proposes a
-_modular no-CPU architecture_ - modules can be added to provide
+OpenVM, see @OpenVM, proposes a
+_modular no-CPU architecture_: modules can be added to provide
 RISC-V support, but also specific operations often used in ZKPs.
 This setup allows the combination of the best of circuits and
 sigma proofs: using circuits, OpenVM provides support for generic
@@ -200,6 +205,12 @@ and other specialised cryptographic primitives.
 The latest benchmarks we found shows that a signature verification using
 OpenVM is only 10x slower than the same verification with `noir`
 or a special sigma-proof.
+While an order of magnitude looks like a lot, we have to keep in
+mind that our circuit implementation using Vega is also about
+an order of magnitude faster than previous circuits.
+So we expect ZKVMs to get to a viable alternative soon, specifically
+if the possibility to add modules for parts of the proofs, like
+sha256 and ECDSA verification, can be done efficiently.
 
 == Use case examples <what-use-cases>
 
@@ -214,6 +225,7 @@ building blocks: parsing the SD-JWT, verifying the signature of the
 issuer, checking the holder binding, and the non-revocation.
 Only the statement on the disclosed values changes from one use case
 to the other.
+
 One missing building block which is not yet clear is how to link several
 credentials together:
 If you have a credential from your commune, it needs to be tied to your
@@ -240,22 +252,19 @@ and electronically signing popular initiatives and referendums.
 
 Many of these uses, like opening a bank account or subscribing to a
 mobile plan, require by law a full identification of the holder, so
-a ZKP does not bring much there.
+a ZKP is not useful in this case.
 But the proof of age is the first one in the list, and the
 extracts from the criminal record and the debt collection register
 will become credentials themselves.
 These credentials are then shown to third parties, e.g., a future
 employer or a landlord, and a ZKP allows to show only what the
 third party needs to know.
-The table @tbl-use-cases lists the types of statements we identified,
+The @tbl-use-cases lists the types of statements we identified,
 starting with the most probable ones.
-It is to be noted that this supposes that the user has the needed
-additional credentials, because the governmental e-ID does not contain
-most of the information described in this table.
 
 #wide-figure(
   table(
-    columns: (auto, 1fr),
+    columns: (0.25fr, 1fr),
     align: left,
     table.header([Statement type], [Examples]),
 
@@ -299,7 +308,8 @@ most of the information described in this table.
       employer credentials yet.],
   ),
   caption: [Types of statements which could be proven with a ZKP on
-    SD-JWT credentials, starting with the most probable ones.],
+    SD-JWT credentials, supposing a rich ecosystem of secondary
+    credentials. The top proposals are the most probable ones.],
 ) <tbl-use-cases>
 
 The examples in @tbl-use-cases involve credentials from many different
@@ -339,21 +349,26 @@ its possession and being over 18 years old using the zero-knowledge proof develo
 tooling to verify the holder's claim.
 We assume the issuer to be known and considered trustworthy, the implementation does not include going to the base registry.
 The interaction happens "in the cloud", and despite both user being hosted by the same platform, perform a proper OpenId4VP verification process across
-the internet.
+the internet, see @fig-sicpa-architecture.
 
-To support such a verification, we extend from the OpenId4VP specification by adding a "proof_type" that suits our ZKP.
-This proof types allows communicating the public parameters selected by the verifier to the holder/prover, and the prover to return
+To support such a verification, we extend the OpenId4VP specification by adding a "proof_type" that suits our ZKP.
+This proof type allows communicating the public parameters selected by the verifier to the holder/prover, and the prover to return
 a base64 encoding of its zero-knowledge proof.
 
-At a high-level (see @fig-sicpa-architecture), our OpenId component receives a verification requests with a new
+@fig-sicpa-architecture shows the high-level overview how an OpenId component
+receives a verification requests with a new
 `proof_type` and delegates its creation to new components that embed the artifacts
 implemented for this work.
-The OpenId flow is unchanged and communication happen agent-to-agent, over the internet,
+The OpenId flow is unchanged and communication happens agent-to-agent, over the internet,
 as for "normal" proof requests.
 
 #let openid-fill = rgb("#e8f0fe") // existing, standard OpenId4VP components
 #let zkp-fill = rgb("#e9f7ef") // new components introduced by this work
 #let data-fill = rgb("#fff4e5") // credential storage
+
+#todo(assignee: [Clement])[There was no "2." here, I re-arranged to have one.
+  Also, can OpenId4VP terminology from https://www.rfc-editor.org/info/rfc6749/#section-1.2
+  be applied here?]
 
 #wide-figure(
   diagram(
@@ -491,105 +506,109 @@ as for "normal" proof requests.
 
 == Benchmarks
 
-For this report, we benchmarked the performance of the proof creation step of two implementations of a Swiyu SD-JWT age proof,
-including issuer and holder binding but excluding non-revocation.
-
-Both implementations are written in Noir: one using the default proof system UltraHonk as implemented in Barretenberg,
+For this report, we benchmarked the performance of the proof creation step
+of two implementations of a Swiyu SD-JWT age proof,
+including issuer and holder binding but excluding non-revocation,
+as described in @why-age-proof.
+Both implementations are written in Noir: one using the default proof system
+UltraHonk as implemented in Barretenberg,
 and the other using the Spartan proof system, now known as Vega.
+For Spartan, we measured the full proof, as well as the pre-computed proof
+described in @how-precomputation.
+We measured on the following platforms and show the results in @what-benchmarks:
 
-=== Mac
+1. A MacBook Pro from 2023 with an Apple M2 Max CPU and 64 GB of RAM
+2. A dual Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz with 16GB of RAM
+3. A Samsung Galaxy A54 running Android 16 ("Baklava")
+  with 8 GB of RAM and an octa-core CPU @galaxy-a54
 
-On desktop, we evaluated the two implementations on a MacBook Pro from 2023 with an Apple M2 Max CPU and 64 GB of RAM. While
-the zero-knowledge proof is ultimately destined to be integrated into the Swiyu mobile application, the performance measured
-on such a machine gives us an idea of what to expect on a less powerful device.
+In our repository, #link("https://github.com/eid-privacy/spartan-backend"),
+the circuits correspond to:
 
-==== UltraHonk/Barretenberg
+- `c0200_swiyu_jwt` - the circuit used to measure the Spartan prover
+- `c9200_swiyu_jwt` - the circuit used to measure the Ultrahonk / Barretenberg
+  prover
 
-UltraHonk, as implemented by Barretenberg, is the default proof system used by Noir. It was therefore an obvious first
-step to evaluate the performance of such circuits.
+All tests have been done using the latest commit on branch `final_report`.
 
-#table(
-  columns: 2,
-  [Noir test], [create_proof [s]],
-  [d10_swiyu_jwt], [3.10],
-)
+#wide-figure(
+  table(
+    columns: 4,
+    table.header([Prover], [Mac], [Intel], [Mobile]),
+    [Ultrahonk \ Barretenberg], [3.1s], [8.8s], [16.1s],
+    [Spartan], [3.7s], [8.3s], [11.8s],
+    [Spartan \ Pre-computed], [load: 0.9s \ final: 0.9s \ total: 1.8s],
+      [load: 1.5s \ final: 2.2s \ total: 3.7s],
+      [_load: 2.1s \ final: 3.1s \ total: 5.2s_]
+  ),
+  caption: [Pretty benchmarks]
+)<what-benchmarks>
 
-Surprisingly, the overall performance on the MacBook for this
-circuit is not significantly worse than that of the circuit using the Spartan/Vega proof system. However, we notice
-considerable differences in performance on mobile devices between the two circuits, suggesting that the underlying system
-architecture may play a role.
+=== Desktop
 
-==== Spartan/Vega
+On desktop, we evaluated the two implementations on a MacBook Pro and on a server with
+a dual-Intel processor.
+While the zero-knowledge proof is ultimately destined to be integrated into the Swiyu
+mobile application, the performance measured
+on this machines gives us an idea of what to expect on a less powerful device.
 
-For the Spartan and Vega proof systems, we evaluated the `c0200_swiyu_jwt` circuit from our `spartan-backend` Rust module at
-commit 4229482.
+It is interesting to note that between the Mac and the Intel machine, the provers are
+inversed: while the Intel server runs the Spartan prover faster, the Mac runs the
+Ultrahonk prover faster.
+We were not able to find out why this inversion of speed happened between the two
+machines, but our best guess is that each prover has been optimised for the other
+machine.
 
-#table(
-  columns: 3,
-  [Circuit], [Average of 5 runs [s]], [Best [s]],
-  [c0200_swiyu_jwt], [3.774], [3.692],
-  [c0200_swiyu_jwt \
-    (partially precomputed)], [2.889], [2.833],
-)
+But for both machines we observe that the finalisation stage after the pre-computation
+is faster than Ultrahonk in every case.
+While our first experiments with pre-computation were not conclusive due to the
+huge size of the intermediate results, in the order of GBs, compression and
+other optimisations reduced the loading part of the pre-computed data to a
+negligible factor!
 
-Precomputing the partial proof takes on average about 5 seconds and generates a file of about 1.5 GB. This has important
-practical implications, not only for devices with limited storage, but it also means that the finalisation of the proof
-is dominated by the time spent reading the data from the device, about 2 seconds on average, or over a third of the
-total runtime of this step. While overall a significant speedup is achieved (23% on the MacBook), we will see that this
-has a considerable impact on the user experience on the mobile phone.
+It is to be noted that precomputing the partial proof takes on average about 5 seconds
+and generates a file of about 28MB.
+As this step is only needed once a user receives a credential, and every time
+the revocation list is updated, which is once a week, we consider this delay
+to be acceptable.
 
 === Mobile
 
-While measuring the performance of our circuits on a mobile phone might at first glance seem like the next logical
-step, it is in reality a major milestone in our efforts to add zero-knowledge proofs to the Swiss e-ID ecosystem.
+While measuring the performance of our circuits on a mobile phone might at
+first glance seem like the next logical
+step, it is in reality a major milestone in our efforts to
+add zero-knowledge proofs to the Swiss e-ID ecosystem.
 
-The existing privacy-preserving digital credentials, Crescent and Longfellow, rely on specialised credential formats
-to achieve their impressive proof verification times of under one second. We, on the other hand, are able to use the
-standard SD-DWT through a Noir circuit, which is a major prerequisite for integrating zero-knowledge proofs into the
+The existing privacy-preserving digital credentials,
+Crescent and Longfellow, rely on specialised credential formats
+to achieve their impressive proof verification times of under one second.
+We, on the other hand, are able to use the
+standard SD-DWT through a Noir circuit, which is a major prerequisite
+for integrating zero-knowledge proofs into the
 Swiss e-ID.
 
-For both the UltraHonk/Barretenberg and Spartan/Vega implementations, we used a Samsung Galaxy A54 running Android 16 ("Baklava")
-with 8 GB of RAM and an octa-core CPU @galaxy-a54.
-
-==== UltraHonk/Barretenberg
-
-We evaluated the circuit `d10_swiyu_jwt` from the `zkp-pocs` library (commit d58bc79) @EIDBlogMobile. In addition to the proofs
-of concept, this library contains a variety of example circuits, one of which is `d10_swiyu_jwt`, a full Swiyu SD-JWT age proof
-with issuer and holder binding, but excluding the non-revocation proof.
-
-#table(
-  columns: 4,
-  [], [Average of 100 runs [s]], [Best [s]], [Worst [s]],
-  [d10_swiyu_jwt], [18.419], [16.154], [21.013],
-)
-
-With an average runtime of 18.5 seconds, the verifiable SD-JWT credential clearly leaves much to be desired in terms of user
-experience. However, successfully generating an SD-JWT credential proof on a mobile device marked a major step in moving our
+Looking at the pure Ultrahonk / Barretenberb proof in @what-benchmarks,
+the best runtime of 16.1 seconds clearly leaves much to be desired in terms of user
+experience.
+However, successfully generating an SD-JWT credential proof on a
+mobile device marked a major step in moving our
 endeavour from a theoretical undertaking to a practically applicable result.
 
-==== Spartan/Vega
+The Spartan backend is already better with the best runtime at 11.8s.
+While this is still an order of magnitude away from our goal, which is
+1s for a proof, it shows that there is still place for optimisation in
+ZKP circuit proofs.
+Also, the mobile device is not of the latest generation, and modern devices
+can easily gain a factor of two.
 
-We evaluated the circuit `c0200_swiyu_jwt` from the `spartan-backend` Rust module (commit 4229482). Drawing on our previous
-experience with the UltraHonk/Barretenberg-based Noir mobile application, we decided that five runs are sufficient to obtain a
-clear picture of the average performance. Since the runtime lies in the range of several seconds, it can be assumed that is
-dominated by the proof-generation computation itself rather than by brief load spikes caused by other processes.
-
-#table(
-  columns: 4,
-  [], [Average of 5 runs [s]], [Best [s]], [Worst [s]],
-  [c0200_swiyu_jwt], [11.793], [11.777], [11.813],
-  [c0200_swiyu_jwt (partially precomputed)], [9.468], [9.329], [9.905],
-)
-
-As can be seen, precomputation reduces the average proof generation time during presentation by 2.446 seconds, or just below 20%,
-which is a considerable speed-up. While this is impressive, it comes at a cost: the precomputed circuit takes up about 1.5 GB,
-which is a considerable amount of space on consumer-grade mobile devices. Its initial precomputation takes up a little over 18
-seconds, which is however not a problem, as it only has to be executed once during initial setup.
-
-Furthermore, we also observed that the total proof generation time is dominated by the time spent reading from disk
-(around 6 seconds). While this means that the proof generation itself is actually well over 20% faster, it also means that the
-very approach used to achieve this improvement diminishes its benefit. Combined with the large size, this makes this particular
-optimization rather impractical for user devices; however, it is a good indicator of the direction future optimizations may take.
+Using the Spartan with pre-computation brings down the proving time to
+a little bit over 5s.
+This includes the loading of the pre-proof, and the finalisation of the
+proof using the latest timestamp and the challenge from the verifier.
+As with the desktop benchmark, the cost to pay is the pre-computation itself,
+which clocks in at 18s on this device.
+But this is only executed once per credential, and upon renewing the
+non-revocation proof, which is probably once per week.
 
 == Related Works and concurrent events
 
@@ -638,6 +657,9 @@ the course of this project. Among these, the most prominent results are:
   caption: [Comparison of related approaches with respect to user experience and deployment,
     reproduced from Table 2 of OpenAC @ENRT26.],
 ) <tbl-openac-ux>
+
+#todo(assignee: [Clement])[Add a description of the difference between
+  Vega_SC and Vega_MC]
 
 #wide-figure(
   block[

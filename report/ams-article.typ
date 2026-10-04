@@ -25,12 +25,12 @@
   // Whether to use narrow margins. Narrow margins (the default) give
   // a tighter, more compact layout. Wide margins (narrow: false) use
   // the full AMS-article margins, leaving room for review comments.
-  narrow: true,
+  narrow: false,
 
   // Number of body columns: 2 for the classic AMS-article look,
   // 1 for a single-column layout. `wide-figure` spans all columns
   // either way.
-  columns: 2,
+  columns: 1,
 
   // The result of a call to the `bibliography` function or `none`.
   bibliography: none,
@@ -60,7 +60,7 @@
     // (divided by 3) when `narrow` is true, leaving full-size,
     // comment-friendly margins when it is false.
     margin: {
-      let divisor = if narrow { 3 } else { 1 }
+      let divisor = if narrow { 3 } else { 1.5 }
       if paper-size != "a4" {
         (
           top: (116pt / 279mm) * 100% / divisor,
@@ -209,9 +209,23 @@
   show enum: set block(above: 0.9em, below: 0.9em)
 
   // Configure lists and links.
-  set list(indent: 24pt, body-indent: 5pt)
-  set enum(indent: 24pt, body-indent: 5pt)
+  // The list marker sits at the paragraph's first-line indent.
+  set list(indent: 1.2em, body-indent: 0.5em)
+  set enum(indent: 1.2em, body-indent: 0.5em)
   show link: set text(font: "DejaVu Sans Mono")
+
+  // Block quotes like LaTeX's quote environment: indented on both sides,
+  // no quotation marks, no first-line indent.
+  show quote.where(block: true): set par(first-line-indent: 0em)
+  show quote.where(block: true): set text(size: 0.95em)
+  show quote.where(block: true): it => block(
+    above: 1.2em, below: 1.2em, inset: (x: 2.5em), {
+      it.body
+      if it.attribution != none {
+        [ #h(1fr) --- #it.attribution]
+      }
+    },
+  )
 
   // Configure equations.
   show math.equation: set block(below: 8pt, above: 9pt)
