@@ -332,10 +332,6 @@ section on holder binding (Section 3.4.1, "ECDSA Signature Proof" in @FFL25).
 
 ==== Definitions
 
-#todo(assignee: [Clement])[Be glad I didn't see that before. I just HATE
-  multiplicative notation for Elliptic Curves! It shouts
-  "HERE BE RSA"...]
-
 Following Crescent, the curve group is written multiplicatively:
 
 - $G$, the generator of the NIST P--256 group, of order $n$.
@@ -445,8 +441,11 @@ So instead of storing and loading 2GB, the Spartan prover now stores only
 However, on a Mac and Intel, this is much faster than reading the data
 from the SSD.
 
-#todo(assignee: [Clement])[Add how removing the checks in Spartan makes this
-  even faster!]
+At the cost of around 11% of storage, going from around 23MB of precomputation storage to 32MB,
+we used a modified version of vega-prover that skips the validations we deem unnecessary to our
+security model to speed up the loading of precomputation files.
+#todo(assignee: "Linus")[Can you put numbers comparable to the others you have here ?]
+
 
 == SICPA Implementation
 
