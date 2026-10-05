@@ -366,10 +366,6 @@ as for "normal" proof requests.
 #let zkp-fill = rgb("#e9f7ef") // new components introduced by this work
 #let data-fill = rgb("#fff4e5") // credential storage
 
-#todo(assignee: [Clement])[There was no "2." here, I re-arranged to have one.
-  Also, can OpenId4VP terminology from https://www.rfc-editor.org/info/rfc6749/#section-1.2
-  be applied here?]
-
 #wide-figure(
   diagram(
     spacing: (26mm, 15mm),
@@ -411,7 +407,7 @@ as for "normal" proof requests.
       <prover>,
       "->",
       bend: 25deg,
-      label: text(size: 0.8em)[3. public parameters],
+      label: text(size: 0.8em)[2. public parameters],
       label-side: left,
       label-sep: 1pt,
     ),
@@ -420,7 +416,7 @@ as for "normal" proof requests.
       <holder-oid>,
       "->",
       bend: 25deg,
-      label: text(size: 0.8em)[4. base64 proof],
+      label: text(size: 0.8em)[3. base64 proof],
       label-side: left,
       label-sep: 1pt,
     ),
@@ -449,7 +445,7 @@ as for "normal" proof requests.
       <verifier-zkp>,
       "->",
       bend: 25deg,
-      label: text(size: 0.8em)[6. proof],
+      label: text(size: 0.8em)[5. proof],
       label-side: left,
       label-sep: 2pt,
     ),
@@ -458,7 +454,7 @@ as for "normal" proof requests.
       <verifier-oid>,
       "->",
       bend: 25deg,
-      label: text(size: 0.8em)[7. result],
+      label: text(size: 0.8em)[6. result],
       label-side: left,
       label-sep: 2pt,
     ),
@@ -484,7 +480,7 @@ as for "normal" proof requests.
       label-side: right,
       label-sep: 2pt,
       label-fill: white,
-      label: align(center, text(size: 0.8em)[5. VP token \ with the ZKP]),
+      label: align(center, text(size: 0.8em)[4. Authorization response]),
     ),
     edge(
       (0.5, -1.2),
@@ -658,8 +654,14 @@ the course of this project. Among these, the most prominent results are:
     reproduced from Table 2 of OpenAC @ENRT26.],
 ) <tbl-openac-ux>
 
-#todo(assignee: [Clement])[Add a description of the difference between
-  Vega_SC and Vega_MC]
+In @tbl-openac-perf are two entries for Vega: Vega#sub[SC] and Vega#sub[MC].
+SC is a shorthand for _single-circuit_, MC for _multi-circuit_.
+The difference illustrates the gain the _fold-and-reuse_ approach of Vega @KS25 allows for.
+_Single_circuit_ shows the system characteristics for a single "big" proving circuit like ours.
+_Multi-circuit_ shows the system characteristics when the proof is sub-divided in smaller circuits,
+some of which can be _reused_. In their publication, their largest speed gain comes from a clever
+way of reusing a circuit that does one block of SHA256 hashing.
+An optimization that would yield very good results on our own construction (at least as much as in their publication).
 
 #wide-figure(
   block[
