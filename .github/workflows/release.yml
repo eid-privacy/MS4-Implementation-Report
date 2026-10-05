@@ -26,7 +26,7 @@ jobs:
         id: datetime
         run: |
           DATETIME=$(date +'%Y-%m-%d_%H-%M')
-          BASENAME=eid_privacy-101.292-IP-ICT-ms2-report
+          BASENAME=eid_privacy-101.292-IP-ICT-ms4-report
           echo "datetime=${DATETIME}" >> $GITHUB_OUTPUT
           echo "filename_date=${BASENAME}-${DATETIME}.pdf" >> $GITHUB_OUTPUT
           echo "filename=${BASENAME}.pdf" >> $GITHUB_OUTPUT
