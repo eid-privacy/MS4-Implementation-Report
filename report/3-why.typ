@@ -170,8 +170,34 @@ Our backend then uses this R1CS instance to produce or verify a zero-knowledge p
 R1CS being one of the most common ways to express NP-statements for zero-knowledge proofs, the synthesizer is only some implementation work away from
 being able to interface with other proof systems ingesting such statements.
 
-#todo(assignee: [Clement])[Only if you have time, after all the other TODOs: can you write some
-  more about the synthesis of the R1CS? That looks like a big part!]
+=== R1CS synthesis
+
+Noir's ACIR bytecode @NoirACIR is a convenient integration point, allowing the design of a well structured synthesizer.
+We organized it around an input mapper and a router handling the opcodes we need to run our e-ID zero-knowledge proofs.
+
+Input mapping makes use of the witness allocation file produced by `nargo execute`.
+It loads a map of witnesses allocated using `bellpepper` and indexed by a "witness index" that 
+Noir uses to reference wires in the bytecode.
+Each entry is marked public or private, as well as linked to the abi parameter it is part of (if it is not and auxiliary or constant witness).
+
+This witness map is used to feed the correct wires into each opcode of the bytecode listing.
+The opcodes we implemented are:
+- AssertZero, encoding raw Plonk-ish constraints
+- Memory operations, taking care of expressions in the circuits that involve array manipulation
+- Blackbox function calls, the opcode Noir uses to delegate proof-system-specific operations to the proving backends
+  - RANGE, the gadget used by Noir to constrain input sizes and ranges.
+  - Elliptic Curve addition (EC ADD)
+  - Multi-scalar multiplication (MSM)
+  - Sha256Compression, implementing a single block compression. Noir standard library takes care of the complete implementation. 
+
+We implemented the low-level EC ADD and MSM rather than the ECDSA verification directly to have more flexibility in the API and to be able to
+implement the modified verification equations of Crescent @FFL2 and ZKAttest @zkattest.
+These could now be wrapped in abstractions such as a Noir library, the standard library itself, or a blackbox.
+Our choice would be a Noir library as the standard library of Noir is built with the curve cycle of bn254-Grumpkin in mind and because
+the many abstraction layers that require wiring to add new operations is not worth the hassle for an operation that only makes sense on a single curve.
+
+The translation of these opcodes into R1CS constants is made through `bellpepper`, a dependency of `vega-prover` that provides gadgets to allocate witnesses and wire them through
+constraints.
 
 This architecture creates a lot of flexibility in the chain: Noir's ACIR could be synthesized by another piece of software (nothing exists at the time of writing)
 and mathematically speaking, the R1CS instance resulting from the synthesis and instantiation could be ingested by other proving backends relying on R1CS.
