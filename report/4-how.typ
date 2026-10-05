@@ -3,7 +3,7 @@
 
 = If you want to use our code <how>
 
-This chapter gives some pointers how to use our work and what the
+This chapter gives some pointers on how to use our work and what the
 restrictions are.
 We hope that our work can be used by other people to test out how
 good ZKPs are currently for use-cases like e-ID.
@@ -76,14 +76,14 @@ own projects.
 
 == Use in Mobile
 
-To know whether our chosen platform is really usable by today's mobile
+To know whether our chosen platform is really usable on today's mobile
 phones, we implemented a proof-of-concept mobile app which simply
 creates a proof, and then verifies it.
 We did not implement the full protocol of interacting with the government
 services like base and trust registry, but simply executed the code
 necessary to create a cryptographic proof.
-Given that this time is much longer than most network communication, we
-suppose that this gives us a good measurement on the feasibility of our
+Given that creating the proof takes much longer than most network communication, we
+suppose that this gives us a good measure of the feasibility of our
 solution.
 
 If you want to create your own mobile app, the UniFFI bindings in
@@ -96,7 +96,7 @@ coding agents to guide you through the process.
 @how-mobile-uniffi shows a summary of how the different parts of
 our libraries work together in a mobile system.
 Rust is often used in mobile devices for time-critical
-elements, or to allow to have the same code base for the
+elements, or to share the same code base between the
 frontend and the backend.
 Using UniFFI, it is easy to create an API which can be used
 from mobile apps, for Android as well as for iOS.
@@ -121,14 +121,14 @@ from mobile apps, for Android as well as for iOS.
     edge((0, 4), (1, 5), "->", [re-reads files on every call]),
     edge((0.3, 4), (0.2, 1), "-->", [build time: uniffi-bindgen \ generates bindings + FFI surface], bend: -40deg),
   ),
-  caption: [Including rust code in a mobile app using UniFFI.
+  caption: [Including Rust code in a mobile app using UniFFI.
     The *UniFFI* blocks are provided by the library or auto-generated.]
 )<how-mobile-uniffi>
 
 == Proof and verification pipelines
 
-In @why-spartan-build, we describe the overall protocol how a proof
-is created, starting from the verifier, to the prover.
+In @why-spartan-build, we describe the overall protocol of how a proof
+is created, from the verifier's request to the prover.
 Once a proof is created, this proof can then be verified by any verifier
 in possession of the same R1CS instance (i.e., synthesizing the same code with our synthesizer).
 
@@ -208,7 +208,7 @@ in possession of the same R1CS instance (i.e., synthesizing the same code with o
 
 Around July 2026, Microsoft updated and renamed the source code distributed under the name of `spartan` to align it with the more recent Vega publication @KS25 under the name `vega-prover`. These changes introduced a clearer API to allow for partial instantiation of circuits and thus, pre-computation of partial proofs.
 
-We cascaded this capability to `spartan-backend` by adding a configuration file documenting which inputs of a circuit are expected to change at every circuit instantiation. As an example: the credential for a given holder is always the same, the challenger nonce is not. Our backend uses this to compute the partition of constraints that does not depend on these inputs. This partition represents the portion of the proof that can be pre-computed.
+We cascaded this capability to `spartan-backend` by adding a configuration file documenting which inputs of a circuit are expected to change at every circuit instantiation. As an example: the credential for a given holder is always the same, the challenge nonce is not. Our backend uses this to compute the partition of constraints that does not depend on these inputs. This partition represents the portion of the proof that can be pre-computed.
 
 Concretely, the configuration file marks a few input wires as volatile, and the taint
 propagates forward: a constraint is volatile as soon as one of its inputs is.
@@ -273,14 +273,14 @@ swiyu_jwt circuit.
 
 With this in place we can optionally pre-compute e-ID presentations and at presentation
 time compute only the part that depends on the verifier's challenge for holder binding.
-While the first, naive implementation of storing the pre-computer circuit
+While the first, naive implementation of storing the pre-computed circuit
 generated multi-GB sized files, we managed to reduce this by applying
 the following techniques:
 
-- not store the full structure, as parts of it is not used in the finalisation -
+- don't store the full structure, as parts of it are not used in the finalisation -
   this reduces the file size from 2GB to 1GB
 - apply a compression algorithm to the structure - there is a lot of repetition
-  in the structure - reduction from 1GB to 40MB
+  in the structure - reduction from 1GB to 28MB
 - don't verify the data upon load - as the data is created by the prover, and
   then re-read by that same prover, we can trust it's the same - this reduces
   the loading time even further
@@ -289,12 +289,12 @@ Applying these steps makes the storing and loading of the pre-computation
 not only feasible, but creates a real advantage compared to a full
 proof creation!
 It is to be noted as well that this intermediate proof contains sensitive
-information of the holder and needs to be stored in accordance.
+information of the holder and needs to be stored accordingly.
 
 == Technical Limitations <how-technical>
 
 While sigma proofs are faster and often produce smaller messages, we decided
-to use a circuit based proof system to make it easier for
+to use a circuit-based proof system to make it easier for
 non-cryptographers to create their own proofs.
 During our project we saw that this actually works great, and that the
 engineers at SICPA were able to update our proposed circuit to
@@ -303,7 +303,7 @@ enable new functionality.
 However, we also saw one big downside of this openness: some programming
 patterns produce big circuits, and as a non-cryptographer it is
 often difficult to understand why our code is not good.
-One example we encountered was the @how-opt-barrel, where a software
+One example we encountered is described in @how-opt-barrel, where a software
 engineer used a for loop to copy data from one array into another.
 But as the indexes were part of the private inputs, the circuit had
 to take into account all possible sizes - which are a lot.
@@ -322,24 +322,26 @@ good, it's difficult to avoid errors.
 Our work would not have been possible without the use of LLMs.
 We did exploratory work with different LLMs, mostly Claude,
 Copilot, and open-weight models like Qwen and DeepSeek.
-This allowed us to create a lot of boiler-plate code like
-benchmark scripts, mobile UIs, but towards the end of the
+This allowed us to create a lot of boilerplate code like
+benchmark scripts and mobile UIs, but towards the end of the
 project also more extensive optimisation tests.
 Even during the 18 months of this project, it was interesting
 to see the improvement of these tools.
-It is incredible the power we have nowadays to go from idea
+It is incredible how much power we have nowadays to go from idea
 to realisation in a short timeframe.
 
 With all that power comes a big responsibility: as we're all
 senior professionals, we do know the basics of software engineering,
 and can steer the LLMs in the right direction.
-For our more junior colleagues, we spent quite some time explaining
-to them how to change what they implement, and why they should
-ask other tasks from the LLMs.
+For our more junior colleagues, it was sometimes difficult to
+understand what is useful and what needs to be rewritten.
+So the senior engineers need to take the time to sit down
+and explain what is possible, and how to request these changes
+from the LLMs.
 
-In this reports, LLMs did cleanup, formatting tables and lists,
-grammatical reviews.
-But the first writing of the report has been done manually,
+In this report, LLMs were used for cleanup, formatting tables and lists,
+and grammatical reviews.
+But the first draft of the report was written manually,
 as writing a report is also a way to re-visit everything we
 did, and discover shortcomings, and possible improvements!
 
@@ -347,7 +349,7 @@ did, and discover shortcomings, and possible improvements!
 
 On the 24th of August, #link("https://zksecurity.xyz")[zkSecurity] started
 the security review of our proof-of-concept code.
-We wrote the requirement for the review to include:
+We specified that the review should include:
 
 - our inclusion of the Spartan prover as a backend for noir
 - the circuits we wrote for the proof-of-concept
@@ -460,7 +462,7 @@ report, together with our answers.
 #finding("0c", [Birth date parsing and age checks do not enforce calendar semantics],
   severity: "low", status: "scope")[
   The cutoff date should be handed in as a public argument, calculated by the prover.
-  This allows to prove different ages, and keeps the control in the prover app.
+  This allows proving different ages, and keeps the control in the prover app.
 ]
 
 #finding("0d", [Prepared proving state and debug logs expose private witness data],
@@ -469,7 +471,7 @@ report, together with our answers.
   state in a private data part.
   It remains to be seen if the
   #link("https://developer.android.com/training/data-storage#filesInternal")[Internal Storage]
-  is big enough, or if External Storage and encryption is needed.
+  is big enough, or if External Storage and encryption are needed.
 ]
 
 === Informational

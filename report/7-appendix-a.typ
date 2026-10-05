@@ -1,13 +1,13 @@
 #import "common.typ": *
 
-= Appendix A - Work Packages and Mile Stones <app-wp-ms>
+= Appendix A - Work Packages and Milestones <app-wp-ms>
 
 == WP4b - Unlinkable and anonymous credential signing
 
 // D4.2a - Implementation of the algorithm to provide unlinkable and anonymous credential signing.
 // D4.2b - Stretch goal: unlinkable pseudonyms bound to a service.
 
-Our chosen solution works directly with the SD-JWT format by the EUDI-Wallet and
+Our chosen solution works directly with the SD-JWT format used by the EUDI-Wallet and
 Swiyu, which made us investigate how to improve the performance of checks
 using the `noir` framework.
 
@@ -35,7 +35,7 @@ _D5.3 - A security proof and an implementation of D5.2_
 
 To prove predicates in standard SD-JWT credentials, used by the EUDI-wallet
 and Swiyu, we use the `noir` framework and a Spartan prover.
-The proof of Spartan can be found in their paper @KS25.
+The proof of Spartan can be found in their paper @S19.
 
 _D5.4 - Example programs for creation and verification of predicates_
 
@@ -47,21 +47,21 @@ shows how to create predicate proofs directly on the credential.
 Contrary to the current Swiyu proposal, we invert the
 proof of the non-revocation: instead of the verifier having
 to download and verify that the current credential is still
-valid, we include the proof directly at the prover.
-This also removes the need of batch issuance of credentials.
+valid, we let the prover include the proof directly.
+This also removes the need for batch issuance of credentials.
 
 _D6.3 - A mathematical proof for the algorithm in D6.2_
 
 As described in @why-opt-revocation, we did not use a
 cryptographic approach to the revocation, but created
 a simplified list, signed by the issuer.
-The security review did include our proposition, and
-they did not mark our list as problematic in any way.
+The security review included our proposal, and
+did not mark our list as problematic in any way.
 
 _D6.4 - Proof of concept implementations of the revocations_
 
 We have a circuit with an example of this revocation list
-in our first Proof-of-Concepts, as circuit
+in our first proofs-of-concept, as circuit
 #repo("zkp-pocs", path: "noir/c06_non_revocation").
 
 == MS3 Goals
@@ -94,7 +94,7 @@ can be used for further experiments.
 
 _D7.1 - Build the library_
 
-Available on #link("https://github.com/eid-privacy/spartan-backend")[Github: eid-privacy/spartan-backend]
+Available on #link("https://github.com/eid-privacy/spartan-backend")[GitHub: eid-privacy/spartan-backend]
 
 _D7.2 - Documentation is available and allows usage of the library_
 
@@ -104,14 +104,14 @@ _D7.3 - Speed / bandwidth considerations_
 
 We reached good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
 and auditable solution.
-On a M4 Mac we get down to 1.5s of proving time.
-Phone implementation hangs around the 10s mark.
-Follow-ups exist that could bring this further down (see @remaining-challenges) without dismissing the work from this grant.
+On a Mac M2, the proving time after precomputation is 1.8s, while a mobile
+phone from 2024 creates the proof after precomputation in 5.2s.
+Follow-ups exist that could bring this further down (see @remaining-challenges) without invalidating the work from this grant.
 Proof size is well below the limit of 1MB: our largest circuit (c0202_sicpa_backend_constant) results in proofs of 202KB.
 
 _D7.4 - An external security review of the final implementation of the algorithms is performed_
 
-We mandated #link("https://zksecurity.xyz/")[ZkSecurity], a company specialized in ZKP implementations, to conduct the security audit of the
+We mandated #link("https://zksecurity.xyz/")[zkSecurity], a company specialized in ZKP implementations, to conduct the security audit of the
 backend, circuit, and noir blackbox implementation.
 The critical findings impacting the soundness of our implementation have been addressed.
 The report will be made available shortly on the library's repository.
@@ -130,7 +130,7 @@ While the code cannot be used yet as-is, we demonstrated
 the way forward and will work further to get the code included
 as a standard library in SICPA.
 
-_D8.1 - Choice of two use-cases to be implemented in SICPAs software_
+_D8.1 - Choice of two use-cases to be implemented in SICPA's software_
 
 SICPA implemented an "over 18" use case and is planning to implement a set membership one.
 
@@ -148,7 +148,7 @@ Yes - This is the final report.
 
 _G7.1 Open sourced library is available publicly, e.g., on GitHub, with a "popular" OSI approved license_
 
-Available on #link("https://github.com/eid-privacy/spartan-backend")[Github: eid-privacy/spartan-backend]
+Available on #link("https://github.com/eid-privacy/spartan-backend")[GitHub: eid-privacy/spartan-backend]
 
 _G7.2 The Digital Trust Platform in WP8 can be extended using the documentation_
 
@@ -156,11 +156,11 @@ Yes
 
 _G7.3 The necessary operations are fast enough to be executed on a modern mobile device, and the size of the messages is well below 1MB_
 
-With flat data, a fixed-sized structure representing a credential, we reached 0.9 second of prover speed.
+With flat data, a fixed-sized structure representing a credential, we reached 0.9 seconds of proving time.
 
 We reached good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
 and auditable solution.
-On a M4 Mac we get down to 1.5s of proving time.
+On an M4 Mac we get down to 1.5s of proving time.
 Phone implementation hangs around the 10s mark.
 Follow-ups exist that could bring this further down (see @remaining-challenges) without dismissing the work from this grant.
 Proof size is well below the limit of 1MB: our largest circuit (c0202_sicpa_backend_constant) results in proofs of 202KB.
@@ -176,8 +176,8 @@ Yes, the platform can request and present credentials using the ZKP circuits and
 _G8.1 Confirmation of usefulness of use-cases by FOITT and FOJ_
 
 A few exchanges confirmed the usefulness of our approach and of the nuances we exposed throughout the work.
-The usecases were informally approved in discussions.
-We believe the usefulness of the "over 18" usecase is not to be demonstrated anymore given the widespread
+The use cases were informally approved in discussions.
+We believe the usefulness of the "over 18" use case no longer needs to be demonstrated given the widespread
 media coverage it had and the amount of regulatory politics focusing on it.
 
 The other use-cases described in @what-use-cases are not yet
@@ -185,7 +185,7 @@ possible, as the Swiyu platform has not been opened to the
 public yet.
 Also, currently only the governmental e-ID credential is
 available, plus the driving license credential.
-But so far no commune or high-school started emitting
+But so far no commune or high school has started issuing
 credentials, for example for a proof of residency, diplomas,
 work permits, or other information.
 

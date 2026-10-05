@@ -33,9 +33,9 @@ is the slowness of the official solutions:
 with every delay, the private actors will create solutions which are out of the
 hand of the governments, and then there will need to be a new legislation to
 regulate these solutions.
-Currently the EU and Switzerland with Swiyu is still well positioned.
+Currently the EU and Switzerland with Swiyu are still well positioned.
 But the latest delays in Switzerland with the deployment of their solution,
-due to security implications in the online registration process, shines a light
+due to security implications in the online registration process, shine a light
 on the difficulty of deploying such a solution.
 Unfortunately this also means that all the ecosystem around e-IDs will be delayed,
 and that ZKPs will not be needed in the near future.
@@ -54,7 +54,7 @@ frameworks relevant to building digital identity systems.
 === Reading List for ZKPs
 
 - status: online
-- abstract: A knowledge vault covering Zero-Knowledge Proof papers, frameworks, cryptographic primitives, and tooling — from foundational theory to production-ready implementations. Built as an Obsidian notebook and mkDocs site, working toward a blog post on the most important elements of the ZKP ecosystem.
+- abstract: A knowledge vault covering Zero-Knowledge Proof papers, frameworks, cryptographic primitives, and tooling — from foundational theory to production-ready implementations. Built as an Obsidian notebook and MkDocs site, working toward a blog post on the most important elements of the ZKP ecosystem.
 
 == Question 1.3
 
@@ -70,23 +70,23 @@ Copy @next-productisation
 
 We are currently discussing with Prof. Alessandro Chiesa, who supported our work at
 EPFL, for a follow-up project including post-quantum secure ZKPs.
-This project just started, and we're in the progress of writing down the
+This project just started, and we're in the process of writing down the
 needed tools, to be able to understand what is still needed.
 Our solution still relies on cryptography which will be broken once universal,
 big, fast, quantum computers are available.
-Once these quantum computers are available, it will be possible to create ZKPs
-on any statement required by the prover.
+Once these quantum computers are available, it will be possible to forge ZKPs
+for any statement the prover wants.
 
 Prof. Alessandro Chiesa has been working on ZKPs based on hashes, which have the
-big advantage of not giving any advantage to quantum computers when it comes
-to creating wrong statements.
-We did write down the requirements, which was based on work we did during this
-project, and are in the process to decide how to go forward with the research
+big benefit of not giving quantum computers any advantage when it comes
+to creating false statements.
+We did write down the requirements, which were based on work we did during this
+project, and are in the process of deciding how to go forward with the research
 and productisation.
 
 Depending on the advancements of quantum computers, it will be required sooner or
 later to be able to create ZKPs using cryptographic algorithms which are safe from
-attacks.
+quantum attacks.
 It needs to be noted, however, that the problem of ZKPs and quantum computers is
 different from the problem regarding transmission and encryption of data:
 while encrypted data can be _stored now, decrypted later_, this is not possible
@@ -100,8 +100,8 @@ proofs, but not decrypt previous proofs.
 
 SICPA sees Zero-Knowledge Proofs as a key technology for markets that increasingly rely on
 the credentialization of documents and proofs.
-Between the start and end of this project we observe a shift in discourse around ZKP from 
-considering them a _nice-to-have_ frontier technology to something that needs to be 
+Between the start and end of this project we observe a shift in discourse around ZKP from
+considering them a _nice-to-have_ frontier technology to something that needs to be
 standardized and deployed sooner rather than later.
 The technology produced during this work is already being assessed for fit
 in various internal initiatives using the knowledge gathered through the last
@@ -120,10 +120,10 @@ mission to further the sovereignty and privacy of these actors.
 // - For projects with implementation partner/s: Has the cash contribution been provided? If not, please explain why the cash contribution has not been paid or will not be paid.
 // - A detailed final financial report is to be submitted separately with all the necessary justifications
 
-We used up most of the budget of the Innosuisse report.
+We used up most of the budget of the Innosuisse grant.
 The distribution between partners / EPFL did work out correctly, and the cash
 contribution of our partner, SICPA, allowed us to have a high-quality security
-proof of our implementation.
+review of our implementation.
 This is a really important part of our work, and will allow SICPA to go on with
 the commercialisation of their product, knowing that the indicated problems
 have been solved in the meantime.
@@ -154,14 +154,14 @@ to protect themselves, solutions like ours can enable these governments to make
 something privacy-preserving for their citizens.
 Having this privacy can allow citizens to overcome some of the gender-specific
 or social inequalities you can find, e.g., when applying for a job with a
-foreign-sounding name, or subscribing for a service as a women.
+foreign-sounding name, or subscribing for a service as a woman.
 
 It is important to note that our technology in itself does nothing to increase
 the privacy of the citizens.
 Technology is only a tool for a society to get to its goals, it cannot replace
 the will of the society to get to these goals.
 But given the current willingness of the Swiss government, as well as the EU,
-to protect their citizens, I believe that our solution is an important milestone
+to protect their citizens, we believe that our solution is an important milestone
 in showing what is possible now.
 
 == Question 1.7

@@ -5,7 +5,7 @@
 This report concludes the work sponsored by the Innosuisse grant 101.292 IP-ICT aiming at formulating a proposal strengthening the privacy guarantees offered by Swiyu @Swiyu.
 
 Throughout the last year and a half a lot has happened in the digital identity space.
-Countries have debated and rolled-out age bans for social media, adult and gambling websites; on one-hand protecting a vulnerable population, on the other significantly
+Countries have debated and rolled out age bans for social media, adult and gambling websites; on the one hand protecting a vulnerable population, on the other significantly
 threatening the privacy of users.
 In parallel, the staggering speed of LLM development has allowed the creation of convincing fake images of identity documents.
 Academia, industry, and governing bodies have all produced work with a high impact on which technologies can be deployed to fend off these issues.
@@ -19,11 +19,12 @@ Our main goal was to develop a solution which can be run on
 mid-range mobile phones with acceptable performance to create and
 send a proof.
 The second goal was to make it possible to deploy our solution using
-currently used digital identity schemes, and make it usable to
+currently used digital identity schemes, and make it usable by
 non-cryptography experts.
 We show how our choices respect these two goals, and what we needed
 to sacrifice in order to get there.
 
 The third part, _If you want to use our code_, chapter @how, explains how our
 work can be used for other research or products.
-We give more detailed explanation of the
+We give more detailed explanation of the details of our work, and how
+it fits into the ecosystem of other proof systems.

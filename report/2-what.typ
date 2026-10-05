@@ -86,7 +86,7 @@ the governmental E-ID solutions proposed in Europe @EUDI-ARF @Swiyu.
 
 === Sigma-proofs
 
-The term has been introduced for the first time by @Cra97 and describes
+The term was introduced by @Cra97 and describes
 the interaction between a prover and a verifier.
 
 #figure(
@@ -105,18 +105,18 @@ the interaction between a prover and a verifier.
     the prover responds.],
 ) <fig-sigma-protocol>
 
-With some imagination, one can interpret the @fig-sigma-protocol as a
-greek $Epsilon$ - @Cra97 indicates further that:
+With some imagination, one can interpret @fig-sigma-protocol as a
+Greek $Sigma$ - @Cra97 indicates further that:
 
 #quote(block: true)[Spelled out, the first part of
   _Sigma_ refers to "zig-zag" symbolising
   the three moves, while the last part is an abbreviation of "Merlin-Arthur".]
 
 These proofs are specialised to a specific proof type - @CM99 gives
-a list which has been updated since then, but still gives an idea what
+a list which has been updated since then, but still gives an idea of what
 can be done with these types of proofs:
 
-- Proving the knowledge of a discrete logarithm xo f a group element y
+- Proving the knowledge of a discrete logarithm x of a group element y
   to a base g
 - Proving the knowledge of a representation of an element y to
   the bases $g_1,...,g_l$
@@ -125,7 +125,7 @@ can be done with these types of proofs:
 - Proving the knowledge of (at least) one out of the discrete logarithms of
   the elements $y_1$ and $y_2$ to the base g (proof of OR)
 - Proving the knowledge of a discrete logarithm that lies in a given range,
-  that is, $2^(ℓ_1) − 2^(ℓ_2) < log(g_y) < 2^(ℓ_1) + 2^(ℓ_2)$ , for some parameters
+  that is, $2^(ℓ_1) − 2^(ℓ_2) < log_g y < 2^(ℓ_1) + 2^(ℓ_2)$ , for some parameters
   $ℓ_1$ and $ℓ_2$
 
 Over time, other sigma proofs have been defined, which led to LegoSNARK @CFQ19
@@ -150,7 +150,7 @@ has the correct form, it is necessary to describe the problem in a more
 abstract form.
 @BCGTV13 creates a modified C-compiler which can compile a subset
 of C instructions to be run on a random-access machine called `TinyRAM`.
-The novelty in this approach is that this allows to express _any_ algorithm
+The novelty in this approach is that this allows _any_ algorithm
 which can be written in C to be proven as a ZKP.
 In addition, the number of engineers knowing how to write C programs is
 vastly superior compared to the number of engineers knowing how to
@@ -171,9 +171,9 @@ use sigma protocols.
   caption: [Compilation pipeline from a C program down to a `zk-SNARK` proof.],
 ) <fig-zkp-circuit-pipeline>
 
-The @fig-zkp-circuit-pipeline shows the pipeline showing how a C
+@fig-zkp-circuit-pipeline shows how a C
 program is compiled to the `TinyRAM` virtual architecture, which is
-rewritten as a `R1CS` circuit, and finally proven using a `zk-SNARK`.
+rewritten as an `R1CS` circuit, and finally proven using a `zk-SNARK`.
 This model from 2013 has been much refined in the meantime, specifically
 the following elements have been updated:
 
@@ -190,7 +190,7 @@ the following elements have been updated:
 === ZKVMs
 
 While ZKP-circuits are based on a specific language which is compiled
-with a special compiler, ZK Virtual Machines (ZKVM)s go one step further
+with a special compiler, ZK Virtual Machines (ZKVMs) go one step further
 and implement a full von Neumann architecture with the possibility to
 create a ZKP.
 OpenVM, see @OpenVM, proposes a
@@ -202,15 +202,15 @@ programming, using sigma proofs (or other) modules, OpenVM allows
 optimised proofs where it matters, e.g., ECDSA signatures, hashing,
 and other specialised cryptographic primitives.
 
-The latest benchmarks we found shows that a signature verification using
+The latest benchmarks we found show that a signature verification using
 OpenVM is only 10x slower than the same verification with `noir`
 or a special sigma-proof.
 While an order of magnitude looks like a lot, we have to keep in
 mind that our circuit implementation using Vega is also about
 an order of magnitude faster than previous circuits.
-So we expect ZKVMs to get to a viable alternative soon, specifically
-if the possibility to add modules for parts of the proofs, like
-sha256 and ECDSA verification, can be done efficiently.
+So we expect ZKVMs to become a viable alternative soon, specifically
+if modules for parts of the proofs, like
+sha256 and ECDSA verification, can be added efficiently.
 
 == Use case examples <what-use-cases>
 
@@ -257,9 +257,9 @@ But the proof of age is the first one in the list, and the
 extracts from the criminal record and the debt collection register
 will become credentials themselves.
 These credentials are then shown to third parties, e.g., a future
-employer or a landlord, and a ZKP allows to show only what the
+employer or a landlord, and a ZKP allows the holder to show only what the
 third party needs to know.
-The @tbl-use-cases lists the types of statements we identified,
+@tbl-use-cases lists the types of statements we identified,
 starting with the most probable ones.
 
 #wide-figure(
@@ -342,21 +342,21 @@ This makes our work on the SD-JWT of the Swiss e-ID a good candidate for integra
 
 
 SICPA's implementation is designed for so-called "Cloud Wallets".
-Keys reside in a key management system that lies outside of the solution's perimeter, modelled the same way an HSM is, i.e., no access to user's private keys.
+Keys reside in a key management system that lies outside of the solution's perimeter, modelled the same way an HSM is, i.e., no access to users' private keys.
 Platform users can, using the same set of keys, act as holders, provers, and verifiers.
 The integration we demonstrate for this work makes use of two distinct users: one who receives an e-ID (outside of the scope of this work) and proves
-its possession and being over 18 years old using the zero-knowledge proof developed during the grant. The other user is a verifier able to use the zero-knowledge
+possession of it and that they are over 18 years old using the zero-knowledge proof developed during the grant. The other user is a verifier able to use the zero-knowledge
 tooling to verify the holder's claim.
-We assume the issuer to be known and considered trustworthy, the implementation does not include going to the base registry.
-The interaction happens "in the cloud", and despite both user being hosted by the same platform, perform a proper OpenId4VP verification process across
+We assume the issuer to be known and considered trustworthy; the implementation does not include querying the base registry.
+The interaction happens "in the cloud", and despite both users being hosted by the same platform, they perform a proper OpenId4VP verification process across
 the internet, see @fig-sicpa-architecture.
 
 To support such a verification, we extend the OpenId4VP specification by adding a "proof_type" that suits our ZKP.
-This proof type allows communicating the public parameters selected by the verifier to the holder/prover, and the prover to return
+This proof type allows the verifier to communicate the public parameters selected by the verifier to the holder/prover, and the prover to return
 a base64 encoding of its zero-knowledge proof.
 
-@fig-sicpa-architecture shows the high-level overview how an OpenId component
-receives a verification requests with a new
+@fig-sicpa-architecture shows the high-level overview of how an OpenId component
+receives a verification request with a new
 `proof_type` and delegates its creation to new components that embed the artifacts
 implemented for this work.
 The OpenId flow is unchanged and communication happens agent-to-agent, over the internet,
@@ -395,7 +395,7 @@ as for "normal" proof requests.
       (0, 2),
       align(center)[ZKP prover component \
         #text(size: 0.85em)[
-          Compute proof with public parameter \
+          Compute proof with public parameters \
           \+ witness from credential
         ]],
       fill: zkp-fill,
@@ -435,7 +435,7 @@ as for "normal" proof requests.
       (1, 2),
       align(center)[ZKP verifier component \
         #text(size: 0.85em)[synthesizes the R1CS,\
-          verify proof and public parameters]
+          verifies proof and public parameters]
       ],
       fill: zkp-fill,
       name: <verifier-zkp>,
@@ -480,7 +480,7 @@ as for "normal" proof requests.
       label-side: right,
       label-sep: 2pt,
       label-fill: white,
-      label: align(center, text(size: 0.8em)[4. Authorization response]),
+      label: align(center, text(size: 0.8em)[4. authorization response]),
     ),
     edge(
       (0.5, -1.2),
@@ -533,11 +533,12 @@ All tests have been done using the latest commit on branch `final_report`.
     table.header([Prover], [Mac], [Intel], [Mobile]),
     [UltraHonk \ Barretenberg], [3.1s], [8.8s], [16.1s],
     [Spartan], [3.7s], [8.3s], [11.8s],
-    [Spartan \ Pre-computed], [load: 0.9s \ final: 0.9s \ total: 1.8s],
-      [load: 1.5s \ final: 2.2s \ total: 3.7s],
+    [Spartan \ Pre-computed], [load: 0.2s \ final: 1.0s \ total: 1.5s],
+      [load: 0.4s \ final: 2.2s \ total: 3.0s],
       [_load: 2.1s \ final: 3.1s \ total: 5.2s_]
   ),
-  caption: [Pretty benchmarks]
+  caption: [Benchmarking our circuits for age-proof with different
+    provers and on three platforms.]
 )<what-benchmarks>
 
 === Desktop
@@ -546,25 +547,25 @@ On desktop, we evaluated the two implementations on a MacBook Pro and on a serve
 a dual-Intel processor.
 While the zero-knowledge proof is ultimately destined to be integrated into the Swiyu
 mobile application, the performance measured
-on this machines gives us an idea of what to expect on a less powerful device.
+on these machines gives us an idea of what to expect on a less powerful device.
 
-It is interesting to note that between the Mac and the Intel machine, the provers are
-inversed: while the Intel server runs the Spartan prover faster, the Mac runs the
+It is interesting to note that between the Mac and the Intel machine, the ranking of the provers is
+inverted: while the Intel server runs the Spartan prover faster, the Mac runs the
 UltraHonk prover faster.
 We were not able to find out why this inversion of speed happened between the two
-machines, but our best guess is that each prover has been optimised for the other
-machine.
+machines, but our best guess is that the provers have different optimisations:
+UltraHonk is tuned for ARM/Apple and Spartan for x86.
 
 But for both machines we observe that the finalisation stage after the pre-computation
 is faster than UltraHonk in every case.
 While our first experiments with pre-computation were not conclusive due to the
 huge size of the intermediate results, in the order of GBs, compression and
-other optimisations reduced the loading part of the pre-computed data to a
-negligible factor!
+other optimisations reduced the loading part of the pre-computed data to an
+acceptable factor!
 
 It is to be noted that precomputing the partial proof takes on average about 5 seconds
 and generates a file of about 28MB.
-As this step is only needed once a user receives a credential, and every time
+As this step is only needed once, when a user receives a credential, and every time
 the revocation list is updated, which is once a week, we consider this delay
 to be acceptable.
 
@@ -579,11 +580,11 @@ The existing privacy-preserving digital credentials,
 Crescent and Longfellow, rely on specialised credential formats
 to achieve their impressive proof verification times of under one second.
 We, on the other hand, are able to use the
-standard SD-DWT through a Noir circuit, which is a major prerequisite
+standard SD-JWT through a Noir circuit, which is a major prerequisite
 for integrating zero-knowledge proofs into the
 Swiss e-ID.
 
-Looking at the pure UltraHonk / Barretenberb proof in @what-benchmarks,
+Looking at the pure UltraHonk / Barretenberg proof in @what-benchmarks,
 the best runtime of 16.1 seconds clearly leaves much to be desired in terms of user
 experience.
 However, successfully generating an SD-JWT credential proof on a
@@ -592,12 +593,12 @@ endeavour from a theoretical undertaking to a practically applicable result.
 
 The Spartan backend is already better with the best runtime at 11.8s.
 While this is still an order of magnitude away from our goal, which is
-1s for a proof, it shows that there is still place for optimisation in
+1s for a proof, it shows that there is still room for optimisation in
 ZKP circuit proofs.
 Also, the mobile device is not of the latest generation, and modern devices
 can easily gain a factor of two.
 
-Using the Spartan with pre-computation brings down the proving time to
+Using Spartan with pre-computation brings down the proving time to
 a little bit over 5s.
 This includes the loading of the pre-proof, and the finalisation of the
 proof using the latest timestamp and the challenge from the verifier.
@@ -606,24 +607,24 @@ which clocks in at 18s on this device.
 But this is only executed once per credential, and upon renewing the
 non-revocation proof, which is probably once per week.
 
-== Related Works and concurrent events
+== Related Work and Concurrent Events
 
-During the period this project spanned, a number of high-profile publications, as well as key governance decisions have happended.
+During the period this project spanned, a number of high-profile publications, as well as key governance decisions have happened.
 
 Interest towards production-deployable Zero-Knowledge solutions for digital identity
-is clear, if only from the number of strong publications that happened during
+is clear, if only from the number of strong publications that appeared during
 the course of this project. Among these, the most prominent results are:
 
 - Longfellow @FS24, an optimized proof system that has been field tested with Google and Deutsche Bank.
   We analyze it in comparison with Crescent in a blog post @EIDBlogCrescentLongfellow.
-  It achieves most of our targets but we found the adaptability to be poor when it came to changing the circuits' implementation and lack auditability by non-experts.
-- Crescent @FFL25 implements interesting ideas with commitments re-randomization as well as the modified ECDSA equation verification for holder binding.
+  It achieves most of our targets but we found the adaptability to be poor when it came to changing the circuits' implementation, and its auditability by non-experts to be lacking.
+- Crescent @FFL25 implements interesting ideas with commitment re-randomization as well as the modified ECDSA equation verification for holder binding.
   We analyze and compare it to Longfellow in a blog article @EIDBlogCrescentLongfellow.
   The main proof on the credential uses Groth16 @G16 which requires a public setup, something we wanted to avoid.
   Our implementation uses their holder binding technique to reduce the ECDSA verification cost and maximize the proving work that can be done in a pre-computed phase.
 - Vega @KS25 is an iteration on Spartan @S19.
-  It introduces a folding of circuits yielding fast proving time.
-  In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
+  It introduces folding of circuits, yielding fast proving times,
+  in particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
   Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
 - OpenAC @ENRT26 is a transparent anonymous-credential design that, like our work, requires no trusted
   setup and no modification of the issuer's credential-issuance flow.
@@ -657,11 +658,11 @@ the course of this project. Among these, the most prominent results are:
 In @tbl-openac-perf are two entries for Vega: Vega#sub[SC] and Vega#sub[MC].
 SC is a shorthand for _single-circuit_, MC for _multi-circuit_.
 The difference illustrates the gain the _fold-and-reuse_ approach of Vega @KS25 allows for.
-_Single_circuit_ shows the system characteristics for a single "big" proving circuit like ours.
-_Multi-circuit_ shows the system characteristics when the proof is sub-divided in smaller circuits,
+_Single-circuit_ shows the system characteristics for a single "big" proving circuit like ours.
+_Multi-circuit_ shows the system characteristics when the proof is sub-divided into smaller circuits,
 some of which can be _reused_. In their publication, their largest speed gain comes from a clever
 way of reusing a circuit that does one block of SHA256 hashing.
-An optimization that would yield good results on our own construction (at least as much as in their publication).
+This optimization would also yield good results on our own construction (at least as much as in their publication).
 
 #wide-figure(
   block[
@@ -699,7 +700,7 @@ substantially larger proving and verifying keys.
 
 === Governance, standardization
 
-There are also talks from standardization body to include this work in standards recognized by the governing bodies in the EU:
+There are also discussions in standardization bodies about including this work in standards recognized by the governing bodies in the EU:
 
 - The authors of Longfellow have proposed it as an IETF draft @IETFLongfellow.
 - ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 @ETSIZKP. In our opinion, the standardization of BBS is great but comes at a point in time when the convenience vs cost of rolling out BBS in a way that is compliant with eIDAS 2 is not attractive. Even less so with all the strong circuit-based ZKP contenders.

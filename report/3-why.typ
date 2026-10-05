@@ -3,18 +3,18 @@
 
 = Specific Choices for Implementations <why>
 
-We chose Noir to write out circuits for the following reasons:
+We chose Noir to write our circuits for the following reasons:
 
 - Circuit accessibility to non-expert developers (with caveats), see @how-technical
 - Circuit readability for auditing and review purposes
 - Modular architecture allowing us to use it decoupled from the original proof system
 
-Noir's default proof system is UltraHonk @UltraHONK, a system designed for the typical trade-offs seen in blockchain scenarions.
+Noir's default proof system is UltraHonk @UltraHONK, a system designed for the typical trade-offs seen in blockchain scenarios.
 The resulting proofs are short, verifying is fast, and prover time is less of a concern.
 For the usage in e-ID, this system has two downsides: first, it is optimised for fast
 verifier time, as it needs to execute on a blockchain.
 In our case, the low resource part of the ZKP is the prover, so we need a fast
-prover, and can spend more time in the verification.
+prover, and can spend more time on the verification.
 Second, UltraHonk requires a public setup, which is a delicate cryptographic ceremony
 to create a secret which must be as random as possible, and requires
 additional trust.
@@ -23,23 +23,23 @@ This section will expose how we used Noir in conjunction with a proof system tha
 
 == Noir for Circuits
 
-After MS2, we decided to pursue the ZKP-circuit venue instead of relying solely
+After MS2, we decided to pursue the ZKP-circuit avenue instead of relying solely
 on sigma proofs.
-As of the end of 2026, Noir is the most complete and supported app to create ZKPs in a
+As of mid-2026, Noir is the most complete and supported app to create ZKPs in a
 user-friendly way.
 It is also extensible, which allowed us to change the prover backend,
 and improve the speed to create a ZKP.
 
 === Circuit Implementation
 
-The @fig-zkp-overview shows an illustration of the different parts
+@fig-zkp-overview shows an illustration of the different parts
 of a ZKP.
 It is important to note that there is information known to both
 the prover and the verifier, namely the statement itself, as well
 as a set of public inputs, e.g., the public key of the issuer.
 Other inputs are private and will not be available to the verifier -
 only the final proof is available to the verifier, and the properties
-of the ZKPs make that the verifier cannot learn more information about
+of ZKPs ensure that the verifier cannot learn more information about
 the private data than the statement reveals.
 So if the statement tests if the given credential has a birthdate of
 more than 18 years in the past, the proof reveals that fact, but not
@@ -140,7 +140,7 @@ The code to write this proof is understandable by a software engineer without
 having to understand the deep cryptographic improvements.
 This is an important step to make ZKPs go from a
 _magical cryptography problem_ to an actual use-case which can be implemented
-and used in everyday's applications.
+and used in everyday applications.
 One thing we did not include in this code is the _revocation_, which is
 described in @why-opt-revocation.
 
@@ -150,40 +150,40 @@ Noir is originally written and equipped to perform proofs and verifications on A
 Noir comes with a default proof system: UltraHonk's implementation in Barretenberg.
 This proof system comes from the line of work on Plonk-ish proof systems and relies on the bn254-Grumpkin curve cycle constructed following a publication on the construction of such cycles @CK24.
 
-Our interest lies in circuits and proofs systems that are efficient to compute for ECDSA verifications of JSON-style data blobs as defined in @SDJWT.
-We used Noir compiler's parametrized architecture to introduced a new compilation-time configuration to change Noir's output circuit (ACIR)
+Our interest lies in circuits and proof systems that are efficient to compute for ECDSA verifications of JSON-style data blobs as defined in @SDJWT.
+We used Noir compiler's parametrized architecture to introduce a new compilation-time configuration to change Noir's output circuit (ACIR)
 from using bn254-Grumpkin to using the scalar field of the Tom-256 curve @zkattest @tom256parameters.
 An important note is that the P256 and Tom-256 curves do NOT form a cycle.
 As such, some of Noir's architecture assumptions break down in local places.
-This curve is especially designed to make computations in the P256 field (such as the ECDSA verification equation) efficient.
+Tom-256 is especially designed to make computations in the P256 field (such as the ECDSA verification equation) efficient.
 Our implementation is limited to elliptic curve addition and multi-scalar-multiplication, foregoing the Poseidon commitment as our circuits don't require this.
 This implementation is only partial since a proper integration would imply a sizeable rework of Noir's architecture as well as of its standard library, both built mostly with bn254 and curve cycles in mind.
 
 == Spartan Backend <why-spartan>
 
 Producing Noir's ACIR with Tom-256 representing values of the circuits enables us to use work from Srinath Setty on Spartan @S19, and then Vega @KS25.
-Spartan is attractive for its prover cost as well as capability to work with Tom-256.
+Spartan is attractive for its prover cost as well as its capability to work with Tom-256.
 Notably, it is used for holder binding in Crescent @FFL25 and we reproduce this approach in our work.
 Spartan relies on bellpepper to synthesize R1CS instances of circuits.
 Our contribution with the spartan-backend is the synthesis of Noir's compiled artifacts into R1CS instances.
 Our backend then uses this R1CS instance to produce or verify a zero-knowledge proof as implemented by Vega.
-R1CS being one of the most common ways to express NP-statements for zero-knowledge proofs, the synthesizer is some implementation away from
+R1CS being one of the most common ways to express NP-statements for zero-knowledge proofs, the synthesizer is only some implementation work away from
 being able to interface with other proof systems ingesting such statements.
 
 #todo(assignee: [Clement])[Only if you have time, after all the other TODOs: can you write some
   more about the synthesis of the R1CS? That looks like a big part!]
 
 This architecture creates a lot of flexibility in the chain: Noir's ACIR could be synthesized by another piece of software (nothing exists at the time of writing)
-and mathematically speaking, the R1CS instance resulting of the synthesis and instantiation could be ingested by other proving backends reyling on R1CS.
+and mathematically speaking, the R1CS instance resulting from the synthesis and instantiation could be ingested by other proving backends relying on R1CS.
 
 === Build and proof chain <why-spartan-build>
 
 Here are the steps a prover would execute with noir when doing a ZKP
-for example to prove their age is equal or above to 18 years:
+for example to prove their age is equal to or above 18 years:
 
-- Prover receives verification requests for their age, including holder binding nonce
-- Prover populates circuits input by mapping high-level function parameters of the Noir circuit description, using our modified `nargo-t256` tool, a build from our forked Noir compiler relying on Tom-256
-- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set
+- Prover receives a verification request for their age, including holder binding nonce
+- Prover populates the circuit inputs by mapping high-level function parameters of the Noir circuit description, using our modified `nargo-t256` tool, a build from our forked Noir compiler relying on Tom-256
+- A preprocessor is used to compute the points defined by Crescent for holder bindings and augment the prover's input set;
   this is necessary because to prove an ECDSA signature in Spartan, the inputs have to be modified
 - Prover uses `nargo-t256 execute` to map the inputs into individual "witnesses"
 - Prover uses `spartan-backend` to:
@@ -204,7 +204,7 @@ R1CS, specifically with regard to code which accesses variable-length
 input arrays.
 
 Other optimisations were already done by previous projects, but never
-described in enough details to be able to be reproduced.
+described in enough detail to be reproduced.
 We hope that these optimisations can inspire others to create
 even better ZKPs for different use-cases!
 
@@ -215,12 +215,12 @@ by the issuer, before it is signed.
 For this reason we don't do a full JSON syntax check in our circuit, and
 take advantage of this correctly formatted JSON to do the following:
 instead of parsing the JSON and extracting various values, our circuit
-let's the prover give the _position_ of the values to be extracted
+lets the prover give the _position_ of the values to be extracted
 as a private input.
-The verifier can trust this position, even though it ignores it, as the
+The verifier can trust this position, even though it does not know it, as the
 circuit makes sure that the JSON field pointed to at the position has
 the required name.
-This trick is also used in Spartan, and allows to avoid a full parsing
+This trick is also used in Crescent, and allows us to avoid a full parsing
 of the JSON, while preventing the prover from giving a wrong position
 in the private input.
 
@@ -242,14 +242,12 @@ N outputs × N-sized lookup each ≈ O(N²) constraints.
 Our input array is in the thousands of bytes, so N² blows up fast.
 
 A barrel shifter never does a variable-index read.
-It decomposes the shift into its bits (LOG of them, since shift is bounded —
+It decomposes the shift into its bits (`ln2` of them, since shift is bounded —
 here at most 128, i.e. 8 bits).
 At each bit-step it shifts by a fixed power of two (1, 2, 4, 8, ...),
-and those are compile-time constants baked into the unrolled loop (step
-doubles each iteration, LOG is a compile-time generic, so the outer loop
-is fully unrolled at compile time).
-Indexing by a constant offset is free.
-The only "runtime" part is a cheap `if bit == 1 { from } else { cur[i] }`
+and those are compile-time constants baked into the unrolled loop,
+indexing by a constant offset is free.
+The only part depending on the witness is a cheap `if bit == 1 { from } else { cur[i] }`
 select per byte per step — O(N) work, done LOG times, so O(N·LOG) total —
 roughly N·8 instead of N².
 
@@ -276,13 +274,13 @@ the returned value needs to be checked to be correct.
 A simple example is factorisation: given $c = a * b$, if $c$ is an
 input to the circuit, it is expensive to calculate $a$ and $b$
 in a ZKP circuit.
-However, an external circuit can do this calculation fast (depending
+However, external code can do this calculation fast (depending
 on the size of $c$ of course), and return $a$ and $b$ to the circuit.
 Now the circuit can verify if $c == a * b$ and abort if this is not
 the case.
 
 In our circuit, the public key of the device is in the SD-JWT
-credential and stored as base-64.
+credential and stored as base64.
 While encoding a binary stream into base64 is fast, decoding produces
 big circuits.
 For this reason, our circuit does the following:
@@ -294,8 +292,8 @@ For this reason, our circuit does the following:
   the same
 
 While it looks more complicated from an external view, the fact that
-encoding is much cheaper than decoding makes this output a smaller
-circuit.
+encoding is much cheaper than decoding makes the resulting circuit
+smaller.
 
 === Selective Disclosure Values <how-opt-sd>
 
@@ -310,8 +308,8 @@ issuer's signature on the hashes works out, see the RFC @RFC9901.
 #let timestamp_dob = $"Date of Birth"$
 
 For our circuit, this is advantageous, as the hashed part of the SD-JWT
-is fixed size, and only the values and salts change.
-The signature of the issuer is only calculated over the fixed size,
+is fixed-size, and only the values and salts change.
+The signature of the issuer is only calculated over the fixed-size part,
 so the circuit also only has to verify the signature over this fixed
 part.
 Our circuit uses the date of birth, which can be entered into the
@@ -327,7 +325,7 @@ than what the issuer signed.
 We used the proposal from Crescent @FFL25 for holder binding. Making $R$ a public input and computing public points based on the verifier challenge allows for most
 of the holder binding cost to be paid outside of the circuit -- a way more efficient
 computation.
-The verification functions as follows, this is borrowed directly from Crescent's
+The verification functions as follows; this is borrowed directly from Crescent's
 section on holder binding (Section 3.4.1, "ECDSA Signature Proof" in @FFL25).
 
 ==== Definitions
@@ -336,7 +334,7 @@ Following Crescent, the curve group is written multiplicatively:
 
 - $G$, the generator of the NIST P--256 group, of order $n$.
 - $d$, the device private key, generated and kept inside the secure element.
-- $Q = G^d$, the device public key. This is what we aim at keeping secret to prevent linkability.
+- $Q = G^d$, the device public key. This is what we aim to keep secret to prevent linkability.
 - $f(dot)$, the function taking a curve point and returning its $x$--coordinate.
 - $M$, the message signed by the device during the presentation, i.e. the fresh
   challenge chosen by the verifier, already hashed and converted to an integer
@@ -371,7 +369,7 @@ scalar multiplication takes approximately 2700 R1CS constraints @FFL25.
 
 As described in @MS2-rep, we decided to not use any
 advanced cryptographic accumulators because of the overhead
-necessary by the clients to keep their witnesses up-to-date.
+required of the clients to keep their witnesses up-to-date.
 Instead we started to use the revocation lists in the Swiyu
 project, but had to abandon their protocol because the list itself
 was compressed, and decompression inflates the circuit size
@@ -387,12 +385,12 @@ can find in @why-revocation-list.
     table.header([Name], [Size [B]], [Description]),
 
     [`ID_START`], [8], [The first `CRED_ID` described in this list],
-    [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch where this list expires],
+    [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch at which this list expires],
     [`REV_LIST`], [128], [Bit-field of revoked credentials - 0: non-revoked - 1: revoked],
     [`SIG`], [64], [ECDSA signature on the first part of this list],
   ),
   caption: [Our proposed structure for the revocation lists.
-    It is similar to the RFC, but is a binary blob,
+    It is similar to the draft-ietf-oauth-status-list-20, but is a binary blob,
     which is much simpler to interpret in a ZKP.]
 )<why-revocation-list>
 
@@ -402,7 +400,7 @@ As the credential itself is never revealed, this `CRED_ID`
 does not pose a danger to the anonymity of our system.
 When creating a proof, the client needs to download the
 corresponding revocation list from the server.
-We did not consider the privacy implication of this request,
+We did not consider the privacy implications of this request,
 but techniques like "Private Information Retrieval" can make
 this retrieval oblivious to the server.
 The circuit needs to perform the following tests so that the
@@ -438,7 +436,7 @@ further down to 28MB!
 
 So instead of storing and loading 2GB, the Spartan prover now stores only
 28MB, but has to compress and decompress the data.
-However, on a Mac and Intel, this is much faster than reading the data
+However, on both the Mac and the Intel machine, this is much faster than reading the data
 from the SSD.
 
 At the cost of around 11% of storage, going from around 23MB of precomputation storage to 32MB,
@@ -450,21 +448,18 @@ security model to speed up the loading of precomputation files.
 == SICPA Implementation
 
 SICPA's platform models users as agents in control of their own keys, which are not hosted within reach of the proving software we want to deploy.
-This replicates closely the setup we have on a phone with the key in the Android's secure element.
+This replicates closely the setup we have on a phone with the key in the secure element of an Android phone.
 
-One of the big question we're still trying to work on with this integration is the cost of operating such ZKP infrastructure at a reasonable speed.
-Allocating a full vCPU and 10GB of RAM to the deployment of the ZKP tooling still results in proving and verification speed in the order of 30 seconds
+One of the big questions we're still trying to work on with this integration is the cost of operating such ZKP infrastructure at a reasonable speed.
+Allocating a full vCPU and 10GB of RAM to the deployment of the ZKP tooling still results in proving and verification speeds in the order of 30 seconds
 each.
-Therefore it is clear that a thorough follow-up analysis of the cost/speed trade-offs and types of deployment must be conducted based on each individual
-use-cases.
-The biggest divide being between high-volume-low-margins credential presentations industries and low-volume-high-margins ones.
+Therefore it is clear that a thorough follow-up analysis of the cost/speed trade-offs and types of deployment must be conducted for each individual
+use case.
+The biggest divide is between industries with high-volume, low-margin credential presentations and those with low-volume, high-margin ones.
 Working on the integration with OpenId4VP was not a big hurdle as the protocol can be conveniently extended with a new proof type but it also
-became clear that a ZKP ecosystem needs a reliable distribution channel for circuits and acceptable public parameters ranges to prevent outdated or malicious circuits
-execution (e.g., a verifier distributing a ZKP circuit that requests oversharing from the prover).
+became clear that a ZKP ecosystem needs a reliable distribution channel for circuits and acceptable public parameters ranges to prevent the execution of outdated or malicious
+circuits (e.g., a verifier distributing a ZKP circuit that requests oversharing from the prover).
 Such a distribution channel should complement the verifier's registry described in Swiyu @Swiyu.
-A point we analyzed late in the project and would deserve more experimentation is the use of precomputation. While storing a large file of precomputation securely
-on a phone is in the realm of realistic implementations, doing so for a high number of credentials, without risking leaking witness values, and ensuring that loading
-the precomputation does come at a cost that offsets the benefit of precomputation is no trivial matter.
 
 == Mobile
 

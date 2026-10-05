@@ -26,9 +26,9 @@
       url: "ineiti.ch"
     ),
   ),
-  abstract: [We describe the ongoing work for the Innosuisse grant 101.292 IP-ICT -
+  abstract: [We describe the work done for the Innosuisse grant 101.292 IP-ICT -
   Secure and Privacy-Preserving Credentials for E-ID - between EPFL and SICPA SA.
-  This is the final Report.],
+  This is the final report.],
 )
 // #set page(margin: (inside: 2cm, outside: 1.5cm, y: 1.75cm))
 
