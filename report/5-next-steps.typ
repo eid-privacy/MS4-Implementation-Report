@@ -4,11 +4,25 @@
 
 == Who can use it?
 
-Taking into account the assumptions in @how-assumptions, here is what you can
-do with the code.
-The main work is to create a spartan-backend for the `noir` compiler,
-and this allows to build on a foundation to improve the performance
-of these circuits.
+Our code and other artifacts can be used by different target
+audiences:
+
+- For researchers, and people interested in the topic, we published
+  several #link("https://eid-privacy.github.io/")[Blog Posts] and a
+  #link("https://eid-privacy.github.io/zkp-vault")[List of Resources],
+  for which we already got feedback of people having used it to
+  start their own journey into ZKPs.
+- Our results are reproducible, thanks to the
+  #link("https://www.jetify.com/devbox")[Devbox] tool which runs
+  on Mac, Linux, and Windows. This applies to the earlier
+  #link("https://github.com/eid-privacy/zkp-pocs")[zkp-pocs], as
+  well as to the latest
+  #link("https://github.com/eid-privacy/spartan-backend")[spartan-backend]
+  code with our improvements.
+  You can also test the performance of the mobile code by running the
+  benchmarks on your own phone using
+  #link("https://github.com/eid-privacy/zkp-android-spartan")[zkp-android-spartan]
+  and running it with Android Studio.
 
 == Remaining Challenges and follow-ups <remaining-challenges>
 
@@ -17,9 +31,11 @@ solution to be used and competitive with others like Longfellow itself.
 
 === Cryptography
 
+*Post-Quantum*:
 The main shortcoming of our proposal is shared with most others, short of Longfellow.
 Spartan is not post-quantum secure as it relies on the hardness of the discrete logarithm problem.
 
+*Optimisations*:
 Our backend does not leverage Vega's capabilities for fold-and-reuse circuits that would dramatically reduce the proving
 time for credential presentation.
 Using this would diminish the cost of sha-256 hashing, and therefore the cost brought by the size of the credentials themselves.
@@ -37,12 +53,12 @@ Next engineering steps would include:
 
 === Swiyu <follow-up-revocation>
 
-Regarding the standards we tried to preserve, OpenId4VP is untouched if for the non-breaking addition of a proof type.
+Regarding the standards we preserved, OpenId4VP is untouched if for the non-breaking addition of a proof type.
 Following the workgroup's meetings and evolution would inform on how such proof mechanisms are meant to extend the original specification.
 
 Our proof circuit does not include revocation. The IETF standard for revocation lists includes either a compression pass, or a very lengthy bit string representation
 both causing prohibitive explosion of the circuit size, and therefore proving time.
-We propose an alternative approach in c06 that would add a flat cost to the proof.
+We propose an alternative approach in @why-opt-revocation that would add a flat cost to the proof.
 Designing such a ZKP-friendly approach to revocation would be a logical next step for a complete proposal.
 
 == Optimisations we didn't do

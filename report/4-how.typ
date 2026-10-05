@@ -86,9 +86,20 @@ Given that this time is much longer than most network communication, we
 suppose that this gives us a good measurement on the feasibility of our
 solution.
 
-If you want to create your own mobile app, the UniFFI bindings in `zkp-android-spartan` provide everything you need. They are used to generate bindings
-for the Kotlin language, which you can then include in your own app as you see fit. The repository contains detailed instructions for both humans and AI
+If you want to create your own mobile app, the UniFFI bindings in
+`zkp-android-spartan` provide everything you need.
+They are used to generate bindings for the Kotlin language, which you can
+then include in your own app as you see fit.
+The repository contains detailed instructions for both humans and AI
 coding agents to guide you through the process.
+
+@how-mobile-uniffi shows a summary of how the different parts of
+our libraries work together in a mobile system.
+Rust is often used in mobile devices for time-critical
+elements, or to allow to have the same code base for the
+frontend and the backend.
+Using UniFFI, it is easy to create an API which can be used
+from mobile apps, for Android as well as for iOS.
 
 #wide-figure(
   diagram(
@@ -112,7 +123,7 @@ coding agents to guide you through the process.
   ),
   caption: [Including rust code in a mobile app using UniFFI.
     The *UniFFI* blocks are provided by the library or auto-generated.]
-)
+)<how-mobile-uniffi>
 
 == Proof and verification pipelines
 
@@ -201,7 +212,8 @@ We cascaded this capability to `spartan-backend` by adding a configuration file 
 
 Concretely, the configuration file marks a few input wires as volatile, and the taint
 propagates forward: a constraint is volatile as soon as one of its inputs is.
-@fig-taint-partition illustrates this propagation on a simplified view of the c0200 circuit.
+@fig-taint-partition illustrates this propagation on a _simplified_ view of the
+swiyu_jwt circuit.
 
 #wide-figure(
   text(size: 0.9em, diagram(
@@ -259,8 +271,25 @@ propagates forward: a constraint is volatile as soon as one of its inputs is.
     holder-binding branch, and the root inherits the taint.],
 ) <fig-taint-partition>
 
+With this in place we can optionally pre-compute e-ID presentations and at presentation
+time compute only the part that depends on the verifier's challenge for holder binding.
+While the first, naive implementation of storing the pre-computer circuit
+generated multi-GB sized files, we managed to reduce this by applying
+the following techniques:
 
-With this in place we can optionally pre-compute e-ID presentations and at presentation time compute only the part that depends on the verifier's challenge for holder binding. This leads to a noticeable reduction in proving time but depending on the device computing the proof, loading precomputation is costly. For our c0200-swiyu-jwt circuit, precomputation's file size is around 1.5GB. It is to be noted as well that this intermediate proof contains sensitive information of the holder and needs to be stored in accordance.
+- not store the full structure, as parts of it is not used in the finalisation -
+  this reduces the file size from 2GB to 1GB
+- apply a compression algorithm to the structure - there is a lot of repetition
+  in the structure - reduction from 1GB to 40MB
+- don't verify the data upon load - as the data is created by the prover, and
+  then re-read by that same prover, we can trust it's the same - this reduces
+  the loading time even further
+
+Applying these steps makes the storing and loading of the pre-computation
+not only feasible, but creates a real advantage compared to a full
+proof creation!
+It is to be noted as well that this intermediate proof contains sensitive
+information of the holder and needs to be stored in accordance.
 
 == Technical Limitations <how-technical>
 
@@ -288,23 +317,31 @@ the reason for these big circuits, and proposing solutions.
 But as always, if you cannot judge if the proposed solution is actually
 good, it's difficult to avoid errors.
 
-Another limitation comes with regard to our pre-computation described
-in @how-precomputation:
-while the schema is very interesting, as it allows to pre-compute the part
-of the proof which doesn't change, i.e., the issuer's signature and for
-age verification even the date of birth proof, there is a big downside.
-This pre-computation is in fact the whole matrix calculated so far, which
-for our age verification circuit corresponds to 1.5GB of data.
-Loading this data into memory to continue the computation already takes
-longer than the second part of the proof!
-We did not have the time yet to optimise this storage and loading of 1.5GB
-of data, which makes the improvements of the pre-computation much less
-impressive.
-
 == Use of LLMs <how-llms>
 
 Our work would not have been possible without the use of LLMs.
+We did exploratory work with different LLMs, mostly Claude,
+Copilot, and open-weight models like Qwen and DeepSeek.
+This allowed us to create a lot of boiler-plate code like
+benchmark scripts, mobile UIs, but towards the end of the
+project also more extensive optimisation tests.
+Even during the 18 months of this project, it was interesting
+to see the improvement of these tools.
+It is incredible the power we have nowadays to go from idea
+to realisation in a very short timeframe.
 
+With all that power comes a big responsibility: as we're all
+senior professionals, we do know the basics of software engineering,
+and can steer the LLMs in the right direction.
+For our more junior colleagues, we spent quite some time explaining
+to them how to change what they implement, and why they should
+ask other tasks from the LLMs.
+
+In this reports, LLMs did cleanup, formatting tables and lists,
+grammatical reviews.
+But the first writing of the report has been done manually,
+as writing a report is also a way to re-visit everything we
+did, and discover shortcomings, and possible improvements!
 
 == Security Review <how-security>
 
@@ -319,18 +356,143 @@ We wrote the requirement for the review to include:
 - our proposal for the revocation list, including the circuit
 
 After the allotted time, zkSecurity came back to us with the
-report of their findings:
+report of their findings, summarized in @tbl-security-findings.
+Findings marked as _out of scope_ are either outside of what we asked
+to be reviewed, or only relevant in a different attacker model than ours.
 
-- 8 high security findings which can allow a prover to cheat
-  - 7 got fixed in the latest release of `spartan-backend`
-  - 1 was deemed a misunderstanding of the scope
-- 4 medium security findings which can produce incorrect results
-  - 2 got fixed
-  - 2 were not relevant for our work
-- 2 low security findings
-  - only relevant in a different attacker model than ours
-- 1 informational finding which got fixed
-- 3 known issues
-  - 1 got fixed
-  - 1 is not in our attacker model
-  - 1 is not yet fixed
+#figure(
+  findings-summary(),
+  caption: [Findings of the zkSecurity review and their current status.],
+) <tbl-security-findings>
+
+In the following we list all findings, using the numbering of the zkSecurity
+report, together with our answers.
+
+=== High
+
+#finding("00", [Prover-controlled offsets allow reads beyond the signed payload],
+  fix: commit("spartan-backend", "29e81b3"))[
+  The offsets given by the prover are now limited to the range of the signed payload.
+  This affected the circuits `c0200_swiyu_jwt` and `c0202_sicpa_backend_constant`.
+]
+
+#finding("01", [Zero inverse scalar and infinity point bypass issuer authentication],
+  fix: commit("spartan-backend", "fe635c1"))[
+  The values `s_inv_jwt` and `R_jwt` are now restricted to the range accepted by ECDSA.
+  This affected the circuits `c0200_swiyu_jwt` and `c0202_sicpa_backend_constant`.
+]
+
+#finding("02", [Non-revocation circuit does not authenticate the credential identifier],
+  status: "scope")[
+  This is expected: the circuit `c06` is specifically created to measure _only_ the
+  non-revocation part of the full proof.
+  As such it is normal that it doesn't verify the validity of the credential itself.
+  However, the circuit `c06` _does_ verify that the revocation list itself is signed
+  by the issuer.
+  The goal of this circuit is to show the time necessary to add a revocation check
+  directly in the proof.
+]
+
+#finding("03", [Range decomposition values are not constrained to be Boolean],
+  fix: [#commit("spartan-backend", "936c819"), #commit("spartan-backend", "794b920")])[
+  The bit values of the `RANGE` decomposition are now constrained,
+  using `to_bits_le_strict` to enforce the value range.
+]
+
+#finding("04", [Noncanonical scalar decompositions change MSM results])[
+  Fixed.
+]
+
+#finding("05", [An infinity and zero x coordinate collision produces false MSM results],
+  fix: commit("spartan-backend", "d4e2caf"))[
+  The infinity branches for the EC addition are now properly selected.
+]
+
+#finding("06", [Point at infinity handling breaks valid curve operations],
+  fix: commit("spartan-backend", "166aba3"))[
+  The infinity handling has been fixed for the ACIR to Spartan conversion and for the MSM.
+]
+
+// TODO: the comments say "To Be Fixed"
+#finding("07", [Constant folding compiles P256 MSMs to incorrect results], status: "open")[
+  To be fixed, does not apply to our proof-of-concept circuits c0200 and c0202.
+]
+
+=== Medium
+
+// TODO: no answer in the comments yet
+#finding("08", [Fixed base MSM offset collisions can produce incorrect results],
+  severity: "medium", status: "open")[
+  Affects `allocated_point.rs`, `constant_point.rs`, and
+  `blackbox/multi_scalar_multiplication.rs` in `spartan-backend/src/noir/synthesis`.
+
+  Does not affect our proof-of-concept circuits c0200 and c0202, but might
+  pose problem in more generic circuits.
+]
+
+#finding("09", [Missing digest reduction prevents some valid issuer signatures from being verified],
+  severity: "medium", fix: commit("spartan-backend", "30ed18e"))[
+  The digest is now reduced.
+  While fixing this, we found two additional issues:
+  - `Fields::lt` in our `noir-t256` code, which hasn't been used before, was wrong.
+    This is fixed now.
+  - `R.x` is a P-256 point coordinate, so it is already $< p$.
+    It can still land in $[n, p)$ and be rejected as a non-canonical scalar,
+    but only with probability $(p-n)/p approx 2^(-130)$.
+    As this is negligible, unlike the $approx 2^(-32)$ probability of the digest case,
+    it is left unreduced.
+]
+
+// TODO: the comments say "To Be Fixed"
+#finding("0a", [MSM accepts scalars outside the canonical P256 domain],
+  severity: "medium", status: "open")[
+    Does not affect our proof-of-concept circuits c0200 and c0202, but might
+    pose problem in more generic circuits.
+]
+
+#finding("0b", [Public return values are treated as private witnesses],
+  severity: "medium", status: "scope")[
+  This would be nice to have, but is not relevant in our setting.
+]
+
+=== Low
+
+#finding("0c", [Birth date parsing and age checks do not enforce calendar semantics],
+  severity: "low", status: "scope")[
+  The cutoff date should be handed in as a public argument, calculated by the prover.
+  This allows to prove different ages, and keeps the control in the prover app.
+]
+
+#finding("0d", [Prepared proving state and debug logs expose private witness data],
+  severity: "low", status: "scope")[
+  This needs to be noted in the assumptions: the mobile device must store the proving
+  state in a private data part.
+  It remains to be seen if the
+  #link("https://developer.android.com/training/data-storage#filesInternal")[Internal Storage]
+  is big enough, or if External Storage and encryption is needed.
+]
+
+=== Informational
+
+#finding("0e", [Partial base64url chunks use bytes beyond the logical payload],
+  severity: "info", fix: commit("spartan-backend", "9f91bfa"))[
+  The bytes beyond `in_len` are now replaced with 0.
+]
+
+=== Known Issues
+
+#finding("0f", [Curve operations do not enforce P256 point membership],
+  severity: "known", fix: commit("spartan-backend", "85bdc3e"))[
+  The P256 membership of the points is now constrained.
+]
+
+#finding("10", [The demonstration verifier does not enforce policy or presentation freshness],
+  severity: "known", status: "scope")[
+  The verifier is only a demonstration and is not part of our attacker model.
+]
+
+// TODO: the comments say "To Be Fixed with other issues"
+#finding("11", [Unchecked P256 points can be folded into false curve statements],
+  severity: "known", status: "open")[
+  To be fixed together with the other P256 issues.
+]

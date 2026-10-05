@@ -26,6 +26,11 @@ shows how the issuer signature is proven by the credential holder.
 // D5.2b - Stretch goal 1: proof bound to single verifier
 // D5.2c - Stretch goal 2: deniable proof
 
+With our approach to use ZKP circuits, predicate proofs in any combination
+are possible.
+The restriction is the complexity of the circuit created, but for most of
+the challenges, a good optimisation can be found.
+
 _D5.3 - A security proof and an implementation of D5.2_
 
 To prove predicates in standard SD-JWT credentials, used by the EUDI-wallet
@@ -38,6 +43,12 @@ Our example circuit in #repo("spartan-backend", path: "circuits/c0200_swiyu_jwt"
 shows how to create predicate proofs directly on the credential.
 
 == WP6b - Privacy-preserving revocation
+
+Contrary to the current Swiyu proposal, we invert the
+proof of the non-revocation: instead of the verifier having
+to download and verify that the current credential is still
+valid, we include the proof directly at the prover.
+This also removes the need of batch issuance of credentials.
 
 _D6.3 - A mathematical proof for the algorithm in D6.2_
 
@@ -54,6 +65,9 @@ in our first Proof-of-Concepts, as circuit
 #repo("zkp-pocs", path: "noir/c06_non_revocation").
 
 == MS3 Goals
+
+Here is the list of all the goals for MS3, which have been mostly
+met by our external security review.
 
 _G5.3 An external entity verifies that D5.3 is correct_
 
@@ -72,6 +86,11 @@ _G3.3 An external entity verifies that the proof for the unlinkable proof of dev
 -> Done by the security review
 
 == WP7 - Final hardened implementation of our choices
+
+For all the applicable findings of the security review, we
+include a fix in our latest code.
+This code is available under an open source license, and
+can be used for further experiments.
 
 _D7.1 - Build the library_
 
@@ -105,6 +124,12 @@ It is likely that further quality improvements will be contributed to the librar
 
 == WP8 - Use the library in SICPA's Digital Trust Platform
 
+We built a demonstrator of the proofs using the standard APIs
+of SICPA's Digital Trust Platform.
+While the code cannot be used yet as-is, we demonstrated
+the way forward and will work further to get the code included
+as a standard library in SICPA.
+
 _D8.1 - Choice of two use-cases to be implemented in SICPAs software_
 
 SICPA implemented an "over 18" use case and is planning to implement a set membership one.
@@ -114,6 +139,8 @@ _D8.2 - Implementation of use-cases using the library from WP7_
 The "over 18" use-case is implemented using the library and its c0202 circuit.
 
 == MS4 Goals
+
+Here are the goals for the final milestone.
 
 _G0.3 The final report is available_
 
@@ -169,16 +196,30 @@ the flow of the demonstration will be the object of a recording and voice-over t
 
 == All Blog Posts
 
-- 2025-05-07 - #link("https://eid-privacy.github.io/wp0/2025/05/07/welcome.html")[Welcome to our technical blog]
-- 2025-05-23 - #link("https://eid-privacy.github.io/wp1/wp2/2025/05/23/swiyu-demo-announcement.html")[Open Source SWIYU Demo application]
-- 2025-06-10 - #link("https://eid-privacy.github.io/wp1/2025/06/10/taxonomy-101.html")[Taxonomy 101]
-- 2025-09-17 - #link("https://eid-privacy.github.io/wp1/2025/09/17/taxonomy-of-digital-identity-systems.html")[Taxonomy of digital identity systems]
-- 2025-09-17 - #link("https://eid-privacy.github.io/wp2/2025/09/17/privacy-enhancing-resources.html")[Resources on Zero-knowledge Systems and Proofs]
-- 2025-10-20 - #link("https://eid-privacy.github.io/wp4/2025/10/20/overview.html")[Overview of Privacy and Unlinkability]
-- 2025-10-21 - #link("https://eid-privacy.github.io/wp1/2025/10/21/comparing-implemented-zk-systems.html")[Comparing ZK systems]
-- 2025-11-28 - #link("https://eid-privacy.github.io/wp0/2025/11/28/crescent-longfellow-showdown.html")[Crescent and Longfellow]
-- 2026-01-09 - #link("https://eid-privacy.github.io/2026/01/09/poc-report.html")[Proof-of-Concept for ZKPs]
-- 2026-01-27 - #link("https://eid-privacy.github.io/wp2/2026/01/27/docknetwork-crypto-library.html")[Choosing a Cryptographic Library for Anonymous Credentials]
-- 2026-04-22 - #link("https://eid-privacy.github.io/wp2/2026/04/22/zkp-vault.html")[Reading list for ZKP algorithms and implementations]
-- 2026-05-27 - #link("https://eid-privacy.github.io/wp2/2026/05/27/noir-benchmarking.html")[BoundedVec sizes vs. proving time in Noir]
-- 2026-06-19 - #link("https://eid-privacy.github.io/wp2/2026/06/19/noir-benchmarking-mobile.html")[Verifiable SD-JWT Credential on Mobile]
+#figure(
+  table(
+    columns: (auto, 1fr),
+    stroke: none,
+    inset: (x: 4pt, y: 3pt),
+    align: left,
+    fill: (_, y) => if calc.odd(y) { luma(93%) },
+    table.hline(),
+    table.header([*Date*], [*Title*]),
+    table.hline(stroke: 0.5pt),
+    [2025-05-07], [#link("https://eid-privacy.github.io/wp0/2025/05/07/welcome.html")[Welcome to our technical blog]],
+    [2025-05-23], [#link("https://eid-privacy.github.io/wp1/wp2/2025/05/23/swiyu-demo-announcement.html")[Open Source SWIYU Demo application]],
+    [2025-06-10], [#link("https://eid-privacy.github.io/wp1/2025/06/10/taxonomy-101.html")[Taxonomy 101]],
+    [2025-09-17], [#link("https://eid-privacy.github.io/wp1/2025/09/17/taxonomy-of-digital-identity-systems.html")[Taxonomy of digital identity systems]],
+    [2025-09-17], [#link("https://eid-privacy.github.io/wp2/2025/09/17/privacy-enhancing-resources.html")[Resources on Zero-knowledge Systems and Proofs]],
+    [2025-10-20], [#link("https://eid-privacy.github.io/wp4/2025/10/20/overview.html")[Overview of Privacy and Unlinkability]],
+    [2025-10-21], [#link("https://eid-privacy.github.io/wp1/2025/10/21/comparing-implemented-zk-systems.html")[Comparing ZK systems]],
+    [2025-11-28], [#link("https://eid-privacy.github.io/wp0/2025/11/28/crescent-longfellow-showdown.html")[Crescent and Longfellow]],
+    [2026-01-09], [#link("https://eid-privacy.github.io/2026/01/09/poc-report.html")[Proof-of-Concept for ZKPs]],
+    [2026-01-27], [#link("https://eid-privacy.github.io/wp2/2026/01/27/docknetwork-crypto-library.html")[Choosing a Cryptographic Library for Anonymous Credentials]],
+    [2026-04-22], [#link("https://eid-privacy.github.io/wp2/2026/04/22/zkp-vault.html")[Reading list for ZKP algorithms and implementations]],
+    [2026-05-27], [#link("https://eid-privacy.github.io/wp2/2026/05/27/noir-benchmarking.html")[BoundedVec sizes vs. proving time in Noir]],
+    [2026-06-19], [#link("https://eid-privacy.github.io/wp2/2026/06/19/noir-benchmarking-mobile.html")[Verifiable SD-JWT Credential on Mobile]],
+    table.hline(),
+  ),
+  caption: [Blog posts published on #link("https://eid-privacy.github.io")[`eid-privacy.github.io`].],
+) <tab-blog-posts>
