@@ -43,6 +43,6 @@ or any other required predicate.
   and all their colleagues who participated in the discussions on how to create
   good ZKPs for the e-ID
 - Patrick Amrein from Ubique for discussions on the general approach to
-  privacy-preserving e-id as well as suggestions to strengthen the
+  privacy-preserving e-ID as well as suggestions to strengthen the
   security guarantees of our circuits and running rust with `--release`
 - The ZkSecurity team for thorough work on short notice

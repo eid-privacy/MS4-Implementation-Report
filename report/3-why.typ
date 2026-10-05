@@ -5,22 +5,27 @@
 
 We chose Noir to write out circuits for the following reasons:
 
-- Circuit accessibility to non-expert developers (with caveats)
+- Circuit accessibility to non-expert developers (with caveats), see @how-technical
 - Circuit readability for auditing and review purposes
 - Modular architecture allowing us to use it decoupled from the original proof system
 
 Noir's default proof system is UltraHonk @UltraHONK, a system designed for the typical trade-offs seen in blockchain scenarions.
 The resulting proofs are short, verifying is very fast, and prover time is less of a concern.
-One of the main con of UltraHONK for our work is that it requires a public setup, a cryptographic ceremony that is delicate to setup properly for
-a public use case.
+For the usage in e-ID, this system has two downsides: first, it is optimised for fast
+verifier time, as it needs to execute on a blockchain.
+In our case, the low resource part of the ZKP is the prover, so we need a fast
+prover, and can spend more time in the verification.
+Second, UltraHonk requires a public setup, which is a delicate cryptographic ceremony
+to create a secret which must be as random as possible, and requires
+additional trust.
 
 This section will expose how we used Noir in conjunction with a proof system that had more of the properties we are after for the Swiss e-ID.
 
-== Using noir
+== Noir for Circuits
 
 After MS2, we decided to pursue the ZKP-circuit venue instead of relying solely
 on sigma proofs.
-Noir is still the most complete and supported app to create ZKPs in a
+As of the end of 2026, Noir is the most complete and supported app to create ZKPs in a
 user-friendly way.
 It is also very extensible, which allowed us to change the prover backend,
 and improve the speed to create a ZKP.
@@ -91,9 +96,6 @@ more.
 #let Pr_non-rev = $"proof"_"non-rev"$
 #let Sig_valid(pub, sig, msg) = $"signature_valid"( #pub, #sig, #msg )$
 
-The different parts of the ZKP we produced for this projects
-are the following:
-
 #wide-figure(
   table(
     columns: (auto, auto),
@@ -145,7 +147,7 @@ described in @why-opt-revocation.
 === Compiler
 
 Noir is originally written and equipped to perform proofs and verifications on Aztec's blockchain.
-Noir comes with a default proof system and implementation: UltraHonk's implementation in Barretenberg.
+Noir comes with a default proof system: UltraHonk's implementation in Barretenberg.
 This proof system comes from the line of work on Plonk-ish proof systems and relies on the bn254-Grumpkin curve cycle constructed following a publication on the construction of such cycles @CK24.
 
 Our interest lies in circuits and proofs systems that are efficient to compute for ECDSA verifications of JSON-style data blobs as defined in @SDJWT.
@@ -159,7 +161,7 @@ This implementation is only partial since a proper integration would imply a siz
 
 == Spartan Backend <why-spartan>
 
-Producing Noir's ACIR with Tom-256 representing values of the circuits enables us to use work from Srinath Setty on Spartan @S19 (and then Vega @KS25).
+Producing Noir's ACIR with Tom-256 representing values of the circuits enables us to use work from Srinath Setty on Spartan @S19, and then Vega @KS25.
 Spartan is attractive for its prover cost as well as capability to work with Tom-256.
 Notably, it is used for holder binding in Crescent @FFL25 and we reproduce this approach in our work.
 Spartan relies on bellpepper to synthesize R1CS instances of circuits.
@@ -167,6 +169,9 @@ Our contribution with the spartan-backend is the synthesis of Noir's compiled ar
 Our backend then uses this R1CS instance to produce or verify a zero-knowledge proof as implemented by Vega.
 R1CS being one of the most common ways to express NP-statements for zero-knowledge proofs, the synthesizer is some implementation away from
 being able to interface with other proof systems ingesting such statements.
+
+#todo(assignee: [Clement])[Only if you have time, after all the other TODOs: can you write some
+  more about the synthesis of the R1CS? That looks like a big part!]
 
 This architecture creates a lot of flexibility in the chain: Noir's ACIR could be synthesized by another piece of software (nothing exists at the time of writing)
 and mathematically speaking, the R1CS instance resulting of the synthesis and instantiation could be ingested by other proving backends reyling on R1CS.
@@ -197,6 +202,11 @@ very big circuits for the Spartan backend.
 This is due to the way Spartan takes the ACIR code and converts it to
 R1CS, specifically with regard to code which accesses variable-length
 input arrays.
+
+Other optimisations were already done by previous projects, but never
+described in enough details to be able to be reproduced.
+We hope that these optimisations can inspire others to create
+even better ZKPs for different use-cases!
 
 === Index Passing as Private Input <how-opt-index>
 
@@ -243,16 +253,12 @@ The only "runtime" part is a cheap `if bit == 1 { from } else { cur[i] }`
 select per byte per step — O(N) work, done LOG times, so O(N·LOG) total —
 roughly N·8 instead of N².
 
-Instead of one big variable shift (expensive random access),
-this does log2(max_shift) small conditional shifts by
-fixed powers of two (cheap, since each is a constant-offset copy plus a select).
-
 === Base64 Encoder <how-opt-base64>
 
 The standard `noir_base64`
 encoder uses a 192-cell alphabet lookup table per output character, which
-dominates the cost of circuits that base64-encode kilobyte-scale buffers
-(e.g. c0200's full SD-JWT payload).
+dominates the cost of circuits that base64-encode kilobyte-scale buffers,
+e.g., a full SD-JWT payload from Swiyu.
 
 Our base64 encoder emits plain integer arithmetic over a
 statically-unrolled loop, so every byte access is a *constant* array
@@ -263,12 +269,13 @@ mod ops) plus four 6-bit -> ASCII conditional selects.
 
 === Brillig Circuits <how-opt-brillig>
 
-Noir allows circuits to use external code whose results is put back
+Noir allows circuits to use external code whose result is put back
 into the circuit.
 This can improve circuit speed, but needs some special handling, as
 the returned value needs to be checked to be correct.
 A simple example is factorisation: given $c = a * b$, if $c$ is an
-input to the circuit, it is very expensive to calculate $a$ and $b$.
+input to the circuit, it is very expensive to calculate $a$ and $b$
+in a ZKP circuit.
 However, an external circuit can do this calculation fast (depending
 on the size of $c$ of course), and return $a$ and $b$ to the circuit.
 Now the circuit can verify if $c == a * b$ and abort if this is not
@@ -297,7 +304,7 @@ the data itself, but on a hashed version of the salted data.
 This allows a prover to selectively disclose values by providing
 the credential holding the hashes, plus the salt and the data.
 The verifier can then check that the hash is correct, and that the
-issuer's signature on the hashes works out.
+issuer's signature on the hashes works out, see the RFC @RFC9901.
 
 #let salt_dob = $"DoBSalt"$
 #let timestamp_dob = $"Date of Birth"$
@@ -324,6 +331,10 @@ The verification functions as follows, this is borrowed directly from Crescent's
 section on holder binding (Section 3.4.1, "ECDSA Signature Proof" in @FFL25).
 
 ==== Definitions
+
+#todo(assignee: [Clement])[Be glad I didn't see that before. I just HATE
+  multiplicative notation for Elliptic Curves! It shouts
+  "HERE BE RSA"...]
 
 Following Crescent, the curve group is written multiplicatively:
 
@@ -370,24 +381,30 @@ project, but had to abandon their protocol because the list itself
 was compressed, and decompression inflates the circuit size
 too much.
 For this reason we went with a simpler approach, keeping the
-list uncompressed, but signed by the issuer.
-Here is the format of this simplified revocation list:
+list uncompressed, but signed by the issuer, which you
+can find in @why-revocation-list.
 
-#table(
-  columns: (auto, auto, auto),
-  table.header([Name], [Size [B]], [Description]),
+#figure(
+  table(
+    columns: (auto, auto, auto),
+    align: (left, right, left),
+    table.header([Name], [Size [B]], [Description]),
 
-  [`ID_START`], [8], [The first `CRED_ID` described in this list],
-  [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch where this list expires],
-  [`REV_LIST`], [128], [Bit-field of revoked credentials - 0: non-revoked - 1: revoked],
-  [`SIG`], [64], [ECDSA signature on the first part of this list],
-)
+    [`ID_START`], [8], [The first `CRED_ID` described in this list],
+    [`EXPIRES_AT`], [8], [Seconds since the Unix Epoch where this list expires],
+    [`REV_LIST`], [128], [Bit-field of revoked credentials - 0: non-revoked - 1: revoked],
+    [`SIG`], [64], [ECDSA signature on the first part of this list],
+  ),
+  caption: [Our proposed structure for the revocation lists.
+    It is very similar to the RFC, but is a binary blob,
+    which is much simpler to interpret in a ZKP.]
+)<why-revocation-list>
 
 In addition to this list, every credential now needs a unique
 `CRED_ID`, ideally incrementally starting from 0.
 As the credential itself is never revealed, this `CRED_ID`
 does not pose a danger to the anonymity of our system.
-When creating a prove, the client needs to download the
+When creating a proof, the client needs to download the
 corresponding revocation list from the server.
 We did not consider the privacy implication of this request,
 but techniques like "Private Information Retrieval" can make
@@ -442,7 +459,7 @@ each.
 Therefore it is clear that a thorough follow-up analysis of the cost/speed trade-offs and types of deployment must be conducted based on each individual
 use-cases.
 The biggest divide being between high-volume-low-margins credential presentations industries and low-volume-high-margins ones.
-Working on the integration with OpenId4VP was not a big hurdle as some of the structures can be conveniently extended with a new proof type but it also
+Working on the integration with OpenId4VP was not a big hurdle as the protocol can be conveniently extended with a new proof type but it also
 became clear that a ZKP ecosystem needs a reliable distribution channel for circuits and acceptable public parameters ranges to prevent outdated or malicious circuits
 execution (e.g., a verifier distributing a ZKP circuit that requests oversharing from the prover).
 Such a distribution channel should complement the verifier's registry described in Swiyu @Swiyu.

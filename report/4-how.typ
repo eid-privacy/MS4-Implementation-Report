@@ -3,17 +3,15 @@
 
 = If you want to use our code <how>
 
-We hope that our work can be used by other people to test out how
-good ZKPs are currently for use-cases like e-ID.
 This chapter gives some pointers how to use our work and what the
 restrictions are.
+We hope that our work can be used by other people to test out how
+good ZKPs are currently for use-cases like e-ID.
 
 == Assumptions / Caveats <how-assumptions>
 
-It is important to understand what the generic assumptions we make
-with regard to the credentials and usage.
-Here is the list of assumptions we make with regard to the
-setup of the infrastructure with regards to the credentials:
+It is important to understand what generic assumptions we make
+with regard to the credentials and usage:
 
 - the issuer is trustworthy - specifically, once an issuer signs
   an SD-JWT, we can suppose that this data structure is correct,
@@ -45,24 +43,36 @@ which are tracked in a separate repository.
 
 Finally, we included related work in a separate repository.
 
-=== Main work
+All repositories are published under
+#link(gh-org)[`github.com/eid-privacy`], as listed in @tab-repos.
+In every repository you'll find a main `README.md`, followed
+by other files which describe how to use the code in your
+own projects.
 
-- [spartan-backend](https://github.com/eid-privacy/spartan-backend): Noir with the Spartan/Vega proof system
-- [zkp-pocs](https://github.com/eid-privacy/zkp-pocs): Collection of circuits (Noir with UltraHonk/Barretenberg)
-- [flakes](https://github.com/eid-privacy/flakes): Utility repository with precompiled packages for Nix and Devbox
+#let cat(body) = table.cell(colspan: 2, fill: luma(93%), strong(body))
 
-=== Benchmarks
-
-- [zkp-android](https://github.com/eid-privacy/zkp-android): Mobile test app for benchmarking Noir with UltraHonk/Barretenberg
-- [zkp-android-spartan](https://github.com/eid-privacy/zkp-android-spartan): Mobile test app for benchmarking Noir with the Spartan/Vega proof system
-
-=== Publications
-
-- [eid-privacy](https://github.com/eid-privacy/eid-privacy.github.io): Our blog posts
-
-=== Related work
-
-- [zkp-vault](https://github.com/eid-privacy/zkp-vault): Collection of related work
+#figure(
+  table(
+    columns: (auto, 1fr),
+    stroke: none,
+    inset: (x: 4pt, y: 3pt),
+    align: left,
+    table.hline(),
+    cat[Main work],
+    repo("spartan-backend"), [Noir with the Spartan/Vega proof system],
+    repo("zkp-pocs"), [Collection of circuits (Docknetwork and Noir with UltraHonk/Barretenberg)],
+    repo("flakes"), [Precompiled packages for Nix and Devbox],
+    cat[Benchmarks (Android)],
+    repo("zkp-android"), [Test app for Noir with UltraHonk/Barretenberg],
+    repo("zkp-android-spartan"), [Test app for Noir with Spartan/Vega],
+    cat[Publications],
+    repo("eid-privacy.github.io"), [Blog posts (#link("https://eid-privacy.github.io")[`eid-privacy.github.io`])],
+    cat[Related work],
+    repo("zkp-vault"), [Collection of related work],
+    table.hline(),
+  ),
+  caption: [Code repositories and documentation.],
+) <tab-repos>
 
 == Use in Mobile
 
@@ -291,9 +301,14 @@ We did not have the time yet to optimise this storage and loading of 1.5GB
 of data, which makes the improvements of the pre-computation much less
 impressive.
 
+== Use of LLMs <how-llms>
+
+Our work would not have been possible without the use of LLMs.
+
+
 == Security Review <how-security>
 
-On the 24th of August, [zkSecurity](https://zksecurity.xyz) started
+On the 24th of August, #link("https://zksecurity.xyz")[zkSecurity] started
 the security review of our proof-of-concept code.
 We wrote the requirement for the review to include:
 

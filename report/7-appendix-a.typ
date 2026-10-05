@@ -17,7 +17,7 @@ See @holder-binding
 
 _D4.4 - Example programs showing how a credential is issued to a holder, and how a verifier can test whether the signature is valid_
 
-Our example circuit in [c0200_swyiu_jwt](https://github.com/eid-privacy/spartan-backend/tree/main/circuits/c0200_swiyu_jwt)
+Our example circuit in #repo("spartan-backend", path: "circuits/c0200_swiyu_jwt")
 shows how the issuer signature is proven by the credential holder.
 
 == WP5b - Predicate Proofs - anonymous and unlinkable proofs of credential values
@@ -34,7 +34,7 @@ The proof of Spartan can be found in their paper @KS25.
 
 _D5.4 - Example programs for creation and verification of predicates_
 
-Our example circuit in [c0200_swyiu_jwt](https://github.com/eid-privacy/spartan-backend/tree/main/circuits/c0200_swiyu_jwt)
+Our example circuit in #repo("spartan-backend", path: "circuits/c0200_swiyu_jwt")
 shows how to create predicate proofs directly on the credential.
 
 == WP6b - Privacy-preserving revocation
@@ -51,7 +51,7 @@ _D6.4 - Proof of concept implementations of the revocations_
 
 We have a circuit with an example of this revocation list
 in our first Proof-of-Concepts, as circuit
-[c06_non_revocation](https://github.com/eid-privacy/zkp-pocs/tree/main/noir/c06_non_revocation).
+#repo("zkp-pocs", path: "noir/c06_non_revocation").
 
 == MS3 Goals
 

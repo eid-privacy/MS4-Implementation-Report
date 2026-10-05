@@ -338,13 +338,13 @@ the nationality, the age, and the commune.
 == SICPA Integration <what-sicpa>
 
 SICPA has its own implementation of standardized formats and protocols for digital identity, including Swiyu-mandated SD-JWT and OpenId4VCi/VP.
-This makes our work on the SD-JWT of the Swiss e-id a very good candidate for integration in that implementation.
+This makes our work on the SD-JWT of the Swiss e-ID a very good candidate for integration in that implementation.
 
 
 SICPA's implementation is designed for so-called "Cloud Wallets".
 Keys reside in a key management system that lies outside of the solution's perimeter, modelled the same way an HSM is, i.e., no access to user's private keys.
 Platform users can, using the same set of keys, act as holders, provers, and verifiers.
-The integration we demonstrate for this work makes use of two distinct users: one who receives an e-id (outside of the scope of this work) and proves
+The integration we demonstrate for this work makes use of two distinct users: one who receives an e-ID (outside of the scope of this work) and proves
 its possession and being over 18 years old using the zero-knowledge proof developed during the grant. The other user is a verifier able to use the zero-knowledge
 tooling to verify the holder's claim.
 We assume the issuer to be known and considered trustworthy, the implementation does not include going to the base registry.
@@ -522,7 +522,7 @@ In our repository, #link("https://github.com/eid-privacy/spartan-backend"),
 the circuits correspond to:
 
 - `c0200_swiyu_jwt` - the circuit used to measure the Spartan prover
-- `c9200_swiyu_jwt` - the circuit used to measure the Ultrahonk / Barretenberg
+- `c9200_swiyu_jwt` - the circuit used to measure the UltraHonk / Barretenberg
   prover
 
 All tests have been done using the latest commit on branch `final_report`.
@@ -531,7 +531,7 @@ All tests have been done using the latest commit on branch `final_report`.
   table(
     columns: 4,
     table.header([Prover], [Mac], [Intel], [Mobile]),
-    [Ultrahonk \ Barretenberg], [3.1s], [8.8s], [16.1s],
+    [UltraHonk \ Barretenberg], [3.1s], [8.8s], [16.1s],
     [Spartan], [3.7s], [8.3s], [11.8s],
     [Spartan \ Pre-computed], [load: 0.9s \ final: 0.9s \ total: 1.8s],
       [load: 1.5s \ final: 2.2s \ total: 3.7s],
@@ -550,13 +550,13 @@ on this machines gives us an idea of what to expect on a less powerful device.
 
 It is interesting to note that between the Mac and the Intel machine, the provers are
 inversed: while the Intel server runs the Spartan prover faster, the Mac runs the
-Ultrahonk prover faster.
+UltraHonk prover faster.
 We were not able to find out why this inversion of speed happened between the two
 machines, but our best guess is that each prover has been optimised for the other
 machine.
 
 But for both machines we observe that the finalisation stage after the pre-computation
-is faster than Ultrahonk in every case.
+is faster than UltraHonk in every case.
 While our first experiments with pre-computation were not conclusive due to the
 huge size of the intermediate results, in the order of GBs, compression and
 other optimisations reduced the loading part of the pre-computed data to a
@@ -583,7 +583,7 @@ standard SD-DWT through a Noir circuit, which is a major prerequisite
 for integrating zero-knowledge proofs into the
 Swiss e-ID.
 
-Looking at the pure Ultrahonk / Barretenberb proof in @what-benchmarks,
+Looking at the pure UltraHonk / Barretenberb proof in @what-benchmarks,
 the best runtime of 16.1 seconds clearly leaves much to be desired in terms of user
 experience.
 However, successfully generating an SD-JWT credential proof on a
@@ -701,7 +701,6 @@ substantially larger proving and verifying keys.
 
 There are also talks from standardization body to include this work in standards recognized by the governing bodies in the EU:
 
-- Standardisation efforts
-  - The authors of Longfellow have proposed it as an IETF draft @IETFLongfellow.
-  - ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 @ETSIZKP. In our opinion, the standardization of BBS is great but comes at a point in time when the convenience vs cost of rolling out BBS in a way that is compliant with eIDAS 2 is not attractive. Even less so with all the strong circuit-based ZKP contenders.
-  - Yubico has also announced interest in piloting with Longfellow in the scope of Europe's Digital Identity project https://www.yubico.com/blog/piloting-europes-future-id-passkeys-securing-digital-wallets/
+- The authors of Longfellow have proposed it as an IETF draft @IETFLongfellow.
+- ETSI is standardizing BBS, Longfellow-zk, Vega, and OpenAC for digital identity uses in ETSI 119 476 2 @ETSIZKP. In our opinion, the standardization of BBS is great but comes at a point in time when the convenience vs cost of rolling out BBS in a way that is compliant with eIDAS 2 is not attractive. Even less so with all the strong circuit-based ZKP contenders.
+- Yubico has also announced interest in piloting with Longfellow in the scope of Europe's Digital Identity project https://www.yubico.com/blog/piloting-europes-future-id-passkeys-securing-digital-wallets/

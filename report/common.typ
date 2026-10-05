@@ -14,3 +14,10 @@
   ]
   — #body
 ]
+
+#let gh-org = "https://github.com/eid-privacy/"
+// Link to a repository (optionally a path inside it) of the eid-privacy org.
+#let repo(name, path: none) = link(
+  gh-org + name + if path != none { "/tree/main/" + path } else { "" },
+  raw(if path != none { path.split("/").last() } else { name }),
+)
