@@ -34,8 +34,8 @@ following important points:
 - We had to change the revocation, see @follow-up-revocation and
   @why-opt-revocation
 - Easy to understand and extendable by IT professionals, see @why
-- On laptop hardware acceptable performance (< 1s for a proof),
-  on mobile hardware still needs some improvement (< 10s on a 2025 iPhone)
+- On laptop hardware acceptable performance (~1.5s for a proof),
+  on mobile hardware still needs some improvement (~5s on a 2023 Android phone)
 
 == Comparison with Other Solutions
 
@@ -538,7 +538,9 @@ All tests have been done using the latest commit on branch `final_report`.
       [_load: 2.1s \ final: 3.1s \ total: 5.2s_]
   ),
   caption: [Benchmarking our circuits for age-proof with different
-    provers and on three platforms.]
+    provers and on three platforms.
+    For the pre-computed proof, the total includes the loading, the finalisation,
+    and the remaining steps performed by `spartan-backend`.]
 )<what-benchmarks>
 
 === Desktop
@@ -564,7 +566,7 @@ other optimisations reduced the loading part of the pre-computed data to an
 acceptable factor!
 
 It is to be noted that precomputing the partial proof takes on average about 5 seconds
-and generates a file of about 28MB.
+and generates a file of about 31MB.
 As this step is only needed once, when a user receives a credential, and every time
 the revocation list is updated, which is once a week, we consider this delay
 to be acceptable.

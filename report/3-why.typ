@@ -465,11 +465,12 @@ So instead of storing and loading 2GB, the Spartan prover now stores only
 However, on both the Mac and the Intel machine, this is much faster than reading the data
 from the SSD.
 
-At the cost of around 11% of storage, going from around 23MB of precomputation storage to 32MB,
+At the cost of around 11% of storage, going from around 28MB of precomputation storage to 31MB,
 we used a modified version of vega-prover that skips the validations to speed up the
 loading of precomputation files.
-As the prover is in responsible of the creation of the proof, and is supposed to be
-malicious, removing these validations has no implications on our security model.
+As the prover is responsible for the creation of the proof, and is supposed to be
+malicious from the point of view of the verifier, removing these validations has no
+implications on our security model: the verifier checks the final proof in any case.
 The only thing which can happen is the corruption of the precomputed data, in which
 case the prover will simply not be able to create a proof.
 This step divides the loading time by a factor of three, and it represents now less
