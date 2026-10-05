@@ -466,10 +466,14 @@ However, on both the Mac and the Intel machine, this is much faster than reading
 from the SSD.
 
 At the cost of around 11% of storage, going from around 23MB of precomputation storage to 32MB,
-we used a modified version of vega-prover that skips the validations we deem unnecessary to our
-security model to speed up the loading of precomputation files.
-#todo(assignee: "Linus")[Can you put numbers comparable to the others you have here ?]
-
+we used a modified version of vega-prover that skips the validations to speed up the
+loading of precomputation files.
+As the prover is in responsible of the creation of the proof, and is supposed to be
+malicious, removing these validations has no implications on our security model.
+The only thing which can happen is the corruption of the precomputed data, in which
+case the prover will simply not be able to create a proof.
+This step divides the loading time by a factor of three, and it represents now less
+than 20% of the total of the finalisation process of the proof.
 
 == SICPA Implementation
 
