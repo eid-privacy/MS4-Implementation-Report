@@ -2,16 +2,16 @@
 
 = Conclusion <conclusion>
 
-We are very satisfied with the way the project concluded.
-Part of it was very hard, because big players like Google and Microsoft were
+We are satisfied with the way the project concluded.
+Part of it was hard, because big players like Google and Microsoft were
 working on the same things.
 But in the end I believe we found an interesting niche where we were able to
 show a difference in how things work.
 
-In the beginning we were very focused on creating a new description of the
+In the beginning we were focused on creating a new description of the
 credentials to optimise proving time.
 But it turned out that nobody wants to change the structures and
-standards in use, as this is a very long process, which requires collaboration
+standards in use, as this is a long process, which requires collaboration
 with governments, policy actors, and other big companies.
 For this reason we concentrated on using the standards currently chosen for
 the EUDI-wallet and Swiyu.

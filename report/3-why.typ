@@ -10,7 +10,7 @@ We chose Noir to write out circuits for the following reasons:
 - Modular architecture allowing us to use it decoupled from the original proof system
 
 Noir's default proof system is UltraHonk @UltraHONK, a system designed for the typical trade-offs seen in blockchain scenarions.
-The resulting proofs are short, verifying is very fast, and prover time is less of a concern.
+The resulting proofs are short, verifying is fast, and prover time is less of a concern.
 For the usage in e-ID, this system has two downsides: first, it is optimised for fast
 verifier time, as it needs to execute on a blockchain.
 In our case, the low resource part of the ZKP is the prover, so we need a fast
@@ -27,7 +27,7 @@ After MS2, we decided to pursue the ZKP-circuit venue instead of relying solely
 on sigma proofs.
 As of the end of 2026, Noir is the most complete and supported app to create ZKPs in a
 user-friendly way.
-It is also very extensible, which allowed us to change the prover backend,
+It is also extensible, which allowed us to change the prover backend,
 and improve the speed to create a ZKP.
 
 === Circuit Implementation
@@ -198,7 +198,7 @@ This proof can then be verified by any verifier in possession of the same R1CS i
 
 During our work on the noir circuits, we encountered various places where
 a normal implementation using standard programming techniques produced
-very big circuits for the Spartan backend.
+big circuits for the Spartan backend.
 This is due to the way Spartan takes the ACIR code and converts it to
 R1CS, specifically with regard to code which accesses variable-length
 input arrays.
@@ -274,7 +274,7 @@ into the circuit.
 This can improve circuit speed, but needs some special handling, as
 the returned value needs to be checked to be correct.
 A simple example is factorisation: given $c = a * b$, if $c$ is an
-input to the circuit, it is very expensive to calculate $a$ and $b$
+input to the circuit, it is expensive to calculate $a$ and $b$
 in a ZKP circuit.
 However, an external circuit can do this calculation fast (depending
 on the size of $c$ of course), and return $a$ and $b$ to the circuit.
@@ -283,7 +283,7 @@ the case.
 
 In our circuit, the public key of the device is in the SD-JWT
 credential and stored as base-64.
-While encoding a binary stream into base64 is very fast, decoding produces
+While encoding a binary stream into base64 is fast, decoding produces
 big circuits.
 For this reason, our circuit does the following:
 
@@ -396,7 +396,7 @@ can find in @why-revocation-list.
     [`SIG`], [64], [ECDSA signature on the first part of this list],
   ),
   caption: [Our proposed structure for the revocation lists.
-    It is very similar to the RFC, but is a binary blob,
+    It is similar to the RFC, but is a binary blob,
     which is much simpler to interpret in a ZKP.]
 )<why-revocation-list>
 
@@ -420,7 +420,7 @@ credential:
 
 The most expensive operation in this list is the ECDSA
 verification, as it also contains a `SHA256` operation,
-and both are very expensive.
+and both are expensive.
 
 === Storage of the Pre-Computation
 
@@ -434,7 +434,7 @@ is not possible to create an invalid proof in any case, these checks are not
 necessary.
 
 In addition, the matrix, and the stored values, contain a lot of $0$s, and
-the non-$0$ values are also very repetitive.
+the non-$0$ values are also repetitive.
 Some of the values stored in the Spartan structure were also not necessary
 in the finalisation phase.
 This reduced the data size to 1GB, and the compression reduced it even

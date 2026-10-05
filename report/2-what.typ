@@ -11,8 +11,8 @@ libraries which implement the necessary cryptographic primitives
 during the first part of this project @EIDBlogZKComparison @EIDBlogZKLibraries.
 After the first half of the project, we concluded the following:
 
-- Standardisation is very important for governments, so it will be
-  very difficult to get adoption for a new format @EUDI-ARF-BBS-1
+- Standardisation is fundamental for governments, so it will be
+  slow to get adoption for a new format @EUDI-ARF-BBS-1
 - ZKPs made a lot of progress, and the circuit-based ZKPs are much
   easier to reason about and are catching up with respect to performance
   to other types of ZKPs @MS2-rep
@@ -46,8 +46,8 @@ with efficiency and extensibility.
 It shows that there is a trade-off between efficiency, measured as
 proving-time and proof-size, and extensibility, measured as the possibility
 for non-domain-experts to change the inputs and tests of a ZKP.
-Another important point is that even though sigma-proof based ZKPs are very
-efficient, they need a credential in a format which is not in use by any of
+Another important point is that even though sigma-proof based ZKPs are more
+efficient than circuits, they need a credential in a format which is not in use by any of
 the governmental E-ID solutions proposed in Europe @EUDI-ARF @Swiyu.
 
 #wide-figure(
@@ -74,7 +74,7 @@ the governmental E-ID solutions proposed in Europe @EUDI-ARF @Swiyu.
       [ZKVMs],
       [low],
       [Standard #box[SD-JWT]],
-      [simulates any program as a ZKP, so very simple to
+      [simulates any program as a ZKP, so simple to
         extend],
       [SP1, OpenVM],
     )
@@ -112,7 +112,7 @@ greek $Epsilon$ - @Cra97 indicates further that:
   _Sigma_ refers to "zig-zag" symbolising
   the three moves, while the last part is an abbreviation of "Merlin-Arthur".]
 
-These proofs are very specialised to a specific proof type - @CM99 gives
+These proofs are specialised to a specific proof type - @CM99 gives
 a list which has been updated since then, but still gives an idea what
 can be done with these types of proofs:
 
@@ -338,7 +338,7 @@ the nationality, the age, and the commune.
 == SICPA Integration <what-sicpa>
 
 SICPA has its own implementation of standardized formats and protocols for digital identity, including Swiyu-mandated SD-JWT and OpenId4VCi/VP.
-This makes our work on the SD-JWT of the Swiss e-ID a very good candidate for integration in that implementation.
+This makes our work on the SD-JWT of the Swiss e-ID a good candidate for integration in that implementation.
 
 
 SICPA's implementation is designed for so-called "Cloud Wallets".
@@ -611,10 +611,10 @@ non-revocation proof, which is probably once per week.
 During the period this project spanned, a number of high-profile publications, as well as key governance decisions have happended.
 
 Interest towards production-deployable Zero-Knowledge solutions for digital identity
-is clear, if only from the number of very strong publications that happened during
+is clear, if only from the number of strong publications that happened during
 the course of this project. Among these, the most prominent results are:
 
-- Longfellow @FS24, a very optimized proof system that has been field tested with Google and Deutsche Bank.
+- Longfellow @FS24, an optimized proof system that has been field tested with Google and Deutsche Bank.
   We analyze it in comparison with Crescent in a blog post @EIDBlogCrescentLongfellow.
   It achieves most of our targets but we found the adaptability to be poor when it came to changing the circuits' implementation and lack auditability by non-experts.
 - Crescent @FFL25 implements interesting ideas with commitments re-randomization as well as the modified ECDSA equation verification for holder binding.
@@ -622,7 +622,7 @@ the course of this project. Among these, the most prominent results are:
   The main proof on the credential uses Groth16 @G16 which requires a public setup, something we wanted to avoid.
   Our implementation uses their holder binding technique to reduce the ECDSA verification cost and maximize the proving work that can be done in a pre-computed phase.
 - Vega @KS25 is an iteration on Spartan @S19.
-  It introduces a folding of circuits yielding very fast proving time.
+  It introduces a folding of circuits yielding fast proving time.
   In particular by optimizing the time spent on hashing credential blocks prior to signing or verification.
   Extending our work with Noir and Vega to provide a DSL that allows for folding would be a great follow-up to our work.
 - OpenAC @ENRT26 is a transparent anonymous-credential design that, like our work, requires no trusted
@@ -661,7 +661,7 @@ _Single_circuit_ shows the system characteristics for a single "big" proving cir
 _Multi-circuit_ shows the system characteristics when the proof is sub-divided in smaller circuits,
 some of which can be _reused_. In their publication, their largest speed gain comes from a clever
 way of reusing a circuit that does one block of SHA256 hashing.
-An optimization that would yield very good results on our own construction (at least as much as in their publication).
+An optimization that would yield good results on our own construction (at least as much as in their publication).
 
 #wide-figure(
   block[
@@ -691,7 +691,7 @@ An optimization that would yield very good results on our own construction (at l
 ) <tbl-openac-perf>
 
 As with every cross-paper comparison, these numbers should be read with care: the measurements
-were not taken on the same hardware, and the setup and pre-computation costs are amortized very
+were not taken on the same hardware, and the setup and pre-computation costs are amortized
 differently depending on how often a credential is presented.
 What they do show is that the transparent, prepare-and-prove designs (Vega and OpenAC) reach
 online proving times in the order of a hundred milliseconds on desktop hardware, at the cost of

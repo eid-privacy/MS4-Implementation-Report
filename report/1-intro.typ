@@ -7,7 +7,7 @@ This report concludes the work sponsored by the Innosuisse grant 101.292 IP-ICT 
 Throughout the last year and a half a lot has happened in the digital identity space.
 Countries have debated and rolled-out age bans for social media, adult and gambling websites; on one-hand protecting a vulnerable population, on the other significantly
 threatening the privacy of users.
-In parallel, the staggering speed of LLM development has allowed the creation of very convincing fake images of identity documents.
+In parallel, the staggering speed of LLM development has allowed the creation of convincing fake images of identity documents.
 Academia, industry, and governing bodies have all produced work with a high impact on which technologies can be deployed to fend off these issues.
 
 The first part, _Overview of our Solution_, chapter @what, of this report covers the context we considered for our work as well as some of the major publications proposing similar solutions for similar

@@ -301,7 +301,7 @@ engineers at SICPA were able to update our proposed circuit to
 enable new functionality.
 
 However, we also saw one big downside of this openness: some programming
-patterns produce very big circuits, and as a non-cryptographer it is
+patterns produce big circuits, and as a non-cryptographer it is
 often difficult to understand why our code is not good.
 One example we encountered was the @how-opt-barrel, where a software
 engineer used a for loop to copy data from one array into another.
@@ -310,9 +310,9 @@ to take into account all possible sizes - which are a lot.
 
 There is the possibility to introduce more optimisations in the noir
 backend to allow for automatic improvements of these cases.
-But there will be a lot of these patterns which create very big
+But there will be a lot of these patterns which create big
 circuits, and thus are not optimal to be used.
-As of September 2026, LLMs like Claude were very helpful in detecting
+As of September 2026, LLMs like Claude were helpful in detecting
 the reason for these big circuits, and proposing solutions.
 But as always, if you cannot judge if the proposed solution is actually
 good, it's difficult to avoid errors.
@@ -328,7 +328,7 @@ project also more extensive optimisation tests.
 Even during the 18 months of this project, it was interesting
 to see the improvement of these tools.
 It is incredible the power we have nowadays to go from idea
-to realisation in a very short timeframe.
+to realisation in a short timeframe.
 
 With all that power comes a big responsibility: as we're all
 senior professionals, we do know the basics of software engineering,

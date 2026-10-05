@@ -102,7 +102,7 @@ Available in D7.1 repository. Guidance is given in this report as well.
 
 _D7.3 - Speed / bandwidth considerations_
 
-We reached very good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
+We reached good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
 and auditable solution.
 On a M4 Mac we get down to 1.5s of proving time.
 Phone implementation hangs around the 10s mark.
@@ -158,7 +158,7 @@ _G7.3 The necessary operations are fast enough to be executed on a modern mobile
 
 With flat data, a fixed-sized structure representing a credential, we reached 0.9 second of prover speed.
 
-We reached very good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
+We reached good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
 and auditable solution.
 On a M4 Mac we get down to 1.5s of proving time.
 Phone implementation hangs around the 10s mark.

@@ -46,7 +46,7 @@ in Noir's standard library and/or compiler to express the semantic of _fold-and-
 
 Next engineering steps would include:
 - A more complete backend, our implementation has deliberately left aside Noir blackboxes and opcodes that were not relevant for the work.
-- A way to audit Noir, or at least the parts relevant to us. Noir has its own testing strategy regarding security but its very active codebase is difficult
+- A way to audit Noir, or at least the parts relevant to us. Noir has its own testing strategy regarding security but its active codebase is difficult
   to assess for soundness.
 - A few changes in Noir's architecture would likely be needed to accommodate for curves that don't form a cycle and contribute our changes back to the upstream
   repository.
@@ -56,7 +56,7 @@ Next engineering steps would include:
 Regarding the standards we preserved, OpenId4VP is untouched if for the non-breaking addition of a proof type.
 Following the workgroup's meetings and evolution would inform on how such proof mechanisms are meant to extend the original specification.
 
-Our proof circuit does not include revocation. The IETF standard for revocation lists includes either a compression pass, or a very lengthy bit string representation
+Our proof circuit does not include revocation. The IETF standard for revocation lists includes either a compression pass, or a lengthy bit string representation
 both causing prohibitive explosion of the circuit size, and therefore proving time.
 We propose an alternative approach in @why-opt-revocation that would add a flat cost to the proof.
 Designing such a ZKP-friendly approach to revocation would be a logical next step for a complete proposal.
@@ -67,12 +67,12 @@ The current Spartan implementation creates a matrix of size $2^N$, where $N$ is
 a natural number.
 For our age-proving circuit, the size of this matrix is $2^22$, but this
 is only because the size got rounded up.
-We are very close to $2^21$, which would improve the performance of the proof
+We are close to $2^21$, which would improve the performance of the proof
 a lot.
 Here are some tasks we could do to get below that threshold:
 - better range-checks with lookup tables - currently each range-check is
   individual
-- multi scalar multiplications - the multiplication ladders are very
+- multi scalar multiplications - the multiplication ladders are
   expensive, and as there are at least two places where two scalar multiplications
   happen in a row, this is an optimisation which might improve the performance
 - optimise Spartan conversion to automatically do barrel-shifter - currently,
