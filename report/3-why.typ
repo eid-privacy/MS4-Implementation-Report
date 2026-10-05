@@ -176,7 +176,7 @@ Noir's ACIR bytecode @NoirACIR is a convenient integration point, allowing the d
 We organized it around an input mapper and a router handling the opcodes we need to run our e-ID zero-knowledge proofs.
 
 Input mapping makes use of the witness allocation file produced by `nargo execute`.
-It loads a map of witnesses allocated using `bellpepper` and indexed by a "witness index" that 
+It loads a map of witnesses allocated using `bellpepper` and indexed by a "witness index" that
 Noir uses to reference wires in the bytecode.
 Each entry is marked public or private, as well as linked to the abi parameter it is part of (if it is not and auxiliary or constant witness).
 
@@ -188,10 +188,10 @@ The opcodes we implemented are:
   - RANGE, the gadget used by Noir to constrain input sizes and ranges.
   - Elliptic Curve addition (EC ADD)
   - Multi-scalar multiplication (MSM)
-  - Sha256Compression, implementing a single block compression. Noir standard library takes care of the complete implementation. 
+  - Sha256Compression, implementing a single block compression. Noir standard library takes care of the complete implementation.
 
 We implemented the low-level EC ADD and MSM rather than the ECDSA verification directly to have more flexibility in the API and to be able to
-implement the modified verification equations of Crescent @FFL2 and ZKAttest @zkattest.
+implement the modified verification equations of Crescent @FFL25 and ZKAttest @zkattest.
 These could now be wrapped in abstractions such as a Noir library, the standard library itself, or a blackbox.
 Our choice would be a Noir library as the standard library of Noir is built with the curve cycle of bn254-Grumpkin in mind and because
 the many abstraction layers that require wiring to add new operations is not worth the hassle for an operation that only makes sense on a single curve.

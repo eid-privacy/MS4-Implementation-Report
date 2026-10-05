@@ -4,6 +4,7 @@
   "shell": {
     "scripts": {
       "compile": ["cd report; typst compile index.typ"],
+      "html": ["cd report; typst compile --features html index.typ index.html"],
       "watch": ["cd report; typst watch index.typ"],
       "test": [
         "make"
