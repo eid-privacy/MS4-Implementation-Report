@@ -105,7 +105,7 @@ _D7.3 - Speed / bandwidth considerations_
 We reached good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
 and auditable solution.
 On a MacBook Pro M2 Max, the proving time after precomputation is 1.5s, while a mobile
-phone from 2023 creates the proof after precomputation in 5.2s.
+phone from 2023 creates the proof after precomputation in 4.5s.
 Follow-ups exist that could bring this further down (see @remaining-challenges) without invalidating the work from this grant.
 Proof size is well below the limit of 1MB: our largest circuit (c0202_sicpa_backend_constant) results in proofs of 202KB.
 
@@ -161,7 +161,7 @@ With flat data, a fixed-sized structure representing a credential, we reached 0.
 We reached good speed with precomputation despite using unmodified Swiyu SD-JWT and providing a human-readable
 and auditable solution.
 On a MacBook Pro M2 Max we get down to 1.5s of proving time.
-On a mobile phone from 2023, the proof takes 11.8s without, and 5.2s with precomputation.
+On a mobile phone from 2023, the proof takes 11.0s without, and 4.5s with precomputation.
 Follow-ups exist that could bring this further down (see @remaining-challenges) without dismissing the work from this grant.
 Proof size is well below the limit of 1MB: our largest circuit (c0202_sicpa_backend_constant) results in proofs of 202KB.
 

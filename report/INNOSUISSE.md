@@ -49,3 +49,7 @@
 * Would you do anything differently if you had the opportunity to do so?
 * How do you assess the results of the project? What are your learnings?
 * What were your main challenges and how did you overcome them?
+
+# Todo in the Libreoffice document
+
+- add references

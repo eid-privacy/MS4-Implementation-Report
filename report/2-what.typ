@@ -35,7 +35,7 @@ following important points:
   @why-opt-revocation
 - Easy to understand and extendable by IT professionals, see @why
 - On laptop hardware acceptable performance (~1.5s for a proof),
-  on mobile hardware still needs some improvement (~5s on a 2023 Android phone)
+  on mobile hardware still needs some improvement (~4.5s on a 2023 Android phone)
 
 == Comparison with Other Solutions
 
@@ -532,10 +532,10 @@ All tests have been done using the latest commit on branch `final_report`.
     columns: 4,
     table.header([Prover], [Mac], [Intel], [Mobile]),
     [UltraHonk \ Barretenberg], [3.1s], [8.8s], [16.1s],
-    [Spartan], [3.7s], [8.3s], [11.8s],
+    [Spartan], [3.7s], [8.3s], [11.0s],
     [Spartan \ Pre-computed], [load: 0.2s \ final: 1.0s \ total: 1.5s],
       [load: 0.4s \ final: 2.2s \ total: 3.0s],
-      [_load: 2.1s \ final: 3.1s \ total: 5.2s_]
+      [_load: 0.4s \ final: 3.4s \ total: 4.5s_]
   ),
   caption: [Benchmarking our circuits for age-proof with different
     provers and on three platforms.
@@ -593,7 +593,7 @@ However, successfully generating an SD-JWT credential proof on a
 mobile device marked a major step in moving our
 endeavour from a theoretical undertaking to a practically applicable result.
 
-The Spartan backend is already better with the best runtime at 11.8s.
+The Spartan backend is already better with the best runtime at 11.0s.
 While this is still an order of magnitude away from our goal, which is
 1s for a proof, it shows that there is still room for optimisation in
 ZKP circuit proofs.
@@ -601,7 +601,7 @@ Also, the mobile device is not of the latest generation, and modern devices
 can easily gain a factor of two.
 
 Using Spartan with pre-computation brings down the proving time to
-a little bit over 5s.
+about 4.5s.
 This includes the loading of the pre-proof, and the finalisation of the
 proof using the latest timestamp and the challenge from the verifier.
 As with the desktop benchmark, the cost to pay is the pre-computation itself,
