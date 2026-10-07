@@ -6,8 +6,8 @@
   title: [Secure and Privacy-Preserving Credentials for E-ID - #linebreak()
     Final Report],
   paper-size: "a4",
-  narrow: true,
-  columns: 2,
+  // narrow: true,
+  // columns: 2,
   authors: (
     (
       name: "Carine Dengler",
@@ -67,5 +67,4 @@
   }
 })
 
-#include "7-appendix-a.typ"
-#include "8-appendix-b.typ"
+#include "7-appendix.typ"

@@ -1,6 +1,6 @@
 #import "common.typ": *
 
-= Appendix A - Work Packages and Milestones <app-wp-ms>
+= Appendix - Work Packages and Milestones <app-wp-ms>
 
 == WP4b - Unlinkable and anonymous credential signing
 

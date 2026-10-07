@@ -35,10 +35,12 @@ or any other required predicate.
 
 - C4DT team beyond the authors
 - SICPA team beyond the authors
-- Matteo Frigo for informed opinions and debate on ZKP solutions for digital identity
+- EPFL and the professors who supported us with their advice, their courses,
+  and answering our questions: Alessandro Chiesa, and Edouard Bugnion
 - Andreas Freysang and Rolf Rauschenbach from the Federal Office of Justice,
   and all their colleagues who participated in the discussions on how to create
   good ZKPs for the e-ID
+- Matteo Frigo for informed opinions and debate on ZKP solutions for digital identity
 - Patrick Amrein from Ubique for discussions on the general approach to
   privacy-preserving e-ID as well as suggestions to strengthen the
   security guarantees of our circuits and running Rust with `--release`
