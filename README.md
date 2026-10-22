@@ -1,5 +1,10 @@
 # MS4 - Implementation and Report
 
+> [!NOTE]
+> This report has moved to [eid-privacy/zkp-reports](https://github.com/eid-privacy/zkp-reports/tree/main/ms4-report),
+> where all reports of the project are collected and built.
+> This repository is kept for its history and will be archived.
+
 Final report for the Innosuisse grant 101.292 IP-ICT -
 _Secure and Privacy-Preserving Credentials for E-ID_ - between EPFL and SICPA SA.
 
