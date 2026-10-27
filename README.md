@@ -25,7 +25,7 @@ _Work Packages and Milestones_.
     0.9s with a flat credential.
     The largest proof (c0202_sicpa_backend_constant) is 202kB.
     See the report section _Benchmarks_ and the Android apps
-    zkp-android-spartan (not public yet) and [zkp-android](https://github.com/eid-privacy/zkp-android)
+    [zkp-android-spartan](https://github.com/eid-privacy/zkp-android-spartan) and [zkp-android](https://github.com/eid-privacy/zkp-android)
 - G7.4 The review shows the security of the library and its recommendations are integrated
   - Done: the [security review](https://github.com/eid-privacy/zkp-reports/tree/main/security-review) by [zkSecurity](https://zksecurity.xyz/) and our answers are in the report section _Security Review_;
     the critical findings have been fixed
